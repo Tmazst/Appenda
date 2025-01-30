@@ -837,13 +837,12 @@ def google_signin():
             #Login user
             usr_obj = User.query.filter_by(email=usr_email).first()
             #Check if user have a church id
-            if usr_obj.chrch_id:
-                login_user(usr_obj)
-            else:
-                return redirect(url_for('select_church'))
+            login_user(usr_obj)
+            flash(f"Hey! {usr_obj.name.title()} You're Logged In!", "success")
 
-            # if not current_user.church_local and not current_user.church_zone:
-            #     return redirect(url_for('finish_signup'))
+            req_page = request.args.get('next')
+            return redirect(req_page) if req_page else redirect(url_for('home'))
+
         
         except IntegrityError:
             db.session.rollback()  # Rollback the session on error
@@ -860,29 +859,15 @@ def google_signin():
             login_user(user_login)
             return redirect(url_for('verification'))
 
-        if user_login.chrch_id:
-            login_user(user_login)
-            flash(f"Hey! {user_login.name.title()} You're Logged In!", "success")
-            if user_login.role == "gen_user":
-                user = gen_user.query.get(user_login.id)
-                if not user.gender or not user.contacts or not user.address:
-                        print(user.gender ,user.contacts, user.address)
-                        return redirect(url_for('usr_finish_signup'))
-            else:
-                user = admin_user.query.get(user_login.id)
-                if not user.gender or not user.contacts or not user.address:
-                    return redirect(url_for('admin_finish_signup'))
-            _activity(user_login)
-        else:
-            flash(f"Please Select Your Local Church", "success")
-            login_user(user_login)
-            return redirect(url_for('select_church'))
+        login_user(user_login)
+        flash(f"Hey! {user_login.name.title()} You're Logged In!", "success")
+
 
         req_page = request.args.get('next')
         return redirect(req_page) if req_page else redirect(url_for('home'))
     
 
-    return redirect(url_for("home"))
+    # return redirect(url_for("home"))
 
 
 # Press the green button in the gutter to run the script.

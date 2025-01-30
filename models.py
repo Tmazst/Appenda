@@ -25,7 +25,7 @@ class User(db.Model,UserMixin):
     contacts = db.Column(db.String(70))
     role = db.Column(db.String(120))
     images = relationship("Images",backref="User",lazy=True)
-    # timestamp = db.Column(db.DateTime)
+    timestamp = db.Column(db.DateTime)
     # project_briefs = relationship("Project_Brief", backref="Project_Brief", lazy=True)
 
     __mapper_args__={
