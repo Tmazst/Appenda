@@ -1,0 +1,99 @@
+
+{% extends "base.html" %}
+{% block content %}
+<style>
+    @media all and (max-width: 575px){
+        body{
+            background-image: url("static/images/upload-bg.jpg");
+            background-size: cover; /* Adjust the size */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Avoid tiling */
+            /* background-color: rgba(255, 255, 255, 0.85); Add a semi-transparent overlay */
+            /* background-blend-mode: overlay; Blend the background color with the image */
+        }
+    }
+</style>
+<div style="width:;margin:0 auto;background-color:;">
+    <!-- <a id="contact_us"></a> -->
+    <section style="background-color:;" id="" class="">
+        <!-- Flash message -->
+        <div class="flash-messages ">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for  category, message in messages %}
+                        <div class="flash-messages alert-{{category}}"> {{message}}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div><br>
+    </section>
+</div>
+<br><br>
+<section id="upl-image-cont" class="container">
+    <div class="upload-class">
+    <div class="form-container">
+        <div class="space-filler"></div>
+        <div><h3 style="border:none;margin: 0 auto;" class="sub-topic-details" >Upload Image</h3><br>
+            <!-- <small class="ad-caption">"Register Your App to increase awareness"</small> -->
+            <small></small>
+        </div>
+
+        <div class="line"></div><br>
+
+        <form style="background-color: ;width:100%;"  _lpchecked="1" action="" method="post" enctype="multipart/form-data">
+            <br>
+            <!-------Name--------->
+            <div style="background-color: f8f95a;" class="job-ad-group marginise-bottom">
+                {{ app_form.hidden_tag() }}
+                {{ app_form.name.label(class="labels")}}<br>
+                {{ app_form.name(class="form-control adj-width-60",placeholder="name")}}
+                {% if app_form.name.errors %}
+                    {% for error in app_form.name.errors %}
+                        <span class="span-error" >*{{error}}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <!-------Image Category--------->
+            <div class="job-ad-group marginise-bottom">
+                {{ app_form.image_category.label(class="labels")}}<br>
+                {{ app_form.image_category(class="form-control adj-width-60",placeholder="Company Name")}}
+                {% if app_form.image_category.errors %}
+                    {% for error in app_form.image_category.errors %}
+                        <span class="span-error" >*{{error}}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <!-------Description--------->
+            <div style="background-color: f8f95a;" class="job-ad-group marginise-bottom">
+                {{ app_form.description.label(class="labels")}}<br>
+                {{ app_form.description(style="min-height:100px", class="form-control adj-width-60", placeholder="Description")}}
+                {% if app_form.description.errors %}
+                    {% for error in app_form.description.errors %}
+                        <span class="span-error" >*{{error}}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <!---------Image--------->
+            <div class="job-ad-group marginise-bottom">
+                {{ app_form.image.label(class="labels")}}<br>
+                {{ app_form.image(class="form-control adj-width-60",placeholder="App Icon")}}
+                {% if app_form.image.errors %}
+                    {% for error in app_form.image.errors %}
+                        <span class="span-error" >*{{error}}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div>
+                {{ app_form.submit(class="btns") }}
+            </div>
+
+        </form>
+    </div>
+</div>
+</section>
+
+{% endblock %}

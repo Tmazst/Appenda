@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <style>
+        .form-fields{
+            display:flex;
+            flex-direction:column;
+        }
+        .search-cont{background-color:;display: flex;justify-content:center;padding:10px}
+        .search-cont input{border: 1px solid grey;border-radius:10px;padding: 5px;}
+        /* section{ background-image:url(static/images/bg_service.png) } */
+    </style>
+<div style="width:;margin:0 auto;background-color:;">
+    <!-- <a id="contact_us"></a> -->
+    <section style="background-color:;" id="" class="services hidden">
+        <!-- Flash message -->
+
+        <div class="flash-messages ">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for  category, message in messages %}
+                        <div class="flash-messages alert-{{category}}"> {{message}}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div><br>
+
+    </section>
+</div>
+
+<div style="text-align: center;">
+    <span style="font-size:18px">Know Your Apps Campaign</span><br>
+    <span style="font-size:18px; font-weight: 300;">We Connect EmaSwatini To Their Apps</span>
+</div>
+
+<br><br><br>
+<div style="justify-content: center;gap:5px;background:none;position:sticky;top:80px;"  class="general-flex">
+    <div class="search-cont">
+        <form style="gap:0" class="general-flex" action="/search" method="get">
+          <input class="search-field" type="search" name="search_value" placeholder="Search Apps" value="">
+          <button style="background: none;" class="search-btn" type="submit"><img style="height:30px" src="static/icons/sibuko.png"></button>
+        </form>
+    </div>
+    <br>
+</div><br>
+
+<section style="flex-direction: column" class="container">
+    <h3 style="color: #737473;width:400px;font-weight:400">"<span><img style="height:20px" src="static/icons/sibuko.png"></span>{{search_value}}"</h3>
+        <!-----DEMOs-->
+        <div id="" style="display: flex;flex-direction: column;background-color: ;margin:10px auto" class="list-view" >
+
+            {% for app in apps %}
+            
+                <div style="background-color: #f7f7f7;border-radius: 15px;padding-right:;gap:10px" class="app-list">
+                    <div onclick="popAppItem('{{app.id}}')" style="height:65px;width:65px;min-width:65px;overflow: hidden;border-radius: 10px;border: 1px solid rgb(235, 232, 232);">
+                        <img style="height:inherit;border-radius:10px" src="static/images/{{app.app_icon}}" /></div>
+                    <div onclick="popAppItem('{{app.id}}')" style="min-width: 150px;"  class="item-as-btn c-name">
+                        <span   style="text-wrap: nowrap;color:#00a550">{{app.name}}</span>
+                        <div id='app-description' class="description" style="font-weight: 400;text-align: left;" >
+                            {{app.description|truncate(length=48, end='...more') }}
+                        </div> 
+                    </div>
+                    <div class="reactions-container">
+                        <div class="pre-react">
+                            {% if app.web_link %}
+                                <a class="" style="height:" href="{{app.web_link}}"><img class="icon-links" src="static/icons/globe.png" /></a>
+                            {% endif %}
+                            {% if app.facebok %}
+                                <a class="" style="" href="#"><img class="icon-links" src="static/icons/facebook-icon.png" /></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div style="background-color:;height: 1px;flex-grow:1;width:80px" class=""></div>
+    
+                </div>
+    
+               <!-- Popup  -->
+               <div onclick="closeAppPop('{{app.id}}')" id="pop_appcont_{{app.id}}" class="pop-cont">
+                <div style="height:auto;width:auto;top:100px;background: none;padding:0;" id="popup_app_{{app.id}}" class="pop-up">
+                    <div style="background-color: rgb(196, 195, 195);"  class="app-container">
+                        <div class="icon-cont"><img src="static/images/{{app.app_icon}}"/></div>
+                        <div class="app-name">{{app.name}}</div>
+                        {% if app.web_link %}
+                            <a href="{{app.web_link}}"><div class="owner-name"><img class="icon-imgs" src="static/icons/globe.png" /><span>{{app.company_name}}</span></div></a>
+                        {% else %}
+                            <div class="owner-name"><span>{{app.company_name}}</span></div>
+                        {% endif %}
+                        <div style="color:rgb(44, 44, 44)" class="description">{{app.description}}</div>
+    
+                        <div class="labels">Download</div>
+                    <div style="height:;" class="links general-flex">
+                        <a style="height:inherit"  href="{{app.playstore_link}}">
+                            <img class="icon-imgs" src="static/icons/googlePlayBadge.svg" />
+                        </a> 
+                        {% if app.ios_link %}
+                        <a style="height:inherit"  href="{{app.ios_link}}">
+                            <img class="icon-imgs" src="static/icons/appleAppStoreBadge.svg" />
+                        </a> 
+                        {% endif %}
+                        <div style="background-color:;" class="general-flex">
+                            {% if app.uptodown_link %}
+                            <a style="" href="{{app.uptodown_link}}">
+                                <img style="height:;" class="icon-imgs" src="static/icons/UpToDown.png" />
+                            </a> 
+                            {% endif %}
+                            {% if app.huawei_link %}
+                            <a style="" href="{{app.huawei_link}}">
+                                <img style="height:;" class="icon-imgs" src="static/icons/huawei-icon.png" />
+                            </a>
+                            {% endif %}
+                            {% if app.apkpure_link %}
+                            <a style="" href="{{app.apkpure_link}}">
+                                <img style="height:;" class="icon-imgs" src="static/icons/apkpure-icon.png" />
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div><br>
+                    <a style="height:inherit"  href="{{app.playstore_link}}">
+                        <div class="btns">explore</div></a>
+                    </div>
+                </div>
+                </div>
+
+            {% endfor %}
+        </div>
+
+</section><br><br>
+
+
+<script>
+    // quoteBtns.forEach(function(btn){
+
+
+    
+    const listIcon = document.querySelector("#list");
+    const blocksIcon = document.querySelector("#blocks");
+
+    listIcon.addEventListener("click", function(){
+
+        window.location.href = "/?icon=listview";
+        // listIcon.classList.add('active') ;
+
+    });
+
+    blocksIcon.addEventListener("click", function(){
+
+        window.location.href = "/?icon=blockview";
+        console.log("Blocks Icon CLicked");
+
+    });
+
+
+
+document.getElementById('scroll-left').addEventListener('click', function() {
+    const container = document.querySelector('#view-cont');
+    const imgContainer = document.querySelector('.scroll-container');
+    const firstImg = document.querySelector('img');
+    // if (!firstImg) return;
+    const imageWidth = firstImg.clientWidth;
+    
+    if (window.innerWidth >= 600){
+        container.scrollBy({
+            left: -600, // Adjust this value to match the height of visible area
+            behavior: 'smooth'
+        });
+    }else{
+        container.scrollBy({
+            left: -220, // Adjust this value to match the height of visible area
+            behavior: 'smooth'
+        });
+    }
+});
+
+document.getElementById('scroll-right').addEventListener('click', function() {
+    console.log("Testing");
+    const container = document.querySelector('#view-cont');
+    const imgContainer = document.querySelector('.scroll-container');
+    const firstImg = document.querySelector('img');
+    // if (!firstImg) return;
+    const imageWidth = firstImg.clientWidth;
+    
+    if (window.innerWidth >= 600){
+        container.scrollBy({
+            left: 600, // Adjust this value to match the height of visible area
+            behavior: 'smooth'
+        });
+    }else{
+        container.scrollBy({
+            left: 220, // Adjust this value to match the height of visible area
+            behavior: 'smooth'
+        });
+    }
+});
+
+
+</script>
+{% endblock %}

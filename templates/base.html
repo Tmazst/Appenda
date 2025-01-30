@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <title>{{title}}</title>
+
+    <div class="header gen-flex">
+      <a href="/">
+        <div style="flex-direction: column;" class="logo gen-flex-col">
+            <img style="height: inherit;" src="{{ url_for('static', filename='images/logo.png') }}" />
+          <div class="cap-1">Eswatini Image Hub</div>
+        </div>
+      </a>
+      <div class="filler"></div>
+      <div class="flag">
+        <img style="height: inherit;" src="{{ url_for('static', filename='images/eswatini_flag.png') }}" />
+      </div>
+    </div>
+
+    <div id="search-cat" style="height: auto;" class="header gen-flex">
+      <!-- <div style="padding-left:20px" class="cap-1">Eswatini Image Hub</div> -->
+      {%if chck_len%}
+      <div id="filter-info" style="height: auto;" class="flag">
+        {%if images | length > 1%}
+        <div class="btns">Images</div>
+        {%elif images | length == 1%}
+        <div class="btns">{{images[0].image_category}}</div>
+        {%endif%}
+      </div>
+      {%endif%}
+      <div class="filler"></div>
+      <div class="search-cont">
+          <form style="gap:0;flex-wrap: nowrap;" class="general-flex" action="/search" method="get">
+            <input class="search-field" type="search" name="search_value" placeholder="Search Apps" value="">
+            <button style="background: none;" class="search-btn" type="submit"><img style="height:30px" src="static/icons/sibuko.png"></button>
+          </form>
+      </div>
+      <div style="background-color:" class="user">
+          <ul class="user-label gen-flex">
+          {% if current_user.is_authenticated %}
+            <li><a class="" href="/account"><span style="font-size:13px" class="nav-link">{{current_user.name}}</span></a></li>
+            <li><a href="/logout"><img class="logout-icon" style="height:40px" src="static/icons/logout-icon.webp"></a></li>
+          {% else %}
+            <li><a class="btns-outlined links-user" href="/login">Login</a></li>
+            <!-- <li><a class="btns-user links-user" href="/client_signup">Register</a></li> -->
+          {% endif %}
+          </ul>
+      </div>
+      
+    </div>
+
+    <div style="z-index:501"  onclick="sideNavFunc(event)" class="menu-icon">
+        <div class="stroke"></div>
+        <div class="stroke"></div>
+        <div class="stroke"></div>
+    </div>
+
+    <div onclick="closeSideNavFunc()"  id="side-navig-bg" class="side-nav-bg ">
+      <div id="side-navig-cont" class="side-nav-cont move-to-appear gen-flex-col">
+          <div style="padding-top:25px"  class="gen-flex-col cat-item-cont">
+            <a href="/?al='all'"> <div class="cat-item"><span>View All</span></div></a>
+            {%for category in categories%}
+            {% set num_images = images | selectattr('image_category', 'equalto', category) | list | length %}
+              
+                <a href="/?cat={{category}}"> <div class="cat-item"><span>{{category}}</span>{%if num_images > 0%}<small class="num gen-flex">{{num_images}}</small>{%endif%}</div></a>
+            {%endfor%}
+          </div>
+      </div>
+    </div>
+
+  
+
+  <div onclick="closeSideNavFunc()"  id="side-navig-bg" class="side-nav-bg ">
+    <div id="side-navig-cont" class="side-nav-cont move-to-appear">
+        <!-- <div class="close-btn"><div class="stroke"></div></div> -->
+        <h3>Menu</h3>
+        <div class="sidenav-list">
+            <li class="other-nav-item">
+              <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="other-nav-item">
+              <a class="nav-link" href="/app_form">Publish App</a>
+            </li>
+            <li class="other-nav-item">
+              <a class="nav-link" href="/edit_app">My App</a>
+            </li>
+            <li class="other-nav-item">
+              <a class="nav-link" href="/about" >About</a>
+            </li>
+        </div>
+    </div>
+  </div>
+
+</head>
+<body>
+    <div style="width:100%" class="">
+        {% block content %}
+        {%endblock%}
+    </div>
+
+    <script src="static/js_script.js" ></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+</body>
+</html>

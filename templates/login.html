@@ -1,0 +1,69 @@
+
+
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .form-fields{
+        display:flex;
+        flex-direction:column;
+    }
+    section{ background-image:url(static/images/bg_service.png) }
+</style>
+<div class="flash-messages" id=""></div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for  category, message in messages %}
+                <div class="flash-messages alert-{{category}}"> {{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+<br><br>
+
+
+<br><br>
+<div style="" class="container">
+<div class="bg-class">
+  <div class="login-cont flex-general">
+    <form style="background-color:;flex-direction:column;z-index:1000;" class="" _lpchecked="1" action="" method="post">
+        <div class="flex-general" style="flex-direction: column;align-items: flex-start;">
+            <div class="flex-general" style="flex-direction: column;align-items: flex-start;">
+                <h2 class="form-welcome" style="">Please Login<br><span style="font-size:medium;color:rgb(102, 102, 102);"></span></h2>
+            </div><br>
+        </div>
+        <div>
+            <a href="{{url_for('google_login')}}"><div style="gap:2px;justify-content: flex-start;" class="general-flex" ><h4 class="form-welcome" style="margin:0">Continue with </h4>
+            <img class="ggl-img" style="height: 35px;border-radius: 15px;" src="static/icons/google-icon.png" /> </div></a>
+        </div>
+        {{login.hidden_tag()}}
+        <div class="group">
+            {{ login.email(class="form-control",placeholder="Email") }}<br>
+            {% if login.email.errors %}
+            {% for error in login.email.errors %}<span class="span-error" >*{{error}}</span>{% endfor %}
+            {% endif %}
+        </div>
+        
+        <div class="group">
+            {{ login.password(class="form-control",placeholder="Password")}}<br>
+            {% if login.password.errors %}
+            {% for error in login.password.errors %}<span class="span-error" >*Password {{error}}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+        <div style="" class="group">
+            <div>{{ login.submit(class="btns whiten") }}</div><br>
+            <div><a style="color:white" class="slinks-li" href="/signup">Create Account</a></div>
+        </div>
+
+        <div style="" class="group">
+            <div><a style="color:white" class="slinks-li" href="/forgot_password">Forgot Password?</a></div>
+        </div>
+
+    </form>
+  </div>
+</div>
+</div><br>
+
+{%endblock%}

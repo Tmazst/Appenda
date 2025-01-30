@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .form-fields{
+        display:flex;
+        flex-direction:column;
+        a{
+            color:none
+        }
+    }
+    .search-cont{background-color:;display: flex;justify-content:center;padding:10px}
+    .search-cont input{border: 1px solid grey;border-radius:10px;padding: 5px;}
+    /* section{ background-image:url(static/images/bg_service.png) } */
+</style>
+
+<div style="width:;margin:0 auto;background-color:;">
+    <!-- <a id="contact_us"></a> -->
+    <section style="background-color:;" id="" class="services hidden">
+        <!-- Flash message -->
+
+        <div class="flash-messages ">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for  category, message in messages %}
+                        <div class="flash-messages alert-{{category}}"> {{message}}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div><br>
+
+    </section>
+</div>
+ 
+<br>
+
+<section class="container flat-flex">
+
+    <div style="align-items: flex-start !important;" class="category-nav gen-flex">
+        <div style="padding-top:25px"  class="gen-flex-col cat-item-cont">
+            <a href="/?al='all'"> <div class="cat-item"><span>View All</span></div></a>
+            {%for category in categories%}
+            {% set num_images = images | selectattr('image_category', 'equalto', category) | list | length %}
+                <a href="/?cat={{category}}"> <div class="cat-item"><span>{{category}}</span><small class="num gen-flex">{{num_images}}</small></div></a>
+            {%endfor%}
+        </div>
+    </div>
+
+    <div class="parent-img-cont">
+
+        <div style="flex-wrap: wrap;" class="images-container flat-flex">
+            {%for img in images%}
+            {% set by_who = usr_obj.query.get(img.uid).name %}
+            <div class="img-card">
+                {%set descr = img.description | tojson %}
+                <div id="imag-cont-{{img.id}}" onclick="displayImage('{{img.image_thumbnail}}','{{img.img_name | e}}','{{by_who}}','{{img.id}}', '{{descr | remove_special_chars}}')"  class="imag"><img id="image-{{img.id}}" class="img-thmb"  src="static/uploads/usr_images/{{img.image_thumbnail}}" /></div>
+                <!-- <div style="gap:5px" class="icons gen-flex"> -->
+                    
+                    <!-- <div class="svg-hrefs" >
+                        <object class="svg-icons" type="image/svg+xml" data="static/icons/view-icon.svg"></object>
+                    </div>
+
+                    <a class="svg-hrefs" style="" href="%">
+                        <object class="svg-icons" type="image/svg+xml" data="static/icons/download-icon.svg"></object>
+                    </a>
+
+                    <a class="svg-hrefs" style="" href="$">
+                        <object class="svg-icons" type="image/svg+xml" data="static/icons/share-icon.svg"></object>
+                    </a> -->
+
+                <!-- </div> -->
+                <div class="cap-2 gen-flex-col">
+                    <!-- <a href="" class="svg-hrefs" id="img-href-id" style="width:40px"> -->
+                        <div id="downld-btn-mobl-{{img.id}}" onclick="openDownload('{{img.id}}')" class="btns-inverted downld-btn-mobl">
+                            Download
+                        </div>
+                    <!-- </a> -->
+                    <small class="captions">{{img.img_name}}</small>
+                    <small class="captions">by: {{by_who}}</small>
+                </div>
+                
+            </div>
+            {%endfor%}
+
+        </div>
+
+        <br>
+
+        <div style="justify-content: flex-start;gap:5px" class="nd-child gen-flex">
+            <a href="/image_form" ><div  class="btns">Upload</div></a>
+            {%if not current_user %}
+            <a href="/signup" ><div class="btns">Sign Up</div></a>
+            {%endif%}
+        </div><br>
+        <div style="align-items:flex-start;" class="nd-child gen-flex-col">
+            <div  class="t-info-t">Documenting Eswatini Scenario into Images</div>
+            <div  class="t-info">Powered by <span>EmaSwati</span></div>
+            <div class="t-info">Developed by <span>Tech Xolutions (TechX)</span></div>
+        </div>
+    </div>
+
+    <div class="display-img">
+        <div style="position: fixed;" class="side-display-fixed">
+            <div class="allow-scroll">
+
+                <div style="width:max-content;margin:0px auto;" class="show-img-dv">
+                    <img id="show-img" class="displayed-img" src="" />
+                </div>
+
+                <div style="" class="cap-parent gen-flex">
+                    <h4 class="img-name">Name of the Image Here</h4>
+                    <div class="filler"></div>
+                    <div class="download_icon">
+                        <a href="" class="svg-hrefs" id="img-href-id" style="width:40px">
+                            <img class="svg-icons"  style="height:40px" src="static/icons/download-icon.svg" />
+                        </a>
+                    </div>
+                </div> 
+
+                <small class="by"></small>
+
+                <div class="describe-img"></div>
+
+            </div>
+        </div>     
+    </div>
+
+</section><br><br>
+
+
+<script>
+    // quoteBtns.forEach(function(btn){
+        function displayImage(image,imgname,by_who,img_id,describe) {
+
+            if(window.innerWidth < 575){
+                var allImgsCont = document.querySelectorAll(".imag");
+                var allImgs = document.querySelectorAll(".img-thmb");
+                var allBtns = document.querySelectorAll(".downld-btn-mobl");
+                console.log("We are on Small Screens: ",window.innerWidth);
+                var imgCont = document.querySelector("#imag-cont-" +img_id);
+                var img = document.querySelector("#image-" +img_id);
+                var downldBtnMobl = document.querySelector("#downld-btn-mobl-" +img_id);
+                
+                allImgsCont.forEach(imgcont => {
+                    imgcont.style.height = "170px";
+                    console.log("Reset all");
+                    });
+
+                allImgs.forEach((img,index) => {
+                    img.classList.remove("resize-up"); 
+                    console.log("Reset all Images ");
+                    // document.querySelector("#downld-btn-mobl-" +index).style.display = "none";
+                    });
+
+                allBtns.forEach((btn,index) => {
+                    console.log("Reset all Buttons ");
+                    btn.style.display = "none";
+                    });
+
+                imgCont.style.width = window.innerWidth;
+                imgCont.style.height = "auto";
+                img.classList.add("resize-up"); 
+                downldBtnMobl.style.display = 'block';
+
+            }else if(window.innerWidth > 575 && window.innerWidth < 800){
+                var allImg = document.querySelectorAll(".imag");
+                console.log("We are on Tablet Screens: ",window.innerWidth);
+                var imgCont = document.querySelector("#imag-cont-" +img_id);
+                var img = document.querySelector("#image-" +img_id);
+
+                allImg.forEach(img => {
+                    img.style.height = "170px";
+                });
+
+                allImgs.forEach(img => {
+                    img.classList.remove("resize-up-2"); 
+                    console.log("Reset all Images ");
+                    });
+
+                // script goes here 
+                imgCont.style.width = window.innerWidth;
+                imgCont.style.height = "auto";
+                img.classList.toggle("resize-up-2");
+                
+            }else{
+
+                console.log(image);
+                let mainImg = document.querySelector("#show-img");
+                let nameImg = document.querySelector(".img-name");
+                let describeImg = document.querySelector(".describe-img");
+                let displyCont = document.querySelector(".display-img");
+                let locate = document.querySelector("#img-href-id");
+                let by = document.querySelector(".by");
+
+                let imageUrl = "static/uploads/usr_images/thumbnails/" + image + "?t=" + new Date().getTime();
+                
+                displyCont.classList.add("showIt");
+
+                mainImg.src = imageUrl;
+
+                nameImg.innerHTML = imgname;
+                by.innerHTML = "by " + by_who;
+
+                describeImg.innerHTML = describe;
+
+                locate.href = "/download_img?img_id=" + img_id.toString();
+
+                console.log("Name: ", nameImg.innerHTML);
+                console.log("Image: ", mainImg.src);
+                console.log("Id: ", locate.href);
+                console.log("Description: ", describe);
+
+                mainImg.onerror = function() {
+                    console.error("Image failed to load:", imageUrl);
+                    // Optionally, set a fallback image
+                    mainImg.src = "path/to/fallback-image.jpg";
+                };
+
+        }
+    }
+
+    function openDownload(img_id){
+        window.location.href = "/download_img?img_id=" + img_id;
+    }
+
+    function revealIcons(id){
+        
+        let btn = document.querySelector("#reveal-icons-btns-"+id);
+        let icons = document.querySelector("#other-pltfms-"+id);
+        icons.classList.toggle("reveal-icons");
+
+        if (btn.innerHTML.trim() === "+more") {
+            btn.innerHTML = "less";
+            // btn.classList.toggle("btns-inverted")
+        } else {
+            btn.innerHTML = "+more";
+            
+        }
+    }
+
+    
+    const listIcon = document.querySelector("#list");
+    const blocksIcon = document.querySelector("#blocks");
+
+    listIcon.addEventListener("click", function(){
+
+        window.location.href = "/?icon=listview";
+        // listIcon.classList.add('active') ;
+
+    });
+
+    blocksIcon.addEventListener("click", function(){
+
+        window.location.href = "/?icon=blockview";
+        // console.log("Blocks Icon CLicked");
+
+    });
+
+
+
+document.getElementById('scroll-left').addEventListener('click', function() {
+    const container = document.querySelector('#view-cont');
+    const imgContainer = document.querySelector('.scroll-container');
+    const firstImg = document.querySelector('img');
+    // if (!firstImg) return;
+    const imageWidth = firstImg.clientWidth;
+    
+    if (window.innerWidth >= 600){
+        container.scrollBy({
+            left: -600, // Adjust this value to match the height of visible area
+            behavior: 'smooth'
+        });
+    }else{
+        container.scrollBy({
+            left: -220, // Adjust this value to match the height of visible area
+            behavior: 'smooth'
+        });
+    }
+});
+
+document.getElementById('scroll-right').addEventListener('click', function() {
+    console.log("Testing");
+    const container = document.querySelector('#view-cont');
+    const imgContainer = document.querySelector('.scroll-container');
+    const firstImg = document.querySelector('img');
+    // if (!firstImg) return;
+    const imageWidth = firstImg.clientWidth;
+    
+    if (window.innerWidth >= 600){
+        container.scrollBy({
+            left: 600, // Adjust this value to match the height of visible area
+            behavior: 'smooth'
+        });
+    }else{
+        container.scrollBy({
+            left: 220, // Adjust this value to match the height of visible area
+            behavior: 'smooth'
+        });
+    }
+});
+
+function trackClick(link,name) {
+        // Send a fetch request to the Flask endpoint to log the click
+        fetch('/track_click', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ clicked_link: link,appnm:name })
+        });
+    }
+
+</script>
+{% endblock %}

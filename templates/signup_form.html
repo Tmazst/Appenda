@@ -1,0 +1,112 @@
+
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .form-fields{
+        display:flex;
+        flex-direction:column;
+    }
+    section{ background-image:url(static/images/bg_service.png) }
+</style>
+<div class="flash-messages" id="">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+          {% for  category, message in messages %}
+              <div class="flash-messages alert-{{category}}"> {{ message }}</div>
+          {% endfor %}
+      {% endif %}
+  {% endwith %}
+</div>
+<br><br>
+
+<div class="container">
+  <div class="bg-class">
+  <div class="login-cont flex-general">
+    
+      <form style="flex-direction:column;z-index:1000;" class="" _lpchecked="1" action="" method="post">
+        <div class="flex-general" style="flex-direction: column;align-items: flex-start;">
+            <div class="flex-general" style="flex-direction: column;align-items: flex-start;">
+                <h2 class="form-welcome" style="">Signup<br><span style="font-size:medium;color:rgb(102, 102, 102);"></span></h2>
+            </div><br>
+            <div>
+                <a href="{{url_for('google_login')}}"><div style="gap:2px;justify-content: flex-start;" class="general-flex" ><h4 class="form-welcome" style="margin:0">Continue with </h4>
+                <img class="ggl-img" style="height: 35px;border-radius: 15px;" src="static/icons/google-icon.png" /> </div></a>
+            </div>
+
+        </div>
+            {{register.hidden_tag()}}
+            <div class="group">
+                {{ register.name(class="form-control",placeholder="name") }}<br>
+                {% if register.name.errors %}
+                  {% for error in register.name.errors %}<span class="span-error" >*{{error}}</span>{% endfor %}
+               {% endif %}
+          </div>
+            <div class="group">
+                  {{ register.email(class="form-control",placeholder="Email") }}<br>
+                  {% if register.email.errors %}
+                    {% for error in register.email.errors %}<span class="span-error" >*{{error}}</span>{% endfor %}
+                 {% endif %}
+            </div>
+            <div class="group">
+                 {{ register.password(id="password",class="form-control",placeholder="Password")}}<br>
+                 {% if register.password.errors %}
+                    {% for error in register.password.errors %}<span class="span-error" >*Password {{error}}</span>
+                    {% endfor %}
+                 {% endif %}
+            </div>
+
+            <div class="group">
+                {{ register.confirm(class="form-control",placeholder="confirm")}}<br>
+                {% if register.confirm.errors %}
+                   {% for error in register.confirm.errors %}<span class="span-error" >*{{error}}</span>
+                   {% endfor %}
+                {% endif %}
+           </div>
+           <!-- <label style="color:rgb(36, 36, 36);font-weight: 500;">Password Strength Checker</label>
+           <div class="power-container">
+                <div id="power-point" class="power-point"></div>
+            </div><br> -->
+
+            <div style="" class="group">
+                 <div >{{ register.submit(class="btns whiten") }}</div><br>
+                 <div><a class="slinks-li" href="/login">Login Instead?</a></div>
+            </div><br>
+            
+
+
+      </form>
+  </div>
+</div>
+</div>
+
+<script>
+    //Password Checker
+    let password = document.getElementById("password");
+    let power = document.getElementById("power-point");
+    confirm_password = document.getElementById("confirm_password");
+    
+    if (password && power) {
+        password.oninput = function () {
+            let point = 0;
+            let value = password.value;
+            let widthPower =
+                ["1%", "25%", "50%", "75%", "100%"];
+            let colorPower =
+                ["#D73F40", "#DC6551", "#F2B84F", "#BDE952", "#3ba62f"];
+    
+            if (value.length >= 6) {
+                let arrayTest =
+                    [/[0-9]/, /[a-z]/, /[A-Z]/, /[^0-9a-zA-Z]/];
+                arrayTest.forEach((item) => {
+                    if (item.test(value)) {
+                        point += 1;
+                    }
+                });
+            }
+            power.style.width = widthPower[point];
+            power.style.backgroundColor = colorPower[point];
+        };
+    }
+</script>
+{% endblock %}

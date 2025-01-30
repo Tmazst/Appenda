@@ -1,0 +1,64 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div style="width:;margin:0 auto;background-color:;">
+    <!-- <a id="contact_us"></a> -->
+    <section style="background-color:;" id="" class="services hidden">
+        <!-- Flash message -->
+        <div class="flash-messages ">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for  category, message in messages %}
+                        <div class="flash-messages alert-{{category}}"> {{message}}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div><br>
+    </section>
+</div>
+
+<section id="" class="container">
+    <div class="form-container">
+        <div class="space-filler"></div>
+        <div><h3 style="border:none;margin: 0 auto;" class="sub-topic-details" >Edit App Info</h3><br>
+            <small class="ad-caption">Please Enter Name & Code of Mobile Application</small>
+            <small></small>
+        </div>
+        
+        <form style="background-color: ;width:100%;"  _lpchecked="1" action="" method="post" enctype="">
+            <br>
+
+                {{ edit_app.hidden_tag() }}
+                
+            <!-------App Name--------->
+            <div class="job-ad-group marginise-bottom">
+                {{ edit_app.app_name.label(class="labels")}}<br>
+                {{ edit_app.app_name(style="width:300px",class="form-control adj-width-60",placeholder="App Name")}}
+                {% if edit_app.app_name.errors %}
+                {% for error in edit_app.app_name.errors %}
+                    <span class="span-error" >*{{error}}</span>
+                {% endfor %}
+                {% endif %}
+            </div>
+
+            <!-------App Code--------->
+            <div class="job-ad-group marginise-bottom">
+                {{ edit_app.app_code.label(class="labels")}}<br>
+                {{ edit_app.app_code(style="width:300px",class="form-control adj-width-60",placeholder="App code")}}
+                {% if edit_app.app_code.errors %}
+                {% for error in edit_app.app_code.errors %}
+                    <span class="span-error" >*{{error}}</span>
+                {% endfor %}
+                {% endif %}
+            </div>
+
+            <div>
+                {{ edit_app.submit(class="btns") }}
+                
+            </div>
+
+        </form>
+</div>
+</section>
+
+{% endblock %}

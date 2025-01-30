@@ -1,0 +1,223 @@
+<!-- #Download  -->
+
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .form-fields{
+        display:flex;
+        flex-direction:column;
+        a{
+            color:none
+        }
+    }
+    .search-cont{background-color:;display: flex;justify-content:center;padding:10px}
+    .search-cont input{border: 1px solid grey;border-radius:10px;padding: 5px;}
+    /* section{ background-image:url(static/images/bg_service.png) } */
+</style>
+
+<div style="width:;margin:0 auto;background-color:;">
+    <!-- <a id="contact_us"></a> -->
+    <section style="background-color:;" id="" class="services hidden">
+        <!-- Flash message -->
+
+        <div class="flash-messages ">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for  category, message in messages %}
+                        <div class="flash-messages alert-{{category}}"> {{message}}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div><br>
+
+    </section>
+</div>
+ 
+<br>
+
+<section id="sect-mobile" style="flex-wrap: wrap;background-color: ;" class="container gen-flex">
+
+    <div style="background-color:;" class="parent-img-cont">
+
+        <div style="flex-wrap: wrap;max-width: 600px;margin:5px auto" class="images-container flat-flex">
+            {%set by_who = user.query.get(image.uid)%}
+            <div class="img-card">
+                <div id="img-display" class="imag-dwnl"><img id="image" class="img-display"  src="static/uploads/usr_images/{{image.image_thumbnail}}" /></div>
+            </div>
+        </div><br>
+        
+        <h4 style="color:rgb(27, 27, 27);max-width: 600px;margin:0 auto">{{image.img_name}}</h4>
+        <div style="font-size: 14px;color:rgb(82, 82, 82);max-width: 600px;margin:0 auto">{{image.description}}</div>
+        
+        <br>
+        
+
+    </div>
+
+    <div class="download-sec">
+        <div style="background-color: ;">
+
+            <div style="width:max-content;margin:0px auto;min-height: 200px;" class="show-img-dv">
+                <!-- <img style="" scr="static/icons/downloads_.png" /> -->
+                <a href="static/uploads/usr_images/{{image.image_thumbnail}}" download="{{image.image_thumbnail}}">
+                    <div class="download-tabs free-dwnld gen-flex"><span>DOWNLOAD</span><img style="height:35px;opacity:0.5" src="static/icons/downloads_.png" /></div>
+                </a>
+                <br>
+                <div class="download-tabs paid-dwnld gen-flex"><span>PURCHASE</span><img style="height:35px;opacity:0.5" src="static/icons/money-icon_.png" /></div>
+            </div>
+
+            <div class="user-info gen-flex-col">
+                {%if by_who.images | length <= 5%}
+                    <div class="contr-class-1">Image Contributor</div><br>
+                {%elif by_who.images | length <= 10 and by_who.images | length > 5%}
+                    <div class="contr-class-1 contr-class-2">Image Contributor</div><br>
+                {%endif%}
+                <div style="" class="img-cont">
+                    <div width="90%"><img class="prf-image" src="static/images/{{by_who.image}}" alt=""/></div>
+                </div><br>
+                <h3 style="margin-bottom: 0;text-align: left;">{{by_who.name}}</h3>
+                <div class="icons-cont"><h4 style="color:rgb(59, 59, 59)">Uploads: {{by_who.images | length}}</h4></div>
+
+            </div>
+
+            <small class="by"></small>
+
+            <!-- <p class="describe-img"></p> -->
+
+        </div>     
+    </div>
+    <br>
+    <br>
+    <!-- <div style="align-items:flex-start;width:100%;padding:7px" class="nd-child gen-flex-col" id="nd-child">
+        <div style="justify-content: flex-start;gap:5px" class="nd-child gen-flex">
+            <a href="/image_form" ><div  class="btns">Upload</div></a>
+            <a href="/signup" ><div class="btns">Sign Up</div></a>
+        </div>
+        <div  class="t-info-t">Documenting Eswatini Scenario into Images</div>
+        <div  class="t-info">Powered by <span>EmaSwati</span></div>
+        <div class="t-info">Developed by <span>Tech Xolutions (TechX)</span></div>
+    </div> -->
+
+</section><br><br>
+
+
+<script>
+    // quoteBtns.forEach(function(btn){
+        function displayImage(image,imgname,by_who) {
+            console.log(image);
+            let mainImg = document.querySelector("#show-img");
+            let nameImg = document.querySelector(".img-name");
+            let describeImg = document.querySelector(".describe-img");
+            let displyCont = document.querySelector(".display-img");
+            let by = document.querySelector(".by");
+
+            let imageUrl = "static/uploads/usr_images/thumbnails/" + image + "?t=" + new Date().getTime();
+            
+            displyCont.classList.add("showIt");
+
+            mainImg.src = imageUrl;
+
+            nameImg.innerHTML = imgname;
+            by.innerHTML = "by " + by_who;
+            // describeImg.innerHTML = describeImg;
+
+            console.log("Name: ", nameImg.innerHTML);
+            console.log("Image: ", mainImg.src);
+
+            mainImg.onerror = function() {
+                console.error("Image failed to load:", imageUrl);
+                // Optionally, set a fallback image
+                mainImg.src = "path/to/fallback-image.jpg";
+            };
+        }
+
+    function revealIcons(id){
+        
+        let btn = document.querySelector("#reveal-icons-btns-"+id);
+        let icons = document.querySelector("#other-pltfms-"+id);
+        icons.classList.toggle("reveal-icons");
+
+        if (btn.innerHTML.trim() === "+more") {
+            btn.innerHTML = "less";
+            // btn.classList.toggle("btns-inverted")
+        } else {
+            btn.innerHTML = "+more";
+            
+        }
+    }
+
+    
+    const listIcon = document.querySelector("#list");
+    const blocksIcon = document.querySelector("#blocks");
+
+    listIcon.addEventListener("click", function(){
+
+        window.location.href = "/?icon=listview";
+        // listIcon.classList.add('active') ;
+
+    });
+
+    blocksIcon.addEventListener("click", function(){
+
+        window.location.href = "/?icon=blockview";
+        // console.log("Blocks Icon CLicked");
+
+    });
+
+
+
+document.getElementById('scroll-left').addEventListener('click', function() {
+    const container = document.querySelector('#view-cont');
+    const imgContainer = document.querySelector('.scroll-container');
+    const firstImg = document.querySelector('img');
+    // if (!firstImg) return;
+    const imageWidth = firstImg.clientWidth;
+    
+    if (window.innerWidth >= 600){
+        container.scrollBy({
+            left: -600, // Adjust this value to match the height of visible area
+            behavior: 'smooth'
+        });
+    }else{
+        container.scrollBy({
+            left: -220, // Adjust this value to match the height of visible area
+            behavior: 'smooth'
+        });
+    }
+});
+
+document.getElementById('scroll-right').addEventListener('click', function() {
+    console.log("Testing");
+    const container = document.querySelector('#view-cont');
+    const imgContainer = document.querySelector('.scroll-container');
+    const firstImg = document.querySelector('img');
+    // if (!firstImg) return;
+    const imageWidth = firstImg.clientWidth;
+    
+    if (window.innerWidth >= 600){
+        container.scrollBy({
+            left: 600, // Adjust this value to match the height of visible area
+            behavior: 'smooth'
+        });
+    }else{
+        container.scrollBy({
+            left: 220, // Adjust this value to match the height of visible area
+            behavior: 'smooth'
+        });
+    }
+});
+
+function trackClick(link,name) {
+        // Send a fetch request to the Flask endpoint to log the click
+        fetch('/track_click', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ clicked_link: link,appnm:name })
+        });
+    }
+
+</script>
+{% endblock %}

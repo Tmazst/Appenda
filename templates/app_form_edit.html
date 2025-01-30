@@ -1,0 +1,374 @@
+
+{% extends "base.html" %}
+{% block content %}
+
+
+    <div style="z-index:1001" class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for  category, message in messages %}
+                    <div class="flash-messages alert-{{category}}"> {{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <section id="" class="container">
+    <div class="form-container">
+        <div class="space-filler"></div>
+    <div><h2 style="border:none" class="sub-topic-details" >Account</h2><br>
+    <small></small>
+    </div>
+    <div class="line"></div><br>
+
+    <div style="" class="img-cont">
+        <img class="prf-image" src="{{url_for('static', filename='images/app_info.app_icon')}}" alt=""/>
+    </div class="flex-center">
+
+    <h4 class="acc-name">{{app_info.name}}</h4>
+    <form style="background-color: f8db5a;width:;"  _lpchecked="1" action="" method="post" enctype="multipart/form-data">
+        <div><small style="border:none" class="form-groups-subs">App Details</small></div><br>
+        
+        <!-------name--------->
+        <div class="job-ad-group marginise-bottom">
+            {{ app_form_update.hidden_tag() }}
+            {{ app_form_update.name.label(class="labels")}}<br>
+            {{ app_form_update.name(class="form-control adj-width-60",placeholder="name",value=app_info.name)}}
+            {% for error in app_form_update.name.errors %}
+                <span class="span-error" >*{{error}}</span>
+            {% endfor %}
+        </div>
+
+        
+        <!-------App Category--------->
+        <div class="job-ad-group marginise-bottom">
+            {{ app_form_update.app_category_ed.label(class="labels")}}
+            {% if app_info.app_category %}
+                {{ app_form_update.app_category_ed(class="form-control adj-width-60",value=app_info.app_category)}}<br>
+            {%else%}
+                {{ app_form_update.app_category_ed(class="form-control adj-width-60",placeholder="app_categorys")}}<br>
+            {%endif%}
+            
+            {% if app_form_update.app_category_ed.errors %}
+            {% for error in app_form_update.app_category_ed.errors %}
+                <span class="span-error" >*{{error}}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
+ 
+
+        <!-------Description--------->
+        <div class="job-ad-group marginise-bottom">
+            {{ app_form_update.description.label(class="labels")}}<br>
+            {% if app_info.description %}
+                <textarea style="height:70px" class="form-control" name="description">
+                    {{app_info.description.strip()}}
+                </textarea>
+                <br>
+            {%else%}
+            <textarea style="height:70px" class="form-control" name="description"></textarea><br>
+            {%endif%}
+        </div>
+
+     
+
+        <!-------version_number--------->
+        <div class="job-ad-group marginise-bottom">
+            {{ app_form_update.version_number.label(class="labels")}}
+            {% if app_info.version_number %}
+                {{ app_form_update.version_number(class="form-control adj-width-60",value=app_info.version_number)}}<br>
+            {%else%}
+                {{ app_form_update.version_number(class="form-control adj-width-60",placeholder="version number")}}<br>
+            {%endif%}
+            
+            {% if app_form_update.version_number.errors %}
+            {% for error in app_form_update.version_number.errors %}
+                <span class="span-error" >*{{error}}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-------Play Store--------->
+        <div class="job-ad-group marginise-bottom">
+
+            {{ app_form_update.playstore_link.label(class="labels")}}
+            {% if app_info.playstore_link  %}
+                {{ app_form_update.playstore_link(class="form-control adj-width-60",placeholder="e.g https://www.playstore_link.com",value=app_info.playstore_link)}}<br>
+            {%else%}
+                {{ app_form_update.playstore_link(class="form-control adj-width-60",placeholder="e.g https://www.playstore_link.com")}}<br>
+            {%endif%}
+            
+            {% if app_form_update.playstore_link.errors %}
+            {% for error in app_form_update.playstore_link.errors %}
+                <span class="span-error" >*{{error}}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-------iOS Store--------->
+        <div class="job-ad-group marginise-bottom">
+
+            {{ app_form_update.ios_link.label(class="labels")}}
+            {% if app_info.ios_link  %}
+                {{ app_form_update.ios_link(class="form-control adj-width-60",placeholder="e.g https://www.ios_link.com",value=app_info.ios_link)}}<br>
+            {%else%}
+                {{ app_form_update.ios_link(class="form-control adj-width-60",placeholder="e.g https://www.ios_link.com")}}<br>
+            {%endif%}
+            
+            {% if app_form_update.ios_link.errors %}
+            {% for error in app_form_update.ios_link.errors %}
+                <span class="span-error" >*{{error}}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-------Uptodown--------->
+        <div class="job-ad-group marginise-bottom">
+
+            {{ app_form_update.uptodown_link.label(class="labels")}}
+            {% if app_info.uptodown_link  %}
+                {{ app_form_update.uptodown_link(class="form-control adj-width-60",placeholder="e.g https://www.uptodown_link.com",value=app_info.uptodown_link)}}<br>
+            {%else%}
+                {{ app_form_update.uptodown_link(class="form-control adj-width-60",placeholder="e.g https://www.uptodown_link.com")}}<br>
+            {%endif%}
+            
+            {% if app_form_update.uptodown_link.errors %}
+            {% for error in app_form_update.uptodown_link.errors %}
+                <span class="span-error" >*{{error}}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-------Huawei Link--------->
+        <div class="job-ad-group marginise-bottom">
+            {{ app_form_update.huawei_link.label(class="labels")}}
+            {% if app_info.platform %}
+                {{ app_form_update.huawei_link(class="form-control adj-width-60",value=app_info.huawei_link)}}<br>
+            {%else%}
+                {{ app_form_update.huawei_link(class="form-control adj-width-60",placeholder="Huawei Link")}}<br>
+            {%endif%}
+            
+            {% if app_form_update.huawei_link.errors %}
+            {% for error in app_form_update.huawei_link.errors %}
+                <span class="span-error" >*{{error}}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-------ApkPure Link--------->
+        <div class="job-ad-group marginise-bottom">
+            {{ app_form_update.apkpure_link.label(class="labels")}}
+            {% if app_info.platform %}
+                {{ app_form_update.apkpure_link(class="form-control adj-width-60",value=app_info.apkpure_link)}}<br>
+            {%else%}
+                {{ app_form_update.apkpure_link(class="form-control adj-width-60",placeholder="APK Pure Link")}}<br>
+            {%endif%}
+            
+            {% if app_form_update.apkpure_link.errors %}
+            {% for error in app_form_update.apkpure_link.errors %}
+                <span class="span-error" >*{{error}}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-------web_link--------->
+        <div class="job-ad-group marginise-bottom">
+
+            {{ app_form_update.web_link.label(class="labels")}}
+            {% if app_info.web_link  %}
+                {{ app_form_update.web_link(class="form-control adj-width-60",placeholder="e.g https://www.web_link.com",value=app_info.web_link)}}<br>
+            {%else%}
+                {{ app_form_update.web_link(class="form-control adj-width-60",placeholder="e.g https://www.web_link.com")}}<br>
+            {%endif%}
+            
+            {% if app_form_update.web_link.errors %}
+            {% for error in app_form_update.web_link.errors %}
+                <span class="span-error" >*{{error}}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-------facebook--------->
+        <div class="job-ad-group marginise-bottom">
+
+            {{ app_form_update.facebook_link.label(class="labels")}}
+            {% if app_info.facebook_link  %}
+                {{ app_form_update.facebook_link(class="form-control adj-width-60",placeholder="e.g https://www.facebook_link.com",value=app_info.facebook_link)}}<br>
+            {%else%}
+                {{ app_form_update.facebook_link(class="form-control adj-width-60",placeholder="e.g https://www.facebook_link.com")}}<br>
+            {%endif%}
+            
+            {% if app_form_update.facebook_link.errors %}
+            {% for error in app_form_update.facebook_link.errors %}
+                <span class="span-error" >*{{error}}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
+        <!-- <p style="margin:0 5px;">   </p> -->
+
+        <!-------Twitter Link--------->
+        <div class="job-ad-group marginise-bottom">
+
+            {{ app_form_update.x_link.label(class="labels")}}
+            {% if app_info.x_link  %}
+                {{ app_form_update.x_link(class="form-control adj-width-60",placeholder="e.g https://www.twitter.com",value=app_info.x_link)}}<br>
+            {%else%}
+                {{ app_form_update.x_link(class="form-control adj-width-60",placeholder="e.g https://www.twitter.com")}}<br>
+            {%endif%}
+            
+            {% if app_form_update.x_link.errors %}
+            {% for error in app_form_update.x_link.errors %}
+                <span class="span-error" >*{{error}}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-------Youtube Link--------->
+        <div class="job-ad-group marginise-bottom">
+
+            {{ app_form_update.youtube_link.label(class="labels")}}
+            {% if app_info.youtube_link  %}
+                {{ app_form_update.youtube_link(class="form-control adj-width-60",value=app_info.youtube_link)}}<br>
+            {%else%}
+                {{ app_form_update.youtube_link(class="form-control adj-width-60",placeholder="e.g https://www.youtube.com")}}<br>
+            {%endif%}
+            
+            {% if app_form_update.youtube_link.errors %}
+            {% for error in app_form_update.youtube_link.errors %}
+                <span class="span-error" >*{{error}}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-------LinkedIn Link--------->
+        <div class="job-ad-group marginise-bottom">
+            {{ app_form_update.linkedin_link.label(class="labels")}}
+            {% if app_info.linkedin_link is not none %}
+                {{ app_form_update.linkedin_link(class="form-control adj-width-60",value=app_info.linkedin_link)}}<br>
+            {%else%}
+                {{ app_form_update.linkedin_link(class="form-control adj-width-60",placeholder="LinkedIn Link")}}<br>
+            {%endif%}
+            
+            {% if app_form_update.linkedin_link.errors %}
+            {% for error in app_form_update.linkedin_link.errors %}
+                <span class="span-error" >*{{error}}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-------github_link--------->
+        <div class="job-ad-group marginise-bottom">
+            {{ app_form_update.github_link.label(class="labels")}}
+            {% if app_info.github_link is not none %}
+                {{ app_form_update.github_link(class="form-control adj-width-60",value=app_info.github_link)}}<br>
+            {%else%}
+                {{ app_form_update.github_link(class="form-control adj-width-60",placeholder="Github Link")}}<br>
+            {%endif%}
+            
+            {% if app_form_update.github_link.errors %}
+            {% for error in app_form_update.github_link.errors %}
+                <span class="span-error" >*{{error}}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-------App Icon--------->
+        <div class="job-ad-group marginise-bottom">
+            {{ app_form_update.app_icon.label(class="labels")}}
+            {% if app_info.app_icon is not none %}
+                {{ app_form_update.app_icon(class="form-control adj-width-60",value=app_info.app_icon)}}<br>
+            {%else%}
+                {{ app_form_update.app_icon(class="form-control adj-width-60")}}<br>
+            {%endif%}
+            
+            {% if app_form_update.app_icon.errors %}
+            {% for error in app_form_update.app_icon.errors %}
+                <span class="span-error" >*{{error}}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-------Company Name--------->
+        <div class="job-ad-group marginise-bottom">
+            {{ app_form_update.company_name.label(class="labels")}}
+            {% if app_info.company_name is not none %}
+                {{ app_form_update.company_name(class="form-control adj-width-60",value=app_info.company_name)}}<br>
+            {%else%}
+                {{ app_form_update.company_name(class="form-control adj-width-60",placeholder="Company Name")}}<br>
+            {%endif%}
+            
+            {% if app_form_update.company_name.errors %}
+            {% for error in app_form_update.company_name.errors %}
+                <span class="span-error" >*{{error}}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-------Company Contacts--------->
+        <div class="job-ad-group marginise-bottom">
+            {{ app_form_update.company_contact.label(class="labels")}}
+            {% if app_info.company_contact is not none %}
+                {{ app_form_update.company_contact(class="form-control adj-width-60",value=app_info.company_contact)}}<br>
+            {%else%}
+                {{ app_form_update.company_contact(class="form-control adj-width-60",placeholder="Company Contact")}}<br>
+            {%endif%}
+            
+            {% if app_form_update.company_contact.errors %}
+            {% for error in app_form_update.company_contact.errors %}
+                <span class="span-error" >*{{error}}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-------Company Email--------->
+        <div class="job-ad-group marginise-bottom">
+            {{ app_form_update.company_email.label(class="labels")}}
+            {% if app_info.company_email is not none %}
+                {{ app_form_update.company_email(class="form-control adj-width-60",value=app_info.company_email)}}<br>
+            {%else%}
+                {{ app_form_update.company_email(class="form-control adj-width-60",placeholder="Company email")}}<br>
+            {%endif%}
+            
+            {% if app_form_update.company_email.errors %}
+            {% for error in app_form_update.company_email.errors %}
+                <span class="span-error" >*{{error}}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-------Edited By--------->
+        <div class="job-ad-group marginise-bottom">
+            {{ app_form_update.edited_by.label(class="labels")}}
+            {% if app_info.edited_by is not none %}
+                {{ app_form_update.edited_by(class="form-control adj-width-60",value=app_info.edited_by)}}<br>
+            {%else%}
+                {{ app_form_update.edited_by(class="form-control adj-width-60",placeholder="e.g Sipho Soko, Communications")}}<br>
+            {%endif%}
+            {% if app_info.edited.strftime %}
+                <label style="font-size:11px;font-weight:600">Last Edit by: {{app_info.edited_by}}  {{app_info.edited.strftime("%d %b %y  %HH:%MM")}}</label>
+            {% endif %}
+            {% if app_form_update.edited_by.errors %}
+            {% for error in app_form_update.edited_by.errors %}
+                <span class="span-error" >*{{error}}</span>
+            {% endfor %}
+            {% endif %}
+        </div><br>
+
+        <!-------Unpublish--------->
+        <label style="font-size:13px;font-weight:600;color:rgb(124, 124, 124)">Should You Consider to unpublish your app, un-tick below.</label>
+        <div class="job-ad-group marginise-bottom">
+            {{ app_form_update.publish.label(class="labels")}}
+            {{ app_form_update.publish(style="width:100px",class="form-control adj-width-60")}}<br>
+        </div><br>
+
+
+        <div>
+            {{ app_form_update.submit(class="btns", value="Update") }}
+            <!--<input class="btns" type="submit" value="Create Account" />-->
+    </div>
+
+    </form>
+</div>
+</section><div class="space-filler"></div><br><br>
+
+{% endblock %}
