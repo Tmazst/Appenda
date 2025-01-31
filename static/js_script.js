@@ -47,6 +47,15 @@
 //}
 //window.onscroll = function() {handleScroll()};
 
+
+// Trim words 
+if(window.innerWidth <= 700){
+    var usr = document.querySelector('#navlink');
+    var trimmed = usr.innerHTML.substring(0,5);
+    usr.innerHTML = trimmed+"...";
+    console.log('Smartphone View');
+}
+
  // Save the scroll position before the page unloads
  window.addEventListener('beforeunload', () => {
     localStorage.setItem('scrollPosition', window.scrollY);

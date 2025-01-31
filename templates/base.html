@@ -40,15 +40,15 @@
           </form>
       </div>
       <div style="background-color:" class="user">
-          <ul class="user-label gen-flex">
+          <div class="user-label gen-flex">
           {% if current_user.is_authenticated %}
-            <li><a class="" href="/account"><span style="font-size:13px" class="nav-link">{{current_user.name}}</span></a></li>
-            <li><a href="/logout"><img class="logout-icon" style="height:40px" src="static/icons/logout-icon.webp"></a></li>
+            <div><a class="" href="/account"><span id="navlink" style="font-size:13px" class="nav-link">{{current_user.name}}</span></a></div>
+            <div><a href="/logout"><img class="logout-icon" style="height:40px" src="static/icons/logout-icon.webp"></a></div>
           {% else %}
             <li><a class="btns-outlined links-user" href="/login">Login</a></li>
             <!-- <li><a class="btns-user links-user" href="/client_signup">Register</a></li> -->
           {% endif %}
-          </ul>
+          </div>
       </div>
       
     </div>

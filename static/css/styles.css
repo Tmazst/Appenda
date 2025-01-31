@@ -2708,7 +2708,7 @@ to{
 @media all and (max-width: 575px){
 
     #search-cat {
-        min-width: 400px;
+        /* min-width: 400px; */
     }
 
     #filter-info{
@@ -2842,7 +2842,7 @@ to{
 }
 
 .nav-link:hover{
-    letter-spacing: 4px;
+    /* letter-spacing: 4px; */
     color:var(--main2-color)
 }
 
