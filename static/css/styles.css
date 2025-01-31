@@ -2711,6 +2711,14 @@ to{
         /* min-width: 400px; */
     }
 
+    .login-cont{
+        width:100%;
+        /* background-color: #00a550; */
+        /* margin:0 auto;
+        padding-right:20px */
+    }
+    
+
     #filter-info{
         display: none;
     }
@@ -2732,6 +2740,16 @@ to{
     flex-direction: column !important;
     width:100% !important;
     padding: 0;
+}
+
+.bg-class-lgn {
+    width: 100%;
+    height: max-content;
+    background-color: var(--main-color);
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 20px;
+    margin-left: -14px;
 }
 
 .upload-class{
