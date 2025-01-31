@@ -273,6 +273,7 @@ div{
 
 .nd-child{
     width:100%;
+    padding:5px;
     /* background-color: #807e7e; */
 }
 
@@ -280,6 +281,7 @@ div{
     width:100%;
     display: none !important;
     position:relative;
+    padding:5px;
 }
 
 .show-caption{

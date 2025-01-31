@@ -84,6 +84,7 @@
                     <div  class="t-info-t">{{img.img_name}} ({{img.image_category}})</div>
                     <div  class="t-info">{{img.description}}<span></span></div>
                     <div class="t-info">Image by <span>{{by_who}}</span></div>
+                    <a id="mobile-del-id" href="/delete_file?im={{img.id}}"><img class="svg-icons" style="" src="static/icons/delete-icon.png"></a> 
                     <a href="/download_img?img_id={{img.id}}"  ><img class="svg-icons phone-dnwl-icon" src="static/icons/download-icon.svg" /></a>
                 </div>
                 {%endif%}
