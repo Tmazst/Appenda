@@ -12,16 +12,7 @@ class Register(FlaskForm):
     email = StringField('email', validators=[DataRequired(),Email()])
     password = PasswordField('password', validators=[DataRequired(), Length(min=8, max=64)])
     confirm = PasswordField('confirm', validators=[DataRequired(),EqualTo('password'), Length(min=8, max=64)])
-    contacts = TelField('Contact(s)', validators=[Optional()])
-    gender =  RadioField('Gender',choices=[("Male", "Male"),("Female", "Female")], validators=[Optional()])
-    town = StringField('Your Town (Optional)', validators=[Optional()])
-    region = SelectField('Region (Optional)', validators=[Optional()],choices=[("Manzini", "Manzini"),("Hhohho", "Hhohho"),
-        ("Shiselweni", "Shiselweni"),("Lobombo", "Lobombo")])
-    address = StringField('Phy. Address (Optional)', validators=[Optional()])
     
-    # zip_code = StringField('Zip Code / Postal Code', validators=[Length(min=0, max=64)])
-    # address = StringField('Physical Address', validators=[DataRequired(), Length(min=8, max=100)])
-    image_pfl = FileField('Profile Image', validators=[FileAllowed(['jpg','png'])])
 
     submit = SubmitField('Create Account!')
 
@@ -33,6 +24,19 @@ class Register(FlaskForm):
         if user_email:
             return ValidationError(f"Email already registered in this platform")
 
+class AccountForm(FlaskForm):
+    contacts = TelField('Contact(s)', validators=[Optional()])
+    gender =  RadioField('Gender',choices=[("Male", "Male"),("Female", "Female")], validators=[Optional()])
+    town = StringField('Your Town (Optional)', validators=[Optional()])
+    region = SelectField('Region (Optional)', validators=[Optional()],choices=[("Manzini", "Manzini"),("Hhohho", "Hhohho"),
+        ("Shiselweni", "Shiselweni"),("Lobombo", "Lobombo")])
+    address = StringField('Phy. Address (Optional)', validators=[Optional()])
+    
+    # zip_code = StringField('Zip Code / Postal Code', validators=[Length(min=0, max=64)])
+    # address = StringField('Physical Address', validators=[DataRequired(), Length(min=8, max=100)])
+    image = FileField('Profile Image', validators=[FileAllowed(['jpg','png'])])
+
+    submit = SubmitField('Update')
 
 
 class ImagesForm(FlaskForm):

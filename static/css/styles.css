@@ -276,6 +276,16 @@ div{
     /* background-color: #807e7e; */
 }
 
+.img-caption{
+    width:100%;
+    display: none !important;
+    position:relative;
+}
+
+.show-caption{
+    display:flex !important;
+}
+
 
 .container{
     width:90%;
@@ -341,6 +351,8 @@ div{
     padding:5px 7px;
 }
 
+
+
 .contr-class-2{
     background-color: #054ce4;
 }
@@ -350,6 +362,13 @@ div{
     width:120px;
     bottom:15px;
     right:10px
+}
+
+del{
+    position: absolute;
+    bottom:15px;
+    left:10px
+
 }
 
 .captions{
@@ -820,11 +839,21 @@ section{
 .hyper-links{
     width:0px;
     height:0px;
-    //background-color:red;
 }
 
 .svg-icons{
     height: 30px;
+    transition:all 0.3s ease;
+}
+
+.svg-icons:hover{
+    transform:scale(0.8);
+}
+
+.phone-dnwl-icon{
+    position:absolute;
+    right:10px;
+    bottom:10px;
 }
 
 .general-flex-row{
@@ -2343,6 +2372,7 @@ to{
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px); /* For legacy Safari support */
     background-color: rgba(255, 255, 255, 0.4); /* Fallback color */
+    border-radius:15px;
 }
 
 /* .user{
@@ -2701,6 +2731,10 @@ to{
     z-index:500;
 }
 
+.search-cont{
+    padding-right:5px;
+}
+
 .display-img{
     position:relative
 }
@@ -2789,7 +2823,8 @@ to{
 }
 .menu-icon{
     left:5px;
-    top:76px;
+    top:65px;
+    background-color:#e0e0e0
 }
 
 .cat-subtitle{

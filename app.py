@@ -19,7 +19,13 @@ import itsdangerous
 import random
 import json
 from PIL import Image
+import threading
+# from celery import Celery
 import re
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
 # import sqlite3
 # import pymysql
 # import pyodbc
@@ -38,15 +44,28 @@ else:
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle':280}
 app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["CELERY_BROKER_URL"] = "redis://localhost:6379/0"
+app.config["CELERY_RESULT_BACKEND"] = "redis://localhost:6379/0"
 app.config["UPLOADED"] = 'static/uploads/usr_images'
 app.config["THUMBS"] = 'static/uploads/usr_images/thumbnails'
 
+
+# def make_celery(app):
+#     celery = Celery(
+#         app.import_name,
+#         backend=app.config["CELERY_RESULT_BACKEND"],
+#         broker=app.config["CELERY_BROKER_URL"],
+#     )
+#     celery.conf.update(app.config)
+#     return celery
 
 oauth = OAuth(app)
 # Initialise App with DB 
 db.init_app(app)
 
 application = app
+
+# run_celery = make_celery(app) 
 
 #Login Manager
 login_manager = LoginManager(app)
@@ -61,47 +80,40 @@ if os.path.exists('client.json'):
 def load_user(user_id):
     return User.query.get(user_id)
 
+
+
 def compress_image(image_path, target_size_kb):
-    #e.g. static/images/usr_images/sipho_2/thumbs
     thumbnail_dir = app.config["THUMBS"]
 
     if not os.path.exists(thumbnail_dir):
         os.makedirs(thumbnail_dir)
 
-    # Open an image file
     with Image.open(image_path) as img:
+        img = img.convert('RGB')
 
-        # try:
-        img = img.convert('RGB')  # Convert to RGB for compatibility with JPEG
-        # if img.mode in ('RGBA', 'LA'):
-        #     img = img.convert('RGB')  # Convert to RGB
-        # elif img.mode == 'L':
-        #     img = img.convert('L')  # Convert to L if you want to keep it grayscale without alpha
-
-        # Calculate quality based on the target size
-        quality = 85  # Starting quality
-
+        # Gradually reduce resolution
+        max_width, max_height = img.size
         while True:
-            print("Debug Co,pression: ",image_path,thumbnail_dir)
             file = os.path.basename(image_path)
-            # Save to a temporary file to check the size
-            # temp_file = image_path.replace(os.path.splitext(image_path)[1], "_temp.jpg")
-            img.save(os.path.join(thumbnail_dir,file), format='JPEG', quality=quality)
+            temp_file = os.path.join(thumbnail_dir, file)
+
+            # Save to check size
+            img.save(temp_file, format="WEBP", quality=85)
 
             # Check size
-            if os.path.getsize(thumbnail_dir) <= target_size_kb * 1024:  # Convert KB to bytes
-                break
-            quality -= 5  # Decrease quality to reduce file size
-
-            if quality < 10:  # Minimum quality threshold
+            if os.path.getsize(temp_file) <= target_size_kb * 1024:  # Convert KB to bytes
+                print(f"Image successfully compressed to target size: {os.path.getsize(temp_file) / 1024} KB")
                 break
 
-            # Move the temp file to the original file name or save as a new file
-            # os.replace(temp_file, image_path)
-            
-        # except Exception as e:
-        #     print(f"Error standardizing image input: {e}")
-        #     return None 
+            # Dynamically reduce resolution
+            max_width = int(max_width * 0.9)
+            max_height = int(max_height * 0.9)
+            img = img.resize((max_width, max_height), Image.Resampling.LANCZOS)
+
+            if max_width < 100 or max_height < 100:  # Safety check for very small images
+                print("Minimum dimensions reached. Could not achieve target size.")
+                break
+
 
 def process_file(file,usr):
         global img_checker
@@ -127,13 +139,42 @@ def process_file(file,usr):
         if file.filename:
             new_path =os.path.join(file_path,new_file_name)
             file_saved = file.save(new_path)
-            compress_image(new_path,target_size_kb=90)
+            threading.Thread(target=compress_image, args=(new_path,),kwargs={"target_size_kb":90}).start()
+
             flash(f"File Upload Successful!!", "success")
 
             return new_file_name
 
         # else:
         #     return f"Allowed are [ .png, .jpg, .jpeg, .gif] only"
+
+
+def process_profile(file,usr):
+    
+    print("Check File: ",file)
+    if isinstance(file, str):
+        return file
+    else:
+        filename = secure_filename(file.filename)
+
+        _img_name, _ext = os.path.splitext(filename)
+        gen_random = secrets.token_hex(8)
+        new_file_name = gen_random + _ext
+
+        if file.filename == '':
+            return 'No selected file'
+
+        print("DEBUG FILE NAME: ", file.filename)
+        file_path = os.path.join("static/images", new_file_name)
+        
+        # Save the file first
+        file.save(file_path)
+        
+        # Compress the image to ~90KB
+        compress_image(file_path, target_size_kb=90)
+
+        # flash("File Upload Successful!!", "success")
+        return new_file_name
 
 if os.path.exists('client.json'):
     appConfig = {
@@ -164,12 +205,18 @@ def createall(db):
 #Password Encryption
 encrypt_password = Bcrypt()
 
+# Define a custom filter
+@app.template_filter('file_exists')
+def file_exists_filter(filepath):
+    return os.path.exists(filepath)
+
 
 #Populating variables across all routes
 @app.context_processor
 def inject_ser():
 
-    return dict(ser=ser) #universal
+    return dict(ser=ser,os=os) #universal
+
 
 
 @app.route("/", methods=['POST','GET'])
@@ -195,6 +242,73 @@ def home():
         layout = request.args.get('icon')
 
     return render_template("index.html", images=images, layout=layout, categories=categories,usr_obj=User,chck_len=chck_len)
+
+# logging.info(f"{file_path} has been deleted.")
+
+#Delete Files in Thumbnail Folder
+def delete_files_thmb(file):
+
+    file_path = os.path.join(app.config["THUMBS"],file) 
+
+    try:
+        os.remove(file_path)
+        logging.info(f"{file_path} has been deleted.")
+        return True
+    except FileNotFoundError:
+        logging.warning(f"The file {file_path} does not exist.")
+        return False
+    except PermissionError:
+        logging.error(f"Permission denied: Unable to delete {file_path}.")
+        return False
+    except Exception as e:
+        logging.error(f"An error occurred: {e}")
+        return False
+
+
+logging.basicConfig(level=logging.INFO)
+
+
+# Function to delete files in the main directory
+def delete_files_maindir(file):
+    file_path = os.path.join(app.config["UPLOADED"], file)
+
+    try:
+        os.remove(file_path)
+        logging.info(f"{file_path} has been deleted.")
+        return True
+    except FileNotFoundError:
+        logging.warning(f"The file {file_path} does not exist.")
+        return False
+    except PermissionError:
+        logging.error(f"Permission denied: Unable to delete {file_path}.")
+        return False
+    except Exception as e:
+        logging.error(f"An error occurred: {e}")
+        return False
+
+
+@app.route('/delete-file', methods=['GET'])
+def delete_file():
+    req_img = request.args.get('im')
+    if not req_img:
+        return jsonify({"Error": "Missing 'im' parameter"}), 400
+
+    img = Images.query.get(req_img)
+    if not img:
+        return jsonify({"Error": f"No image found with ID {req_img}"}), 404
+
+    # Delete the image from the database
+    db.session.delete(img)
+    db.session.commit()
+
+    # Delete the associated file from the filesystem
+    if delete_files_maindir(img.image_thumbnail) and delete_files_thmb(img.image_thumbnail):
+        return jsonify({"Success": "Image Deleted Successfully"})
+    elif delete_files_maindir(img.image_thumbnail) or delete_files_thmb(img.image_thumbnail):
+        return jsonify({"Success": "Image Deleted"})
+    else:
+        return jsonify({"Error": "Failed to delete the image file from the file system."}), 500
+
 
 @app.route('/download_img', methods=['POST',"GET"])
 def download():
@@ -476,6 +590,7 @@ def image_form():
         db.session.commit()
 
         flash("Upload was Successful👍","success")
+        return redirect(url_for('home'))
 
     return render_template("image_form.html",app_form=app_form)
 
@@ -506,133 +621,6 @@ class Save_Values:
 @app.template_filter('remove_special_chars')
 def remove_special_chars(s):
     return re.sub(r'[^a-zA-Z0-9\s]', '', s)
-
-@app.route("/app_form_editor", methods=['POST','GET'])
-def app_form_editor(app_name=None,code=None):
-    # app_info=None
-    app_form_update = App_Info_Form()
-
-    if request.method == "GET" and request.args.get("code"):
-        app_info=App_Info.query.filter_by(app_code=ser.loads(request.args.get("code")).get('data'),name=request.args.get("app_name")).first()
-        # Save_Values.app_obj=app_info
-
-    # if not Save_Values.app_obj:
-    #     return jsonify({"Error":"Looks like something went wrong with the URL request, Please request a new link"})
-
-    if request.method == "POST":
-        app_info = App_Info.query.filter_by(app_code=ser.loads(request.args.get("code")).get('data'),name=request.args.get("app_name")).first()
-        if app_form_update.name.data:
-            app_info.name = app_form_update.name.data
-        if request.form.get("description"):
-            app_info.description = request.form.get("description").strip()
-        if app_form_update.version_number.data:
-            app_info.version_number = app_form_update.version_number.data
-        if app_form_update.app_category_ed.data:
-            app_info.app_category = app_form_update.app_category_ed.data
-        if app_form_update.playstore_link.data:
-            app_info.playstore_link = app_form_update.playstore_link.data
-        if app_form_update.facebook_link.data:
-            app_info.facebook_link = app_form_update.facebook_link.data
-        if app_form_update.whatsapp_link.data:
-            app_info.whatsapp_link = app_form_update.whatsapp_link.data
-        app_info.x_link = app_form_update.x_link.data
-        if app_form_update.linkedin_link.data:
-            app_info.linkedin_link = app_form_update.linkedin_link.data
-        if app_form_update.youtube_link.data:
-            app_info.youtube_link = app_form_update.youtube_link.data
-        if app_form_update.web_link.data:
-            app_info.web_link=app_form_update.web_link.data
-        if app_form_update.github_link.data:
-            app_info.github_link = app_form_update.github_link.data
-        if app_form_update.huawei_link.data:
-            app_info.huawei_link = app_form_update.huawei_link.data
-        if app_form_update.apkpure_link.data:
-            app_info.apkpure = app_form_update.apkpure_link.data
-        if app_form_update.company_name.data:
-            app_info.company_name = app_form_update.company_name.data
-        if app_form_update.company_contact.data:
-            app_info.company_contact = app_form_update.company_contact.data
-        if app_form_update.company_email.data:
-            app_info.company_email = app_form_update.company_email.data
-        if app_form_update.edited_by.data:
-            app_info.edited_by=app_form_update.edited_by.data
-
-        app_info.publish = app_form_update.publish.data
-        app_info.edited = datetime.now()
-
-        if app_form_update.app_icon.data:
-            # print("Check if there is data:",app_form_update.app_icon.data )
-            img_update = app_form_update.app_icon.data
-            app_info.app_icon = process_file(img_update)
-
-        db.session.commit()
-        flash("Update Successful","success")
-        return redirect(url_for("home"))
-        
-
-    return render_template("app_form_edit.html",app_form_update=app_form_update,app_info=app_info)
-
-
-@app.route("/app_form_edit/<token>", methods=['POST','GET'])
-def app_form_edit(token):
-    id_=None
-    app_form_update = App_Info_Form()
-    print("DEBUG EMAIL TOKEN LINK: ",token)
-    if token:
-        id_obj = App_Access_Credits.query.filter_by(token=token).first()
-        id_ = id_obj.app_id
-
-    app_info =App_Info.query.get(id_)
-
-    if not app_info:
-        return jsonify({"Error":"Looks like something went wrong with the URL Request, Please request a new link"})
-
-    if request.method == "POST" and app_info:
-        if app_form_update.name.data:
-            app_info.name = app_form_update.name.data
-        if request.form.get("description"):
-            app_info.description = request.form.get("description").strip()
-        if app_form_update.version_number.data:
-            app_info.version_number = app_form_update.version_number.data
-        if app_form_update.app_category_ed.data:
-            app_info.app_category = app_form_update.app_category_ed.data
-        if app_form_update.playstore_link.data:
-            app_info.playstore_link = app_form_update.playstore_link.data
-        if app_form_update.facebook_link.data:
-            app_info.facebook_link = app_form_update.facebook_link.data
-        if app_form_update.whatsapp_link.data:
-            app_info.whatsapp_link = app_form_update.whatsapp_link.data
-        app_info.x_link = app_form_update.x_link.data
-        if app_form_update.linkedin_link.data:
-            app_info.linkedin_link = app_form_update.linkedin_link.data
-        if app_form_update.youtube_link.data:
-            app_info.youtube_link = app_form_update.youtube_link.data
-        if app_form_update.web_link.data:
-            app_info.web_link=app_form_update.web_link.data
-        if app_form_update.github_link.data:
-            app_info.github_link = app_form_update.github_link.data
-        if app_form_update.huawei_link.data:
-            app_info.huawei_link = app_form_update.huawei_link.data
-        if app_form_update.apkpure_link.data:
-            app_info.apkpure = app_form_update.apkpure_link.data
-        if app_form_update.company_name.data:
-            app_info.company_name = app_form_update.company_name.data
-        if app_form_update.company_contact.data:
-            app_info.company_contact = app_form_update.company_contact.data
-        if app_form_update.company_email.data:
-            app_info.company_email = app_form_update.company_email.data
-
-        app_info.publish = app_form_update.publish.data
-
-        if app_form_update.app_icon.data:
-            print("Check if there is data:",app_form_update.app_icon.data )
-            img_update = app_form_update.app_icon.data
-            app_info.app_icon = process_file(img_update)
-
-        db.session.commit()
-        flash("Update Successful","success")
-
-    return render_template("app_form_edit.html",app_form_update=app_form_update,app_info=app_info)
 
 
 @app.route("/signup", methods=["POST","GET"])
@@ -674,11 +662,11 @@ def sign_up():
     return render_template("signup_form.html",register=register)
 
 # User Account
-@app.route("/user_account", methods=["POST", "GET"])
+@app.route("/account", methods=["POST", "GET"])
 def user_account():
 
     usr_account=gen_user.query.get(current_user.id)
-    account_form = Register(obj=usr_account)
+    account_form = AccountForm(obj=usr_account)
 
     if account_form.validate_on_submit():
 
@@ -689,15 +677,19 @@ def user_account():
             usr_account.address=account_form.address.data
             
             if account_form.image.data:
-                usr_account.image = process_file(account_form.image.data)
+                usr_account.image = process_profile(account_form.image.data,usr_account)
 
             # try:
             db.session.commit()
             flash(f"Update Successful!", "success")
             print("Update Successful!")
+            return redirect(url_for('user_account'))
+    else:
+        if account_form.errors:
+            for error in account_form:
+                print("ERROR: ",error)
 
-
-    return render_template('user_account.html',account_form =account_form, usr_account=usr_account)
+    return render_template('account.html',account_form =account_form, usr_account=usr_account)
 
 #Verification Pending
 @app.route("/login", methods=["POST","GET"])

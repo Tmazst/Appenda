@@ -24,26 +24,25 @@
         <div width="90%"><img class="prf-image" src="static/images/{{usr_account.image}}" alt=""/></div>
     </div><br>
     <h4 style="margin-bottom: 0;text-align:left">{{usr_account.name}}</h4>
-    <div style="" class="icons-cont"><img class="icons" src='static/icons/email-icon.png' /><small class="">{{usr_account.email}}</small></div>
-    <div style="" class="icons-cont"><img class="icons" src='static/icons/church-icon.png' />{% if usr_account.church_local %}<small class="">{{usr_account.church_local}},</small></div>
-    <small style="" class="">{{usr_account.church_zone}}, {{usr_account.church_mission}}</small>{% else %}<a href="/account_form">Finish Sign-up</a>{% endif %} <br>
+    <div style="" class="icons-cont"><small class="">{{usr_account.email}}</small></div>
+    <div style="" class="icons-cont"><small class="">{%if usr_account.timestamp %}{{usr_account.timestamp.strftime("%d %b %Y")}}</small> {%endif%}<br></div>
     {% if usr_account.role == "admin_user" %}
         <small style="color:rgb(149, 151, 151);" class="">Admin</small>
     {% endif %}
 </div>
 
-<br><br>
+<br>
 
 <div class="container">
    
-  <!-- <div class=" flex-general"> -->
+  <div style="max-width: 1100px;margin:0 auto" class="limit-width">
     
       <form style="flex-direction:column;z-index:1000;" class="" _lpchecked="1" action="" method="post" enctype="multipart/form-data">
         <h1>Account Details<br><span style="font-size:medium;color:rgb(102, 102, 102)"></span></h1>
             {{account_form.hidden_tag()}}
             <!-- Contacts  -->
             <div class="group">
-                {{ account_form.contacts.label(class="acc_labels") }}<br>
+                {{ account_form.contacts.label(class="labels") }}
                 {{ account_form.contacts(class="form-control",placeholder="contacts",value=usr_account.contacts) }}<br>
                 {% if account_form.contacts.errors %}
                   {% for error in account_form.contacts.errors %}<span class="span-error" >*{{error}}</span>{% endfor %}
@@ -51,38 +50,48 @@
           </div>
           <!-- Gender  -->
           <div class="group">
-            {{ account_form.gender.label(class="acc_labels") }}<br>
-            {{ account_form.gender(class="form-control",placeholder="gender",value=usr_account.gender) }}<br>
-            <label style="color:rgb(58, 57, 57);font-size: 12px;" class="labels">Current Value: {{usr_account.gender}}</label>
+            {{ account_form.gender.label(class="labels") }}
+            {{ account_form.gender(style="list-style-type:none",placeholder="gender",value=usr_account.gender) }}
             {% if account_form.gender.errors %}
               {% for error in account_form.gender.errors %}<span class="span-error" >*{{error}}</span>{% endfor %}
            {% endif %}
           </div>
+
           <!-- Physical Address  -->
           <div class="group">
-            {{ account_form.address.label(class="acc_labels") }}<br>
-            {{ account_form.address(class="form-control",placeholder="address",value=usr_account.address) }}<br>
+            {{ account_form.address.label(class="labels") }}
+            {{ account_form.address(class="form-control",placeholder="address",value=usr_account.address) }}
             {% if account_form.address.errors %}
               {% for error in account_form.address.errors %}<span class="span-error" >*{{error}}</span>{% endfor %}
            {% endif %}
           </div>
+
           <!-- Town  -->
           <div class="group">
-            {{ account_form.town.label(class="acc_labels") }}<br>
-            {{ account_form.town(class="form-control",placeholder="church activity",value=usr_account.town)}}<br>
+            {{ account_form.town.label(class="labels") }}
+            {{ account_form.town(class="form-control",placeholder="church activity",value=usr_account.town)}}
             {% if account_form.town.errors %}
                 {% for error in account_form.town.errors %}<span class="span-error" >*{{error}}</span>{% endfor %}
             {% endif %}
-        </div>
+           </div>
 
-        <!-- Region  -->
-        <div class="group">
-            {{ account_form.region.label(class="acc_labels") }}<br>
-            {{ account_form.region(class="form-control",placeholder="church region",value=usr_account.region)}}<br>
-            {% if account_form.region.errors %}
-                {% for error in account_form.region.errors %}<span class="span-error" >*{{error}}</span>{% endfor %}
+           <!-- Region  -->
+           <div class="group">
+                {{ account_form.region.label(class="labels") }}
+                {{ account_form.region(class="form-control",placeholder="church region",value=usr_account.region)}}
+                {% if account_form.region.errors %}
+                    {% for error in account_form.region.errors %}<span class="span-error" >*{{error}}</span>{% endfor %}
+                {% endif %}
+           </div>
+
+           <!-- Image  -->
+           <div class="group">
+            {{ account_form.image.label(class="labels") }}
+            {{ account_form.image(class="form-control",placeholder="church image",value=usr_account.image)}}
+            {% if account_form.image.errors %}
+                {% for error in account_form.image.errors %}<span class="span-error" >*{{error}}</span>{% endfor %}
             {% endif %}
-        </div>
+       </div>
 
 
 
@@ -94,7 +103,7 @@
         </div>
 
       </form>
-  <!-- </div> -->
+  </div>
 </div>
 
 <script>

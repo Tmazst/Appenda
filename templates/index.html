@@ -50,36 +50,43 @@
 
         <div style="flex-wrap: wrap;" class="images-container flat-flex">
             {%for img in images%}
-            {% set by_who = usr_obj.query.get(img.uid).name %}
-            <div class="img-card">
-                {%set descr = img.description | tojson %}
-                <div id="imag-cont-{{img.id}}" onclick="displayImage('{{img.image_thumbnail}}','{{img.img_name | e}}','{{by_who}}','{{img.id}}', '{{descr | remove_special_chars}}')"  class="imag"><img id="image-{{img.id}}" class="img-thmb"  src="static/uploads/usr_images/{{img.image_thumbnail}}" /></div>
-                <!-- <div style="gap:5px" class="icons gen-flex"> -->
-                    
-                    <!-- <div class="svg-hrefs" >
-                        <object class="svg-icons" type="image/svg+xml" data="static/icons/view-icon.svg"></object>
-                    </div>
-
-                    <a class="svg-hrefs" style="" href="%">
-                        <object class="svg-icons" type="image/svg+xml" data="static/icons/download-icon.svg"></object>
-                    </a>
-
-                    <a class="svg-hrefs" style="" href="$">
-                        <object class="svg-icons" type="image/svg+xml" data="static/icons/share-icon.svg"></object>
-                    </a> -->
-
-                <!-- </div> -->
-                <div class="cap-2 gen-flex-col">
-                    <!-- <a href="" class="svg-hrefs" id="img-href-id" style="width:40px"> -->
-                        <div id="downld-btn-mobl-{{img.id}}" onclick="openDownload('{{img.id}}')" class="btns-inverted downld-btn-mobl">
-                            Download
+                {% if ("static/uploads/usr_images/thumbnails/" ~ img.image_thumbnail) | file_exists %}
+                {% set by_who = usr_obj.query.get(img.uid).name %}
+                <div class="img-card">
+                    {%set descr = img.description | tojson %}
+                    <div id="imag-cont-{{img.id}}" onclick="displayImage('{{img.image_thumbnail}}','{{img.img_name | e}}','{{by_who}}','{{img.id}}', '{{descr | remove_special_chars}}')"  class="imag"><img id="image-{{img.id}}" class="img-thmb"  src="static/uploads/usr_images/thumbnails/{{img.image_thumbnail}}" /></div>
+                    <!-- <div style="gap:5px" class="icons gen-flex"> -->
+                        <!-- <div class="svg-hrefs" >
+                            <object class="svg-icons" type="image/svg+xml" data="static/icons/view-icon.svg"></object>
                         </div>
-                    <!-- </a> -->
-                    <small class="captions">{{img.img_name}}</small>
-                    <small class="captions">by: {{by_who}}</small>
+
+                        <a class="svg-hrefs" style="" href="%">
+                            <object class="svg-icons" type="image/svg+xml" data="static/icons/download-icon.svg"></object>
+                        </a>
+
+                        <a class="svg-hrefs" style="" href="$">
+                            <object class="svg-icons" type="image/svg+xml" data="static/icons/share-icon.svg"></object>
+                        </a> -->
+                    <!-- </div> -->
+                    <div id="cap-{{img.id}}" style="display: none;" class="cap-2 gen-flex-col show-caption">
+                        <!-- <a href="" class="svg-hrefs" id="img-href-id" style="width:40px"> -->
+                            <div id="downld-btn-mobl-{{img.id}}" onclick="openDownload('{{img.id}}')" class="btns-inverted downld-btn-mobl">
+                                Download
+                            </div>
+                        <!-- </a> -->
+                        <small class="captions">{{img.img_name}}</small>
+                        <small class="captions">by: {{by_who}}</small>
+                    </div>
+                    
                 </div>
-                
-            </div>
+
+                <div id="img-caption-{{img.id}}" style="align-items:flex-start;" class="img-caption gen-flex-col">
+                    <div  class="t-info-t">{{img.img_name}} ({{img.image_category}})</div>
+                    <div  class="t-info">{{img.description}}<span></span></div>
+                    <div class="t-info">Image by <span>{{by_who}}</span></div>
+                    <a href="/download_img?img_id={{img.id}}"  ><img class="svg-icons phone-dnwl-icon" src="static/icons/download-icon.svg" /></a>
+                </div>
+                {%endif%}
             {%endfor%}
 
         </div>
@@ -93,7 +100,7 @@
             {%endif%}
         </div><br>
         <div style="align-items:flex-start;" class="nd-child gen-flex-col">
-            <div  class="t-info-t">Documenting Eswatini Scenario into Images</div>
+            <div style="color:rgb(100, 100, 100)"  class="t-info-t">Documenting Eswatini into Images</div>
             <div  class="t-info">Powered by <span>EmaSwati</span></div>
             <div class="t-info">Developed by <span>Tech Xolutions (TechX)</span></div>
         </div>
@@ -110,6 +117,7 @@
                 <div style="" class="cap-parent gen-flex">
                     <h4 class="img-name">Name of the Image Here</h4>
                     <div class="filler"></div>
+                    <a id="img-del-id" href=""><img style="height:50px" src="static/icons/delete-icon.png"></a> 
                     <div class="download_icon">
                         <a href="" class="svg-hrefs" id="img-href-id" style="width:40px">
                             <img class="svg-icons"  style="height:40px" src="static/icons/download-icon.svg" />
@@ -132,35 +140,53 @@
     // quoteBtns.forEach(function(btn){
         function displayImage(image,imgname,by_who,img_id,describe) {
 
+            // Image Display Configs for small screen 
             if(window.innerWidth < 575){
+
                 var allImgsCont = document.querySelectorAll(".imag");
                 var allImgs = document.querySelectorAll(".img-thmb");
                 var allBtns = document.querySelectorAll(".downld-btn-mobl");
-                console.log("We are on Small Screens: ",window.innerWidth);
+                var allImgCap = document.querySelectorAll(".img-caption");
+                var allinlineCaps = document.querySelectorAll(".cap-2");
+                console.log("We are on Small Screens: ", window.innerWidth);
                 var imgCont = document.querySelector("#imag-cont-" +img_id);
                 var img = document.querySelector("#image-" +img_id);
                 var downldBtnMobl = document.querySelector("#downld-btn-mobl-" +img_id);
+                var imgCap = document.querySelector("#img-caption-" +img_id);
+                var imgInlineCap = document.querySelector("#cap-" +img_id);
                 
+                // Validate all images container height to the standard 
                 allImgsCont.forEach(imgcont => {
                     imgcont.style.height = "170px";
                     console.log("Reset all");
                     });
-
+                
+                // Remove styles
                 allImgs.forEach((img,index) => {
                     img.classList.remove("resize-up"); 
                     console.log("Reset all Images ");
-                    // document.querySelector("#downld-btn-mobl-" +index).style.display = "none";
                     });
-
+                
+                // Turn OFF all btns
                 allBtns.forEach((btn,index) => {
                     console.log("Reset all Buttons ");
                     btn.style.display = "none";
                     });
 
+                allImgCap.forEach(caption => {
+                    caption.classList.remove("show-caption");
+                });
+
+                allinlineCaps.forEach(caption => {
+                    caption.classList.add("show-caption");
+                });
+
                 imgCont.style.width = window.innerWidth;
                 imgCont.style.height = "auto";
                 img.classList.add("resize-up"); 
                 downldBtnMobl.style.display = 'block';
+                imgCap.classList.add("show-caption");
+                imgInlineCap.classList.remove('show-caption');
 
             }else if(window.innerWidth > 575 && window.innerWidth < 800){
                 var allImg = document.querySelectorAll(".imag");
@@ -190,6 +216,7 @@
                 let describeImg = document.querySelector(".describe-img");
                 let displyCont = document.querySelector(".display-img");
                 let locate = document.querySelector("#img-href-id");
+                let delImg = document.querySelector("#img-del-id");
                 let by = document.querySelector(".by");
 
                 let imageUrl = "static/uploads/usr_images/thumbnails/" + image + "?t=" + new Date().getTime();
@@ -204,6 +231,7 @@
                 describeImg.innerHTML = describe;
 
                 locate.href = "/download_img?img_id=" + img_id.toString();
+                delImg.href = "/delete-file?im=" + img_id.toString();
 
                 console.log("Name: ", nameImg.innerHTML);
                 console.log("Image: ", mainImg.src);
@@ -215,9 +243,8 @@
                     // Optionally, set a fallback image
                     mainImg.src = "path/to/fallback-image.jpg";
                 };
-
+            }
         }
-    }
 
     function openDownload(img_id){
         window.location.href = "/download_img?img_id=" + img_id;
@@ -257,7 +284,6 @@
     });
 
 
-
 document.getElementById('scroll-left').addEventListener('click', function() {
     const container = document.querySelector('#view-cont');
     const imgContainer = document.querySelector('.scroll-container');
@@ -277,6 +303,7 @@ document.getElementById('scroll-left').addEventListener('click', function() {
         });
     }
 });
+
 
 document.getElementById('scroll-right').addEventListener('click', function() {
     console.log("Testing");
