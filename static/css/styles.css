@@ -1287,7 +1287,7 @@ input:focus{
   border:1px solid #bebebe;
   border-radius:10px;
   /* display:inline-block; */
-  width:100%
+  width:95%
 }
 
 
@@ -2738,7 +2738,7 @@ to{
     /* background-color: #00a550; */
     min-width: 320px;
     width:100%;
-    padding:15px 0;
+    padding:20px 0;
 }
 
 .container{
