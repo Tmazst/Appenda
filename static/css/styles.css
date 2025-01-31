@@ -2735,11 +2735,10 @@ to{
 }
 
 .upload-class{
-
     /* background-color: #00a550; */
     min-width: 320px;
     width:100%;
-    
+    padding:15px 0;
 }
 
 .container{
