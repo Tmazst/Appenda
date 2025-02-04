@@ -48,6 +48,22 @@
 //window.onscroll = function() {handleScroll()};
 
 
+var faqCont = document.querySelectorAll(".faq-ea-cont");
+
+faqCont.forEach(faq => {
+    var question = faq.querySelector('.faq-q');
+    var answer = faq.querySelector('.faq-ans');
+    
+    question.addEventListener('click', function() {
+        // Toggle the display of the answer
+        if (answer.style.display === "none" || answer.style.display === "") {
+            answer.style.display = "block";  // Show the answer
+        } else {
+            answer.style.display = "none";    // Hide the answer
+        }
+    });
+});
+
 // Trim words 
 if(window.innerWidth <= 700){
     var usr = document.querySelector('#navlink');

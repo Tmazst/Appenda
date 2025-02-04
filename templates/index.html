@@ -34,27 +34,38 @@
  
 <br>
 
+
 <section class="container flat-flex">
 
-    <div style="align-items: flex-start !important;" class="category-nav gen-flex">
+    
+    <div style="align-items: flex-start !important;" class="category-nav gen-flex-col">
         <div style="padding-top:25px"  class="gen-flex-col cat-item-cont">
+            <img style="height:50px" src="static/icons/category-icon.png" />
             <a href="/?al='all'"> <div class="cat-item"><span>View All</span></div></a>
             {%for category in categories%}
             {% set num_images = images | selectattr('image_category', 'equalto', category) | list | length %}
-                <a href="/?cat={{category}}"> <div class="cat-item"><span>{{category}}</span><small class="num gen-flex">{{num_images}}</small></div></a>
+                <a href="/?cat={{category}}"> <div class="cat-item"><span>{{category}}</span>{%if num_images > 0%}<small class="num gen-flex">{{num_images}}</small>{%endif%}</div></a>
             {%endfor%}
+        </div>
+        <div class="filler"></div>
+        <div class="gen-flex-col lower-nav">
+            <a href="/about"><div class="gen-flex"><img style="height:40px" src="static/icons/about-icon.png" /><span class="labels">About Appenda</span></div></a> 
+            <a href="/faqs"><div class="gen-flex"></div><div class="gen-flex"><img style="height:40px" src="static/icons/faq-icon.png" /><span class="labels">Frequently Asked</span></div></a>
+            <a href="/terms_conditions"><div class="gen-flex"><img style="height:40px" src="static/icons/tcs-icon.png" /><span class="labels">Terms of Use</span></div></a>
         </div>
     </div>
 
     <div class="parent-img-cont">
+        
 
         <div style="flex-wrap: wrap;" class="images-container flat-flex">
             {%for img in images%}
                 {% if ("static/uploads/usr_images/thumbnails/" ~ img.image_thumbnail) | file_exists %}
                 {% set by_who = usr_obj.query.get(img.uid).name %}
+                {%set likes = likes.query.filter_by(img_id=img.id).first().num_likes%}
                 <div class="img-card">
                     {%set descr = img.description | tojson %}
-                    <div id="imag-cont-{{img.id}}" onclick="displayImage('{{img.image_thumbnail}}','{{img.img_name | e}}','{{by_who}}','{{img.id}}', '{{descr | remove_special_chars}}')"  class="imag"><img id="image-{{img.id}}" class="img-thmb"  src="static/uploads/usr_images/thumbnails/{{img.image_thumbnail}}" /></div>
+                    <div id="imag-cont-{{img.id}}" onclick="displayImage('{{img.image_thumbnail}}','{{img.img_name | e}}','{{by_who}}','{{img.id}}', '{{descr | remove_special_chars}}', '{{likes}}')"  class="imag"><img id="image-{{img.id}}" class="img-thmb"  src="static/uploads/usr_images/thumbnails/{{img.image_thumbnail}}" /></div>
                     <!-- <div style="gap:5px" class="icons gen-flex"> -->
                         <!-- <div class="svg-hrefs" >
                             <object class="svg-icons" type="image/svg+xml" data="static/icons/view-icon.svg"></object>
@@ -68,14 +79,24 @@
                             <object class="svg-icons" type="image/svg+xml" data="static/icons/share-icon.svg"></object>
                         </a> -->
                     <!-- </div> -->
+                    <a href="/like?im={{img.id}}" >
+                        <div class="likes-normal">
+                            <div id="likes" style="position:relative">
+                                <img style="height:35px" src="static/icons/heart-icon-outlined.png" />
+                                {%if likes %}<small style="" class="num gen-flex likes-1">{{likes}}</small>{%endif%}
+                            </div>
+                        </div>
+                    </a>
                     <div id="cap-{{img.id}}" style="display: none;" class="cap-2 gen-flex-col show-caption">
                         <!-- <a href="" class="svg-hrefs" id="img-href-id" style="width:40px"> -->
                             <div id="downld-btn-mobl-{{img.id}}" onclick="openDownload('{{img.id}}')" class="btns-inverted downld-btn-mobl">
                                 Download
                             </div>
                         <!-- </a> -->
+                        
+
                         <small class="captions">{{img.img_name}}</small>
-                        <small class="captions">by: {{by_who}}</small>
+                        <div class="gen-flex"><img style="height:20px" src="static/icons/user.png" /><small class="captions"> {{by_who}}</small></div>
                     </div>
                     
                 </div>
@@ -83,10 +104,10 @@
                 <div id="img-caption-{{img.id}}" style="align-items:flex-start;" class="img-caption gen-flex-col">
                     <div  class="t-info-t">{{img.img_name}} ({{img.image_category}})</div>
                     <div  class="t-info">{{img.description}}<span></span></div>
-                    <div class="t-info">Image by <span>{{by_who}}</span></div>
+                    <div class="t-info">Image by <span><b>{{by_who}}</b></span></div>
                     <a id="mobile-del-id" href="/delete_file?im={{img.id}}"><img class="svg-icons" style="" src="static/icons/delete-icon.png"></a> 
                     <a href="/download_img?img_id={{img.id}}"  ><img class="svg-icons phone-dnwl-icon" src="static/icons/download-icon.svg" /></a>
-                </div>
+                </div><br><br>
                 {%endif%}
             {%endfor%}
 
@@ -101,7 +122,11 @@
             {%endif%}
         </div><br>
         <div style="align-items:flex-start;" class="nd-child gen-flex-col">
-            <div style="color:rgb(100, 100, 100)"  class="t-info-t">Documenting Eswatini into Images</div>
+            <h3>Showcasing the Beauty of Eswatini!</h2>
+                <div class="gen-flex">
+                    <img style="height: 40px;" src="static/icons/camera-icon.png "/>
+                    <div style="color:rgb(54, 54, 54)" class="labels">Landscapes, Waterfalls, Mountains, Infrastucture, Hot Springs, Vegetation, Rivers, Indigeneous Fruits, Culture, Villages, Sports, Wildlife, and more.</div><br>
+                </div><br>
             <div  class="t-info">Powered by <span>EmaSwati</span></div>
             <div class="t-info">Developed by <span>Tech Xolutions (TechX)</span></div>
         </div>
@@ -114,11 +139,17 @@
                 <div style="width:max-content;margin:0px auto;" class="show-img-dv">
                     <img id="show-img" class="displayed-img" src="" />
                 </div>
-
+                
                 <div style="" class="cap-parent gen-flex">
                     <h4 class="img-name">Name of the Image Here</h4>
                     <div class="filler"></div>
                     <a id="img-del-id" href=""><img style="height:50px" src="static/icons/delete-icon.png"></a> 
+                    <a href="" id="add-like">
+                        <div id="likes" style="position:relative">
+                            <img style="height:40px" src="static/icons/heart-icon-full.png" />
+                            <small style="right:-5px" id="num" class="num gen-flex likes"></small>
+                        </div>
+                    </a>
                     <div class="download_icon">
                         <a href="" class="svg-hrefs" id="img-href-id" style="width:40px">
                             <img class="svg-icons"  style="height:40px" src="static/icons/download-icon.svg" />
@@ -126,9 +157,11 @@
                     </div>
                 </div> 
 
-                <small class="by"></small>
+                <!-- <small class="by"></small><br> -->
+                <div style="justify-content: flex-start;padding-left: 10px;" class="gen-flex"><img style="height:30px" src="static/images/default.png" /><small class="by">{{by_who}}</small></div>
 
                 <div class="describe-img"></div>
+                <br><br>
 
             </div>
         </div>     
@@ -139,7 +172,7 @@
 
 <script>
     // quoteBtns.forEach(function(btn){
-        function displayImage(image,imgname,by_who,img_id,describe) {
+        function displayImage(image,imgname,by_who,img_id,describe,likes) {
 
             // Image Display Configs for small screen 
             if(window.innerWidth < 575){
@@ -219,6 +252,8 @@
                 let locate = document.querySelector("#img-href-id");
                 let delImg = document.querySelector("#img-del-id");
                 let by = document.querySelector(".by");
+                let num = document.querySelector("#num");
+                let addLike = document.querySelector("#add-like");
 
                 let imageUrl = "static/uploads/usr_images/thumbnails/" + image + "?t=" + new Date().getTime();
                 
@@ -228,6 +263,9 @@
 
                 nameImg.innerHTML = imgname;
                 by.innerHTML = "by " + by_who;
+                num.innerHTML = likes;
+                console.log("CHECK LIKES: ",num.innerHTML,"+",likes );
+                addLike.href = "/like?im=" + img_id;
 
                 describeImg.innerHTML = describe;
 

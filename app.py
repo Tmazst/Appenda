@@ -215,7 +215,9 @@ def file_exists_filter(filepath):
 @app.context_processor
 def inject_ser():
 
-    return dict(ser=ser,os=os) #universal
+    
+
+    return dict(ser=ser,os=os,likes=Likes) #universal
 
 
 
@@ -242,6 +244,17 @@ def home():
         layout = request.args.get('icon')
 
     return render_template("index.html", images=images, layout=layout, categories=categories,usr_obj=User,chck_len=chck_len)
+
+@app.route('/terms_conditions')
+def terms():
+
+    return render_template("terms_conditions.html")
+
+
+@app.route('/faqs')
+def faq():
+
+    return render_template("faqs.html")
 
 # logging.info(f"{file_path} has been deleted.")
 
@@ -575,6 +588,7 @@ def email():
 def image_form():
 
     app_form = ImagesForm()
+    timestamp=None
 
     if request.method == "POST":
 
@@ -588,12 +602,46 @@ def image_form():
 
         db.session.add(image_info)
         db.session.commit()
+        # print()
+        # img = Images.query.filter_by(timestamp=timestamp).first()
+        # zero_likes = Likes(img_id=img.id,liker_id=current_user.id,timestamp=timestamp,num_likes=0)
+        # db.session.add(zero_likes)
+        # db.session.commit()
 
         flash("Upload was Successful👍","success")
         return redirect(url_for('home'))
 
     return render_template("image_form.html",app_form=app_form)
 
+
+@app.route("/like", methods=['GET'])
+@login_required
+def likes():
+
+    id = request.args.get("im")
+    image = Images.query.get(id)
+    likes_obj = Likes.query.filter_by(img_id=image.id).first()
+    if current_user:
+        print("Debug Likes: ", image)
+        if likes_obj:
+            if not Likes.query.filter_by(liker_id=current_user.id,img_id=image.id):
+                likes_obj.img_id = image.id
+                likes_obj.liker_id=current_user.id
+                likes_obj.num_likes = likes_obj.num_likes=+1
+                likes_obj.timestamp = datetime.now()
+
+                
+                db.session.commit()
+            else:
+                print("Already Have Liked")
+        else:
+            print("Debug No Likes: ", image)
+            zero_likes = Likes(img_id=image.id,liker_id=current_user.id,timestamp=datetime.now(),num_likes=1)
+            db.session.add(zero_likes)
+            db.session.commit()
+        return redirect(url_for("home"))
+    
+    return f""
 
 @app.route("/edit_app", methods=['POST','GET'])
 def edit_app():

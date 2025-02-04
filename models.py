@@ -77,8 +77,14 @@ class Images(db.Model):
     edited=db.Column(db.DateTime)
     edited_by=db.Column(db.String(100))
     access=relationship("Image_Access_Credits",backref="App_Info",lazy=True)
+    likes_id=relationship("Likes",backref="App_Info",lazy=True)
 
-    
+class Likes(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    img_id = db.Column(db.Integer, ForeignKey('images.id'))
+    liker_id = db.Column(db.Integer,ForeignKey("user.id"))
+    num_likes = db.Column(db.Integer,default=0,nullable=False)
+    timestamp = db.Column(db.DateTime)
 
 class Image_Access_Credits(db.Model):
 

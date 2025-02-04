@@ -59,9 +59,11 @@
         <div class="stroke"></div>
     </div>
 
-    <div onclick="closeSideNavFunc()"  id="side-navig-bg" class="side-nav-bg ">
+    <div onclick="closeSideNavFunc()"  id="side-navig-bg" class="side-nav-bg gen-flex-col">
       <div id="side-navig-cont" class="side-nav-cont move-to-appear gen-flex-col">
+        
           <div style="padding-top:25px"  class="gen-flex-col cat-item-cont">
+            <img style="height:50px" src="static/icons/category-icon.png" />
             <a href="/?al='all'"> <div class="cat-item"><span>View All</span></div></a>
             {%for category in categories%}
             {% set num_images = images | selectattr('image_category', 'equalto', category) | list | length %}
@@ -69,7 +71,14 @@
                 <a href="/?cat={{category}}"> <div class="cat-item"><span>{{category}}</span>{%if num_images > 0%}<small class="num gen-flex">{{num_images}}</small>{%endif%}</div></a>
             {%endfor%}
           </div>
+          <div class="filler"></div>
+        <div class="gen-flex-col lower-nav">
+            <a href="/about"><div class="gen-flex"><img style="height:40px" src="static/icons/about-icon.png" /><span class="labels">About Appenda</span></div></a> 
+            <a href="/faqs"><div class="gen-flex"></div><div class="gen-flex"><img style="height:40px" src="static/icons/faq-icon.png" /><span class="labels">Frequently Asked</span></div></a>
+            <a href="/terms_conditions"><div class="gen-flex"><img style="height:40px" src="static/icons/tcs-icon.png" /><span class="labels">Terms of Use</span></div></a>
+        </div>
       </div>
+      
     </div>
 
   

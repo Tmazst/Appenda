@@ -16,10 +16,40 @@
 
 
 :root{
-    --main-color : #92278F;
+    --main-color : rgb(146, 39, 143);
     --main2-color :#00a550;
 }
 
+body{
+    background-image: url("static/images/bg.png") !important;
+    background-size: cover; /* Adjust the size */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Avoid tiling */
+    background: linear-gradient(rgba(255,255,255,1),rgba(146, 39, 143,0.05)) !important;
+    /* background-color: rgba(255, 255, 255, 0.85); Add a semi-transparent overlay */
+    /* background-blend-mode: overlay; Blend the background color with the image */
+}
+
+.likes{
+    right:-6px;
+    background-color: rgb(236, 236, 236) !important;
+    color:var(--main-color) !important;
+    font-weight: bold !important;
+
+}
+
+.likes-normal{
+    position: absolute;
+    left:5px;
+    bottom:5px;
+}
+
+.likes-1{
+    right:-6px !important;
+    background: rgb(236, 236, 236) !important;
+    color:var(--main-color) !important;
+    font-weight: bold !important;
+}
 
 
 html{box-sizing:border-box}*;*:before;*:after{//box-sizing:inherit}
@@ -116,6 +146,7 @@ div{
     margin-top:0;
     padding:20px;
     color:#222;
+    font-weight: 500;
     /* background-color: #00a550; */
 }
 
@@ -238,7 +269,9 @@ div{
 
 
 .cat-item-cont{
-    gap:15px
+    gap:15px;
+    width:90%;
+    margin: 0 auto;
 }
 
 
@@ -260,6 +293,58 @@ div{
 .img-thmb{
     height:inherit;
     /* border-radius: 20px; */
+}
+
+.doc-container{
+    width:95%;
+    padding:10px;
+    max-width:900px;
+    border:1px solid #f1f1f1;
+    background-color:#fdfdfd;
+    border-radius: 10px;
+}
+
+.lower-nav{
+    min-height:200px
+}
+
+.lower-nav .labels{
+    color:#3a3a3a
+}
+
+.open-faq{
+    height:auto;
+    overflow: visible;
+}
+
+.faq-q{
+    font-weight: 600;
+}
+
+.faq-q:hover{
+    cursor:pointer;
+}
+
+.faq-ans{
+    padding:20px;
+    display: none;
+}
+
+.faq-ea-cont {
+    background-color: #f7f7f7;
+    overflow: hidden;
+    border-radius:10px ;
+    padding:5px;
+}
+
+
+.open-faq .faq-ans {
+    display: block; /* Show the answer when the container is open */
+}
+
+.doc-container p{
+    color:#222;
+    font-size:15px;
 }
 
 .images-container{
@@ -1072,6 +1157,10 @@ overflow:scroll;
     text-decoration:none;
 }
 
+/* div::before{
+    content:"Please Wait...."
+} */
+
 .side-nav-bg{
     position: fixed;
     display: none;
@@ -1085,7 +1174,7 @@ overflow:scroll;
 }
 
 .side-nav-cont{
-    width:250px;
+    width:300px;
     height: 100vh;
     display: flex;
     transform: translate(-100%);
@@ -1094,7 +1183,7 @@ overflow:scroll;
     flex-direction: column;
     padding:15px;
     transition:all 0.3s ease;
-    transform: translate(0%);
+    transform: translate(-20%);
 }
 
 .show-menu{
@@ -1106,7 +1195,7 @@ overflow:scroll;
         transform: translate(-100%);
     } 
     100%{
-        transform: translate(0%);
+        transform: translate(-20%);
     }
 }
 
