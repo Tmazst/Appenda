@@ -2867,7 +2867,7 @@ to{
 @media all and (max-width: 575px){
 
     .web-cont{
-        margin-left:3px ;
+        margin-left:-20px ;
     }
 
     #search-cat {

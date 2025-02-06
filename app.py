@@ -22,7 +22,7 @@ from PIL import Image
 import threading
 # from celery import Celery
 import re
-import base64
+# import base64
 # import logging
 
 # logging.basicConfig(level=logging.INFO)
@@ -852,7 +852,7 @@ def google_login():
     # Step 1: Generate a nonce and store it in the session for validation
     nonce = os.urandom(16).hex()  # Generate a random string
     session['nonce'] = nonce  # Save nonce to session
-    print("DEBUG NONCE STEP 1: ",session['nonce'] )
+    # print("DEBUG NONCE STEP 1: ",session['nonce'] )
 
     return oauth.appenda_oauth.authorize_redirect(redirect_uri=url_for("google_signin",_external=True),nonce=nonce)
 
@@ -869,12 +869,12 @@ def google_signin():
     print("Raw ID Token:", id_token)
 
     # Decode the ID token (without validation, for inspection purposes)
-    parts = id_token.split(".")
-    id_token_payload = json.loads(base64.urlsafe_b64decode(parts[1] + "==").decode("utf-8"))
-    print("Decoded ID Token:", id_token_payload)
+    # parts = id_token.split(".")
+    # id_token_payload = json.loads(base64.urlsafe_b64decode(parts[1] + "==").decode("utf-8"))
+    # print("Decoded ID Token:", id_token_payload)
 
     nonce = session.pop('nonce', None)
-    print("DEBUG NONCE STEP 2: ",nonce )
+    # print("DEBUG NONCE STEP 2: ",nonce )
     if not nonce:
         return jsonify({'Error':"Something Went Missing With Your Sign in, Please Retry"})
     
