@@ -182,13 +182,13 @@ def process_profile(file,usr):
         # flash("File Upload Successful!!", "success")
         return new_file_name
 
-
+#Google oauth configs
 if os.path.exists('client.json'):
     appConfig = {
         "OAUTH2_CLIENT_ID" : creds['clientid'],
         "OAUTH2_CLIENT_SECRET":creds['clientps'],
         "OAUTH2_META_URL":"",
-        "FLASK_SECRET":"sdsdjsdsdjfe832j2rj_32jfesdsdjfe832j2rj32j832",
+        "FLASK_SECRET": app.config['SECRET_KEY'], #"sdsdjsdsdjfe832j2rj_32jfesdsdjfe832j2rj32j832",
         "FLASK_PORT": 5000  
     }
 
@@ -863,6 +863,8 @@ def google_signin():
 
     # Step 1: Handle the OAuth2 callback and exchange the authorization code for an access token
     token = oauth.appenda_oauth.authorize_access_token()
+
+    print("DEBUG STATE: ", request.args.get('state'), session.get('_google_authlib_state_'))
 
     # Step 2: Retrieve and decode the ID token
     id_token = token.get("id_token")
