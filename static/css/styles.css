@@ -2984,7 +2984,7 @@ body{
 }
 
 .shw-menu{
-    display:flex;
+    display:flex !important;
 }
 .menu-icon{
     left:5px;
