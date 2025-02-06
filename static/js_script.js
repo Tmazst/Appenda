@@ -64,6 +64,18 @@ faqCont.forEach(faq => {
     });
 });
 
+
+var names = document.querySelectorAll(".captions");
+// console.log("Did we find the Names: ",names);
+names.forEach(name => {
+    var inner = name.innerHTML;
+    if (inner.length >= 13 ){
+    var trimmed =  inner.substring(0,13) + "..";
+    name.innerHTML= trimmed;
+    // console.log("Did we find the Name: ",trimmed );
+}
+});
+
 // Trim words 
 if(window.innerWidth <= 700){
     var usr = document.querySelector('#navlink');
@@ -71,16 +83,6 @@ if(window.innerWidth <= 700){
     usr.innerHTML = trimmed+"...";
     console.log('Smartphone View');
 
-    var names = document.querySelectorAll(".captions");
-    console.log("Did we find the Names: ",names);
-    names.forEach(name => {
-        var inner = name.innerHTML;
-        if (inner.length >= 13 ){
-        var trimmed =  inner.substring(0,12) + "..";
-        name.innerHTML= trimmed;
-        console.log("Did we find the Name: ",trimmed );
-    }
-    });
 
 }
 

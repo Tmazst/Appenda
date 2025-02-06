@@ -72,7 +72,7 @@
 
                     <!-- Likes  -->
                     <a href="/like?im={{img.id}}" >
-                        <div class="likes-normal">
+                        <div id="like-cont-{{img.id}}" class="likes-normal-bleft">
                             <div id="likes" style="position:relative">
                                 <img style="height:35px" src="static/icons/heart-icon-outlined.png" />
                                 {%if likes %}<small style="" class="num gen-flex likes-1">{{likes}}</small>{%endif%}
@@ -185,10 +185,53 @@
 
 <script>
 
+        // Function to check image orientation
+        function checkImageOrientation(imageId) {
+            const imgElement = document.getElementById(imageId);
+            const img = new Image(); // Create a new Image object
 
+            img.onload = function() {
+                if (img.width < img.height) {
+                    let idNumber = imageId.substring(imageId.lastIndexOf('-') + 1); // Get the numeric id part
+                    var likeInstanceEl = document.querySelector("#like-cont-" + idNumber);
+                    likeInstanceEl.classList.add('likes-normal-tright');
+                    likeInstanceEl.classList.remove('likes-normal-bleft');
+                    console.log("The image is in landscape orientation.");
+
+                } else if (img.height < img.width) {
+                    console.log("The image is in portrait orientation.");
+                } else {
+                    console.log("The image is square.");
+                }
+            };
+
+            img.src = imgElement.src; // Set the Image object source to the thumbnail source
+        }
+
+        // Call the function when the DOM is fully loaded
+        document.addEventListener("DOMContentLoaded", function() {
+            // checkImageOrientation("image-img.id");
+            var allImagesCont = document.querySelectorAll(".imag");
+            allImagesCont.forEach(imgCont => {
+                let imgId = imgCont.querySelector("img").id; // Get the ID of the image within its container
+                checkImageOrientation(imgId);
+            })
+        });
 
     // quoteBtns.forEach(function(btn){
         function displayImage(image,imgname,by_who,img_id,describe,likes) {
+
+            var allImgs = document.querySelectorAll(".imag");
+            //Like Cont instance, 
+            // when the image is zoomed in take the like element to bottom left
+            let likeCont = document.querySelector("#like-cont-" + img_id); //Get the current opened image's like element instance
+            likeCont.classList.remove("likes-normal-tright"); 
+            likeCont.classList.add("likes-normal-bleft");
+
+            allImgs.forEach(img => {
+                    let imgId = img.querySelector("img").id; // Get the ID of the image within its container
+                    checkImageOrientation(imgId); //Checking all image orientations again to reset back to normal / initial position
+                    });
 
             // Image Display Configs for small screen 
             if(window.innerWidth < 575){
@@ -248,19 +291,21 @@
                 deleteIcon.classList.add("show-caption");
 
             }else if(window.innerWidth > 575 && window.innerWidth < 800){
-                var allImg = document.querySelectorAll(".imag");
+
                 console.log("We are on Tablet Screens: ",window.innerWidth);
                 var imgCont = document.querySelector("#imag-cont-" +img_id);
                 var img = document.querySelector("#image-" +img_id);
 
-                allImg.forEach(img => {
+                allImgs.forEach(img => {
                     img.style.height = "170px";
                 });
 
                 allImgs.forEach(img => {
+                    // Back to normal size 
                     img.classList.remove("resize-up-2"); 
                     console.log("Reset all Images ");
                     });
+
 
                 // script goes here 
                 imgCont.style.width = window.innerWidth;

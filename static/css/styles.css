@@ -38,10 +38,16 @@ body{
 
 }
 
-.likes-normal{
+.likes-normal-bleft{
     position: absolute;
     left:5px;
     bottom:5px;
+}
+
+.likes-normal-tright{
+    position: absolute;
+    right:5px !important;
+    top:5px !important;
 }
 
 .likes-1{
@@ -2854,6 +2860,10 @@ to{
     position:relative
 }
 
+.del-mobile{
+    display: none;
+}
+
 @media all and (max-width: 575px){
 
     #search-cat {
@@ -2865,9 +2875,9 @@ to{
 /*        background-color: aqua;*/
     }
 
-    .cap-img{
+    /* .cap-img{
         display: none !important;
-    }
+    } */
     
     .img-card{
         max-width:100vw;
@@ -2885,7 +2895,7 @@ to{
         position: absolute;
         right:5px;
         bottom: 5px;
-        display: none;
+        
     }
     
     .flat-flex{
