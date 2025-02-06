@@ -859,7 +859,7 @@ def google_signin():
     token = oauth.appenda_oauth.authorize_access_token()
 
     # Step 2: Parse the ID token from the response to get user information
-    user_info = oauth.google.parse_id_token(token)
+    user_info = oauth.appenda_oauth.parse_id_token(token)
     
     # Step 3: Store user info in the Flask session for persistence
     session['user'] = user_info
