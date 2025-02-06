@@ -22,6 +22,7 @@ from PIL import Image
 import threading
 # from celery import Celery
 import re
+from flask_session import Session
 # import logging
 
 # logging.basicConfig(level=logging.INFO)
@@ -44,10 +45,15 @@ else:
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle':280}
 app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["CELERY_BROKER_URL"] = "redis://localhost:6379/0"
-app.config["CELERY_RESULT_BACKEND"] = "redis://localhost:6379/0"
+# app.config["CELERY_BROKER_URL"] = "redis://localhost:6379/0"
+# app.config["CELERY_RESULT_BACKEND"] = "redis://localhost:6379/0"
 app.config["UPLOADED"] = 'static/uploads/usr_images'
 app.config["THUMBS"] = 'static/uploads/usr_images/thumbnails'
+
+
+# app.config['SESSION_TYPE'] = 'sqlalchemy'
+# app.config['SESSION_SQLALCHEMY'] = db  # E.g., provided by Flask-SQLAlchemy
+# Session(app)
 
 
 # def make_celery(app):
@@ -176,6 +182,7 @@ def process_profile(file,usr):
         # flash("File Upload Successful!!", "success")
         return new_file_name
 
+
 if os.path.exists('client.json'):
     appConfig = {
         "OAUTH2_CLIENT_ID" : creds['clientid'],
@@ -196,14 +203,18 @@ if os.path.exists('client.json'):
                 jwks_uri = "https://www.googleapis.com/oauth2/v3/certs"
                 )
 
+
 ser = Serializer(app.config['SECRET_KEY']) 
+
 
 #Database Tables Updates
 def createall(db):
     db.create_all()
 
+
 #Password Encryption
 encrypt_password = Bcrypt()
+
 
 # Define a custom filter
 @app.template_filter('file_exists')
@@ -845,18 +856,22 @@ def google_login():
 @app.route("/google_signin", methods=["POST","GET"])
 def google_signin():
 
+    # Step 1: Handle the OAuth2 callback and exchange the authorization code for an access token
     token = oauth.appenda_oauth.authorize_access_token()
+
+    # Step 2: Parse the ID token from the response to get user information
+    user_info = oauth.google.parse_id_token(token)
     
+    # Step 3: Store user info in the Flask session for persistence
+    session['user'] = user_info
 
-    session['user'] = token
+    # pretty=session.get("user")
+    # usr_info = pretty.get('userinfo')
 
-    pretty=session.get("user")
-
-    usr_info = pretty.get('userinfo')
-    verified = usr_info.get("email_verified")
-    usr_email = usr_info.get("email")
-    usr_name=usr_info.get("name")
-    usr_athash=usr_info.get("at_hash")
+    verified = user_info.get("email_verified")
+    usr_email = user_info.get("email")
+    usr_name=user_info.get("name")
+    usr_athash=user_info.get("at_hash")
 
     if not verified:
         flash("Access Denied!, Your Email is not verified with Google")
