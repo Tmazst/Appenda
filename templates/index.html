@@ -37,7 +37,7 @@
 
 <section class="container flat-flex">
 
-    <!-- For Wide Screens  -->
+    <!-- Side Navigation For Wide Screens  -->
     <div style="align-items: flex-start !important;" class="category-nav gen-flex-col">
         <div style="padding-top:25px"  class="gen-flex-col cat-item-cont">
             <img style="height:50px" src="static/icons/category-icon.png" />
@@ -49,6 +49,7 @@
         </div>
         <div class="filler"></div>
         <div class="gen-flex-col lower-nav">
+            <a href="https://techxolutions.com/public_html/Appenda.apk"><div class="gen-flex"><img style="height:40px" src="static/icons/android-icon.png" /><span class="labels">Download App</span></div></a> 
             <a href="/about"><div class="gen-flex"><img style="height:40px" src="static/icons/about-icon.png" /><span class="labels">About Appenda</span></div></a> 
             <a href="/faqs"><div class="gen-flex"></div><div class="gen-flex"><img style="height:40px" src="static/icons/faq-icon.png" /><span class="labels">Frequently Asked</span></div></a>
             <a href="/terms_conditions"><div class="gen-flex"><img style="height:40px" src="static/icons/tcs-icon.png" /><span class="labels">Terms of Use</span></div></a>
@@ -227,7 +228,7 @@
                     let imgId = img.querySelector("img").id; // Get the ID of the image within its container
                     checkImageOrientation(imgId); //Checking all image orientations again to reset back to normal / initial position
                     });
-                    
+
             //Like Cont instance, 
             // when the image is in zoom-in take the like element to the bottom left
             let likeCont = document.querySelector("#like-cont-" + img_id); //Get the current opened image's like element instance
