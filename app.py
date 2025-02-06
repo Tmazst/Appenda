@@ -325,6 +325,7 @@ def delete_file():
 
 
 @app.route('/download_img', methods=['POST',"GET"])
+@login_required
 def download():
 
     img = request.args.get("img_id")
