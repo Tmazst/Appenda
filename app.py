@@ -884,9 +884,6 @@ def google_signin():
     # Step 3: Store user info in the Flask session for persistence
     session['user'] = user_info
 
-    # pretty=session.get("user")
-    # usr_info = pretty.get('userinfo')
-
     verified = user_info.get("email_verified")
     usr_email = user_info.get("email")
     usr_name=user_info.get("name")
