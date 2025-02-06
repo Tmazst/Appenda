@@ -22,7 +22,7 @@ from PIL import Image
 import threading
 # from celery import Celery
 import re
-# import base64
+import base64
 # import logging
 
 # logging.basicConfig(level=logging.INFO)
@@ -871,9 +871,9 @@ def google_signin():
     print("Raw ID Token:", id_token)
 
     # Decode the ID token (without validation, for inspection purposes)
-    # parts = id_token.split(".")
-    # id_token_payload = json.loads(base64.urlsafe_b64decode(parts[1] + "==").decode("utf-8"))
-    # print("Decoded ID Token:", id_token_payload)
+    parts = id_token.split(".")
+    id_token_payload = json.loads(base64.urlsafe_b64decode(parts[1] + "==").decode("utf-8"))
+    print("Decoded ID Token:", id_token_payload)
 
     nonce = session.pop('nonce', None)
     # print("DEBUG NONCE STEP 2: ",nonce )
