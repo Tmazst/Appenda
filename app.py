@@ -257,7 +257,7 @@ def faq():
 
     return render_template("faqs.html")
 
-# logging.info(f"{file_path} has been deleted.")
+
 
 #Delete Files in Thumbnail Folder
 def delete_files_thmb(file):
