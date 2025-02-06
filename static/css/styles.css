@@ -16,7 +16,7 @@
 
 
 :root{
-    --main-color : rgb(146, 39, 143);
+    --main-color : #92278f;
     --main2-color :#00a550;
 }
 
@@ -2865,6 +2865,10 @@ to{
 }
 
 @media all and (max-width: 575px){
+
+    .web-cont{
+        margin-left:3px ;
+    }
 
     #search-cat {
         /* min-width: 400px; */

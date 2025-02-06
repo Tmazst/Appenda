@@ -22,9 +22,9 @@ from PIL import Image
 import threading
 # from celery import Celery
 import re
-import logging
+# import logging
 
-logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.INFO)
 
 # import sqlite3
 # import pymysql
@@ -266,20 +266,20 @@ def delete_files_thmb(file):
 
     try:
         os.remove(file_path)
-        logging.info(f"{file_path} has been deleted.")
+        flash(f"{file_path} has been deleted.")
         return True
     except FileNotFoundError:
-        logging.warning(f"The file {file_path} does not exist.")
+        # flash(f"The file {file_path} does not exist.")
         return False
     except PermissionError:
-        logging.error(f"Permission denied: Unable to delete {file_path}.")
+        # logging.error(f"Permission denied: Unable to delete {file_path}.")
         return False
     except Exception as e:
-        logging.error(f"An error occurred: {e}")
+        # logging.error(f"An error occurred: {e}")
         return False
 
 
-logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.INFO)
 
 
 # Function to delete files in the main directory
@@ -288,16 +288,16 @@ def delete_files_maindir(file):
 
     try:
         os.remove(file_path)
-        logging.info(f"{file_path} has been deleted.")
+        flash(f"{file_path} has been deleted.")
         return True
     except FileNotFoundError:
-        logging.warning(f"The file {file_path} does not exist.")
+        flash(f"The file {file_path} does not exist.")
         return False
     except PermissionError:
-        logging.error(f"Permission denied: Unable to delete {file_path}.")
+        flash(f"Permission denied: Unable to delete {file_path}.")
         return False
     except Exception as e:
-        logging.error(f"An error occurred: {e}")
+        flash(f"An error occurred: {e}")
         return False
 
 
