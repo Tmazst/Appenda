@@ -145,16 +145,34 @@ function closeSideNavFunc(){
 
     };
 
-let menuIcon = document.querySelector(".menu-icon");
-window.addEventListener("scroll", function() {
-        console.log("Scrolling at the moment");
-        if (window.scrollY > 10) {
-            menuIcon.classList.add("shw-menu");
-        } else {
-            // Hide the menu icon when at the top of the page
-            // menuIcon.classList.remove("shw-menu");
-        }
-    });
+
+document.addEventListener("DOMContentLoaded", function() {
+    let menuIcon = document.querySelector(".menu-icon");
+
+    if (menuIcon) {
+        window.addEventListener("scroll", function() {
+            console.log("Scrolling at the moment");
+            if (window.scrollY > 100) {
+                menuIcon.classList.add("shw-menu");
+            } else {
+                menuIcon.classList.remove("shw-menu");
+            }
+        });
+    } else {
+        console.error("The .menu-icon element was not found in the DOM!");
+    }
+});
+
+// let menuIcon = document.querySelector(".menu-icon");
+// window.addEventListener("scroll", function() {
+//         console.log("Scrolling at the moment");
+//         if (window.scrollY > 100) {
+//             menuIcon.classList.add("shw-menu");
+//         } else {
+//             // Hide the menu icon when at the top of the page
+//             // menuIcon.classList.remove("shw-menu");
+//         }
+//     });
 
 const paragraph = document.querySelectorAll('.sel-tag');
 
