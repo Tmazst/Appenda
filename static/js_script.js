@@ -148,7 +148,7 @@ function closeSideNavFunc(){
 let menuIcon = document.querySelector(".menu-icon");
 window.addEventListener("scroll", function() {
         console.log("Scrolling at the moment");
-        if (window.scrollY > 100) {
+        if (window.scrollY > 10) {
             menuIcon.classList.add("shw-menu");
         } else {
             // Hide the menu icon when at the top of the page
