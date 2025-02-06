@@ -852,19 +852,23 @@ def google_login():
     # Step 1: Generate a nonce and store it in the session for validation
     nonce = os.urandom(16).hex()  # Generate a random string
     session['nonce'] = nonce  # Save nonce to session
-    print("DEBUG NONCE STEP 1: ",session['nonce'] )
+    print("DEBUG NONCE STEP 1: ",session['nonce'])
 
-    return oauth.appenda_oauth.authorize_redirect(redirect_uri=url_for("google_signin",_external=True),nonce=nonce)
+    return oauth.appenda_oauth.authorize_redirect(redirect_uri=url_for("google_signin",_external=True),state=nonce)
 
 
 #login redirect
 @app.route("/google_signin", methods=["POST","GET"])
 def google_signin():
 
+    print("DEBUG STATE: ", request.args.get('state'), session.get('_google_authlib_state_'))
     # Step 1: Handle the OAuth2 callback and exchange the authorization code for an access token
     token = oauth.appenda_oauth.authorize_access_token()
 
-    print("DEBUG STATE: ", request.args.get('state'), session.get('_google_authlib_state_'))
+    # Retrieve nonce from state (in URL query parameter)
+    state_nonce = request.args.get('state')  # `state` contains the nonce
+
+    
 
     # Step 2: Retrieve and decode the ID token
     id_token = token.get("id_token")
@@ -881,7 +885,7 @@ def google_signin():
         return jsonify({'Error':"Something Went Missing With Your Sign in, Please Retry"})
     
     # Step 2: Parse the ID token from the response to get user information
-    user_info = oauth.appenda_oauth.parse_id_token(token,nonce=nonce)
+    user_info = oauth.appenda_oauth.parse_id_token(token,nonce=state_nonce)
     
     # Step 3: Store user info in the Flask session for persistence
     session['user'] = user_info
