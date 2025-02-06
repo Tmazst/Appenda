@@ -222,16 +222,19 @@
         function displayImage(image,imgname,by_who,img_id,describe,likes) {
 
             var allImgs = document.querySelectorAll(".imag");
-            //Like Cont instance, 
-            // when the image is zoomed in take the like element to bottom left
-            let likeCont = document.querySelector("#like-cont-" + img_id); //Get the current opened image's like element instance
-            likeCont.classList.remove("likes-normal-tright"); 
-            likeCont.classList.add("likes-normal-bleft");
 
             allImgs.forEach(img => {
                     let imgId = img.querySelector("img").id; // Get the ID of the image within its container
                     checkImageOrientation(imgId); //Checking all image orientations again to reset back to normal / initial position
                     });
+                    
+            //Like Cont instance, 
+            // when the image is in zoom-in take the like element to the bottom left
+            let likeCont = document.querySelector("#like-cont-" + img_id); //Get the current opened image's like element instance
+            likeCont.classList.remove("likes-normal-tright"); 
+            likeCont.classList.add("likes-normal-bleft");
+
+
 
             // Image Display Configs for small screen 
             if(window.innerWidth < 575){

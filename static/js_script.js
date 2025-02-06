@@ -152,7 +152,7 @@ window.addEventListener("scroll", function() {
             menuIcon.classList.add("shw-menu");
         } else {
             // Hide the menu icon when at the top of the page
-            menuIcon.classList.remove("shw-menu");
+            // menuIcon.classList.remove("shw-menu");
         }
     });
 
