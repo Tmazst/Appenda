@@ -799,29 +799,31 @@ def search_in_table():
         'user': creds['user'],
         'password': creds['db_pass'],
         'host': 'localhost',  # or your MySQL server address
-        'database': 'techtlnf_images_hub_db'
+        'database': 'techtlnf_images_hub_db' #
     }
 
     conn = mysql.connector.connect(**db_config)
     cursor = conn.cursor()
 
     # Use parameters to avoid SQL injection
-    query = f"SELECT * FROM `{table_name}` WHERE CONCAT(COALESCE(img_name, ''), COALESCE(image_category, '')  LIKE %s"
+    query = f"SELECT * FROM `{table_name}` WHERE CONCAT(COALESCE(img_name, ''), COALESCE(description, ''), COALESCE(image_category, '')) LIKE %s"
     cursor.execute(query, ('%' + search_value + '%',))
     rows = cursor.fetchall()
 
+    
+
+    # Convert the results to a list of dictionaries (depending on your needs)
+    rows = [{'id': row[0], 'uid': row[1], 'img_name': row[2], 'description': row[3], 'category': row[4], 
+             'image_thumbnail': row[6]} for row in rows]
+    
     # Print results for debugging
     for row in rows:
         print("Car Make: ", row)
 
-    # Convert the results to a list of dictionaries (depending on your needs)
-    images = [{'id': row[0], 'uid': row[1], 'img_name': row[2], 'description': row[3], 'alias': row[4], 
-             'image_thumbnail': row[5], 'likes_id': row[16]} for row in rows]
-
     cursor.close()
     conn.close()
 
-    return render_template('search_results.html', images=images, categories=categories,usr_obj=User)
+    return render_template('search_results.html', images=rows, categories=categories,usr_obj=User,search_value=search_value)
 
 
 @app.route("/google_signup", methods=["POST","GET"])
