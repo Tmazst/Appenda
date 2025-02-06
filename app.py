@@ -22,6 +22,7 @@ from PIL import Image
 import threading
 # from celery import Celery
 import re
+import base64
 # import logging
 
 # logging.basicConfig(level=logging.INFO)
@@ -853,7 +854,7 @@ def google_login():
     session['nonce'] = nonce  # Save nonce to session
     print("DEBUG NONCE STEP 1: ",session['nonce'] )
 
-    return oauth.appenda_oauth.authorize_redirect(redirect_uri=url_for("google_signin",_external=True))
+    return oauth.appenda_oauth.authorize_redirect(redirect_uri=url_for("google_signin",_external=True),nonce=nonce)
 
 
 #login redirect
@@ -862,6 +863,15 @@ def google_signin():
 
     # Step 1: Handle the OAuth2 callback and exchange the authorization code for an access token
     token = oauth.appenda_oauth.authorize_access_token()
+
+    # Step 2: Retrieve and decode the ID token
+    id_token = token.get("id_token")
+    print("Raw ID Token:", id_token)
+
+    # Decode the ID token (without validation, for inspection purposes)
+    parts = id_token.split(".")
+    id_token_payload = json.loads(base64.urlsafe_b64decode(parts[1] + "==").decode("utf-8"))
+    print("Decoded ID Token:", id_token_payload)
 
     nonce = session.pop('nonce', None)
     print("DEBUG NONCE STEP 2: ",nonce )
