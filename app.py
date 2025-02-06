@@ -217,7 +217,7 @@ def inject_ser():
 
     
 
-    return dict(ser=ser,os=os,likes=Likes) #universal
+    return dict(ser=ser,os=os,likes=Likes,home=False) #universal
 
 
 
@@ -227,9 +227,10 @@ def home():
     images=None
     layout = None
     db.create_all()
-    al = request.args.get("al")
-    cat = request.args.get("cat")
+    al = request.args.get("al") #All Images
+    cat = request.args.get("cat") #categry
     chck_len=True
+    home=True
 
     if cat:
         images = Images.query.filter_by(image_category=cat).all()
@@ -243,7 +244,7 @@ def home():
     if request.args.get('icon'):
         layout = request.args.get('icon')
 
-    return render_template("index.html", images=images, layout=layout, categories=categories,usr_obj=User,chck_len=chck_len)
+    return render_template("index.html", images=images, layout=layout, categories=categories,usr_obj=User,chck_len=chck_len,home=home)
 
 @app.route('/terms_conditions')
 def terms():
@@ -676,6 +677,7 @@ def sign_up():
 
     register = Register()
     user = None
+    home=True
 
     if current_user.is_authenticated:
         return redirect(url_for('home'))
@@ -707,7 +709,7 @@ def sign_up():
             print(register.errors)
 
     # from myproject.models import user
-    return render_template("signup_form.html",register=register)
+    return render_template("signup_form.html",register=register,home=home)
 
 # User Account
 @app.route("/account", methods=["POST", "GET"])
@@ -744,6 +746,7 @@ def user_account():
 def login():
 
     login = Login()
+    home=True
 
     if login.validate_on_submit():
 
@@ -763,7 +766,7 @@ def login():
                 # Check If are they allocated to a church 
 
                 login_user(user_login)
-                flash(f"Hey! {user_login.name.title()} You're Logged In!", "success")
+                flash(f"Welcome! {user_login.name.title()}", "success")
 
                 req_page = request.args.get('next')
                 return redirect(req_page) if req_page else redirect(url_for('home'))
@@ -779,30 +782,31 @@ def login():
         else:
             print("No Errors found", login.email.data, login.password.data)
 
-    return render_template("login.html",login=login)
+    return render_template("login.html",login=login,home=True)
 
 
 @app.route('/search', methods=['GET'])
 def search_in_table():
 
-    apps_obj = App_Info()
+    apps_obj = Images()
+    categories= {app.image_category for app in Images.query.all()}
 
     search_value = request.args.get('search_value')
-    table_name = "app_info"  # request.args.get('table_name')
+    table_name = "images"  # request.args.get('table_name')
 
     # Database connection parameters
     db_config = {
         'user': creds['user'],
         'password': creds['db_pass'],
         'host': 'localhost',  # or your MySQL server address
-        'database': 'techtlnf_apps_eswatini'
+        'database': 'techtlnf_images_hub_db'
     }
 
     conn = mysql.connector.connect(**db_config)
     cursor = conn.cursor()
 
     # Use parameters to avoid SQL injection
-    query = f"SELECT * FROM `{table_name}` WHERE CONCAT(COALESCE(name, ''), COALESCE(company_name, ''), COALESCE(app_category, ''), COALESCE(platform, ''))  LIKE %s"
+    query = f"SELECT * FROM `{table_name}` WHERE CONCAT(COALESCE(img_name, ''), COALESCE(image_category, '')  LIKE %s"
     cursor.execute(query, ('%' + search_value + '%',))
     rows = cursor.fetchall()
 
@@ -811,17 +815,13 @@ def search_in_table():
         print("Car Make: ", row)
 
     # Convert the results to a list of dictionaries (depending on your needs)
-    apps = [{'id': row[0], 'cid': row[1], 'name': row[2], 'description': row[3], 'app_category': row[4], 
-             'platform': row[5], 'version_number': row[6], 'playstore_link': row[7], 'ios_link': row[8],'uptodown_link': row[9],
-             'huawei_link': row[10], 'apkpure_link': row[11], 'galaxy_link': row[12],'microsoft_link': row[13], 'amazon_link': row[14], 
-               'facebook_link': row[15], 'whatsapp_link': row[16], 'x_link': row[17],'linkedin_link': row[18], 'youtube_link': row[19], 'web_link': row[20],
-            'github_link': row[21], 'app_icon': row[22], "app_code":row[23],'publish': row[24],'approved': row[25], 'timestamp': row[26], 'company_name': row[27],
-            'company_contact': row[28],'company_email': row[29],} for row in rows]
+    images = [{'id': row[0], 'uid': row[1], 'img_name': row[2], 'description': row[3], 'alias': row[4], 
+             'image_thumbnail': row[5], 'likes_id': row[16]} for row in rows]
 
     cursor.close()
     conn.close()
 
-    return render_template('search_results.html', apps_obj=apps_obj, apps=apps,search_value=search_value)
+    return render_template('search_results.html', images=images, categories=categories,usr_obj=User)
 
 
 @app.route("/google_signup", methods=["POST","GET"])
@@ -843,6 +843,7 @@ def google_login():
 def google_signin():
 
     token = oauth.appenda_oauth.authorize_access_token()
+    
 
     session['user'] = token
 
@@ -880,7 +881,7 @@ def google_signin():
             usr_obj = User.query.filter_by(email=usr_email).first()
             #Check if user have a church id
             login_user(usr_obj)
-            flash(f"Hey! {usr_obj.name.title()} You're Logged In!", "success")
+            flash(f"Welcome! {usr_obj.name.title()}", "success")
 
             req_page = request.args.get('next')
             return redirect(req_page) if req_page else redirect(url_for('home'))
@@ -902,7 +903,7 @@ def google_signin():
             return redirect(url_for('verification'))
 
         login_user(user_login)
-        flash(f"Hey! {user_login.name.title()} You're Logged In!", "success")
+        flash(f"welcome! {user_login.name.title()}", "success")
 
 
         req_page = request.args.get('next')

@@ -70,6 +70,18 @@ if(window.innerWidth <= 700){
     var trimmed = usr.innerHTML.substring(0,5);
     usr.innerHTML = trimmed+"...";
     console.log('Smartphone View');
+
+    var names = document.querySelectorAll(".captions");
+    console.log("Did we find the Names: ",names);
+    names.forEach(name => {
+        var inner = name.innerHTML;
+        if (inner.length >= 13 ){
+        var trimmed =  inner.substring(0,12) + "..";
+        name.innerHTML= trimmed;
+        console.log("Did we find the Name: ",trimmed );
+    }
+    });
+
 }
 
  // Save the scroll position before the page unloads

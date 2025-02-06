@@ -100,7 +100,7 @@ div{
 
 .cap-1{
     font-weight:500;
-    font-size: 18px;
+    font-size: 15px;
     color:#202020
 }
 
@@ -119,6 +119,13 @@ div{
     border-radius:20px;
     backdrop-filter: blur(10px);
     box-shadow:1px 1px 3px 0px rgba(0,0,0,0.1);
+}
+
+.footer{
+    border-radius: 15px;
+    border:1px solid #555;
+    padding:10px;
+    width:90%;
 }
 
 .icons:hover{
@@ -349,7 +356,6 @@ div{
 
 .images-container{
     width: 100%;
-    min-width:350px;
     /* background-color: #a5006e; */
     height:fit-content;
     border-bottom: 1px solid rgb(230, 230, 230);
@@ -1589,7 +1595,9 @@ label span{
 
 .flash-messages{
     width:60%;
-    margin:10px auto
+    margin:10px auto;
+    z-index: 1500;
+    /* box-shadow: 2px 2px 5px rgba(0,0,0,0.5);; */
 }
 .sel-tag{
     font-size:20px;
@@ -2793,9 +2801,24 @@ to{
     border-radius: 10px;
 }
 
+#login{
+    border-width:2px;
+}
+
 .alert-error{
     color:red !important;
     text-decoration: dotted;
+}
+
+.affilliates{
+    width:100%;
+    height:120px;
+    justify-content: flex-start;
+    margin-top:40px;
+}
+
+.affilliates img{
+    height:inherit;
 }
 
 .alert-success{
@@ -2813,6 +2836,7 @@ to{
 .cap-1{
     position: absolute;
     bottom:0;
+    padding-left:5px
     
 }
 
@@ -2834,6 +2858,38 @@ to{
 
     #search-cat {
         /* min-width: 400px; */
+    }
+    
+    .imag{
+        width:100%;
+/*        background-color: aqua;*/
+    }
+
+    .cap-img{
+        display: none !important;
+    }
+    
+    .img-card{
+        max-width:100vw;
+        overflow: hidden;
+    }
+    
+    .img-caption{
+        background: rgba(224, 224, 224, 0.5);
+        backdrop-filter: blur(10px);
+        padding: 10px;
+        border-radius: 15px;
+    }
+    
+    .del-mobile{
+        position: absolute;
+        right:5px;
+        bottom: 5px;
+        display: none;
+    }
+    
+    .flat-flex{
+        align-items: center;
     }
 
     .login-cont{
@@ -2884,6 +2940,14 @@ to{
     padding:20px 0;
 }
 
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:100vw;
+    flex-direction:column;
+}
+
 .container{
     display:flex;
     justify-content: center;
@@ -2914,7 +2978,7 @@ to{
 }
 .menu-icon{
     left:5px;
-    top:65px;
+    top:70px;
     background-color:#e0e0e0
 }
 
@@ -2945,6 +3009,8 @@ to{
 .cap-1{
     position: absolute;
     bottom:0;
+    font-size:13px;
+    font-weight: 600;
 
 }
 

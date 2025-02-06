@@ -1,0 +1,274 @@
+ <!-- FAQ  -->
+
+  <!-- Terms and Conditions  -->
+
+<!-- #Download  -->
+
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .form-fields{
+        display:flex;
+        flex-direction:column;
+        a{
+            color:none
+        }
+    }
+    .search-cont{background-color:;display: flex;justify-content:center;padding:10px}
+    .search-cont input{border: 1px solid grey;border-radius:10px;padding: 5px;}
+    /* section{ background-image:url(static/images/bg_service.png) } */
+</style>
+
+<div style="width:;margin:0 auto;background-color:;">
+    <!-- <a id="contact_us"></a> -->
+    <section style="background-color:;" id="" class="services hidden">
+        <!-- Flash message -->
+
+        <div class="flash-messages ">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for  category, message in messages %}
+                        <div class="flash-messages alert-{{category}}"> {{message}}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div><br>
+
+    </section>
+</div>
+ 
+<br>
+
+<section id="sect-mobile" style="flex-wrap: wrap;" class="container gen-flex">
+
+    <div id="faqs" class="doc-container">
+       <h3>FAQ for Eswatini Image Hosting Platform (Appenda)</h3><br>
+
+       <div class="faq-ea-cont">
+            <p class="faq-q">1. What is the purpose of this image hosting site?</p>
+            <p class="faq-ans">
+                Our platform is dedicated to showcasing the beauty and diversity of Eswatini. We invite all emaSwati to upload high-quality images that capture the essence of our country. This initiative not only highlights our stunning scenery but also provides an opportunity for users to generate passive income through image contributions.
+            </p>
+       </div><br>
+
+       <div class="faq-ea-cont">
+            <p class="faq-q">2. Who can upload images to the site?</p>
+            <p class="faq-ans">
+                Any LiSwati resident can upload images to our site! Whether you are a professional photographer or an amateur with a quality image to share, we encourage you to participate and contribute your unique perspectives of Eswatini.
+            </p>
+        </div><br>
+
+        <div class="faq-ea-cont">
+            <p class="faq-q">3. Is there a fee to download images?</p>
+            <p class="faq-ans">
+                Downloading images is free for users, but we encourage donations to the image owners. Users can contribute a minimum of 20 SZL or more to support photographers and creators whose work they admire.
+            </p>
+        </div><br>
+
+        <div class="faq-ea-cont">
+            <p class="faq-q">4. How can I ensure my images are of high quality?</p>
+            <p class="faq-ans">
+            
+                Use high-resolution photos and pay attention to composition, lighting, and subject matter.
+            
+            </p>
+        </div><br>
+
+        <div class="faq-ea-cont">
+            <p class="faq-q">5. What kind of images are encouraged for upload?</p>
+            <p class="faq-ans">
+                We are open to a wide range of imagery, including landscapes, cultural events, daily life, wildlife, and more. We celebrate all aspects of life in Eswatini, and we encourage creativity and artistic expression.
+            </p>
+        </div><br>
+
+        <div class="faq-ea-cont">
+            <p class="faq-q">6. How will my contributions be used?</p>
+            <p class="faq-ans">
+                Your images will be available for download by users worldwide, allowing them to appreciate and learn about Eswatini. Users who download your images can choose to contribute to you, ensuring that local creators benefit from their work.
+            </p>
+        </div><br>
+
+        <div class="faq-ea-cont">
+            <p class="faq-q">7. What kind of licensing is associated with the images?</p>
+            <p class="faq-ans">
+                Once uploaded, images will be licensed under terms that specify how users can use them (e.g., personal use versus commercial use). It’s important to provide clear guidelines on what people can and cannot do with your images.
+            </p>
+        </div><br>
+
+        <div class="faq-ea-cont">
+            <p class="faq-q">8. Can I specify a price for my images?</p>
+            <p class="faq-ans">
+                While downloading is free, you can suggest a contribution amount for users who wish to support your work. 
+                However your image(s) should earn a higher voting through user's likes to be considered exclusive and earn a premium standard.
+            </p>
+        </div><br>
+
+        <div class="faq-ea-cont">
+            <p class="faq-q">9. How can I promote my work on this platform?</p>
+            <p class="faq-ans">
+                Regularly update your uploaded images and share your experiences as a contributor.</p>
+        </div><br>
+
+        <div class="faq-ea-cont">
+            <p class="faq-q">10. What if I see an image that I believe is inappropriate or violates the guidelines?</p>
+            <p class="faq-ans">
+                We take community standards seriously. If you find any content that is inappropriate or violates our guidelines, please report it via the ‘Report’ feature on the image page. Our moderation team will review your report promptly.
+            </p>
+        </div><br>
+
+        <div class="faq-ea-cont">
+            <p class="faq-q">11. Can I delete my uploaded images?</p>
+            <p class="faq-ans">
+                Yes, as an uploaded image owner, you can delete your images at any time from your profile account settings.
+            </p>
+        </div><br>
+
+        <div class="faq-ea-cont">
+            <p class="faq-q">12. How do I get paid from contributions?</p>
+            <p class="faq-ans">
+                Once you receive contributions from users downloading your images, we will provide clear instructions on how to withdraw your earnings. Payment methods will include local options familiar to LiSwati users.
+            </p>
+        </div><br>
+
+        <div class="faq-ea-cont">
+            <p class="faq-q">13. How can I get involved with the image hosting community?</p>
+            <p class="faq-ans">
+                Yes, we take user privacy seriously. Your personal information will be kept secure, and only the necessary details will be shared with users who download your images.
+            </p>
+        </div><br>
+
+        <div class="faq-ea-cont">
+            <p class="faq-q">14. Who can I contact for further questions?</p>
+            <p class="faq-ans">
+                For further inquiries or assistance, please reach out to our support team via the contact form on our website, and we will get back to you as soon as possible.
+            </p>
+        </div><br>
+
+    </div>
+    <br>
+    <br>
+
+
+</section><br><br>
+
+
+<script>
+    // quoteBtns.forEach(function(btn){
+        function displayImage(image,imgname,by_who) {
+            console.log(image);
+            let mainImg = document.querySelector("#show-img");
+            let nameImg = document.querySelector(".img-name");
+            let describeImg = document.querySelector(".describe-img");
+            let displyCont = document.querySelector(".display-img");
+            let by = document.querySelector(".by");
+
+            let imageUrl = "static/uploads/usr_images/thumbnails/" + image + "?t=" + new Date().getTime();
+            
+            displyCont.classList.add("showIt");
+
+            mainImg.src = imageUrl;
+
+            nameImg.innerHTML = imgname;
+            by.innerHTML = "by " + by_who;
+            // describeImg.innerHTML = describeImg;
+
+            console.log("Name: ", nameImg.innerHTML);
+            console.log("Image: ", mainImg.src);
+
+            mainImg.onerror = function() {
+                console.error("Image failed to load:", imageUrl);
+                // Optionally, set a fallback image
+                mainImg.src = "path/to/fallback-image.jpg";
+            };
+        }
+
+    function revealIcons(id){
+        
+        let btn = document.querySelector("#reveal-icons-btns-"+id);
+        let icons = document.querySelector("#other-pltfms-"+id);
+        icons.classList.toggle("reveal-icons");
+
+        if (btn.innerHTML.trim() === "+more") {
+            btn.innerHTML = "less";
+            // btn.classList.toggle("btns-inverted")
+        } else {
+            btn.innerHTML = "+more";
+            
+        }
+    }
+
+    
+    const listIcon = document.querySelector("#list");
+    const blocksIcon = document.querySelector("#blocks");
+
+    listIcon.addEventListener("click", function(){
+
+        window.location.href = "/?icon=listview";
+        // listIcon.classList.add('active') ;
+
+    });
+
+    blocksIcon.addEventListener("click", function(){
+
+        window.location.href = "/?icon=blockview";
+        // console.log("Blocks Icon CLicked");
+
+    });
+
+
+
+document.getElementById('scroll-left').addEventListener('click', function() {
+    const container = document.querySelector('#view-cont');
+    const imgContainer = document.querySelector('.scroll-container');
+    const firstImg = document.querySelector('img');
+    // if (!firstImg) return;
+    const imageWidth = firstImg.clientWidth;
+    
+    if (window.innerWidth >= 600){
+        container.scrollBy({
+            left: -600, // Adjust this value to match the height of visible area
+            behavior: 'smooth'
+        });
+    }else{
+        container.scrollBy({
+            left: -220, // Adjust this value to match the height of visible area
+            behavior: 'smooth'
+        });
+    }
+});
+
+document.getElementById('scroll-right').addEventListener('click', function() {
+    console.log("Testing");
+    const container = document.querySelector('#view-cont');
+    const imgContainer = document.querySelector('.scroll-container');
+    const firstImg = document.querySelector('img');
+    // if (!firstImg) return;
+    const imageWidth = firstImg.clientWidth;
+    
+    if (window.innerWidth >= 600){
+        container.scrollBy({
+            left: 600, // Adjust this value to match the height of visible area
+            behavior: 'smooth'
+        });
+    }else{
+        container.scrollBy({
+            left: 220, // Adjust this value to match the height of visible area
+            behavior: 'smooth'
+        });
+    }
+});
+
+function trackClick(link,name) {
+        // Send a fetch request to the Flask endpoint to log the click
+        fetch('/track_click', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ clicked_link: link,appnm:name })
+        });
+    }
+
+</script>
+{% endblock %}

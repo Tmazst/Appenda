@@ -1,0 +1,241 @@
+ <!-- Terms and Conditions  -->
+
+<!-- #Download  -->
+
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .form-fields{
+        display:flex;
+        flex-direction:column;
+        a{
+            color:none
+        }
+    }
+    .search-cont{background-color:;display: flex;justify-content:center;padding:10px}
+    .search-cont input{border: 1px solid grey;border-radius:10px;padding: 5px;}
+    /* section{ background-image:url(static/images/bg_service.png) } */
+</style>
+
+<div style="width:;margin:0 auto;background-color:;">
+    <!-- <a id="contact_us"></a> -->
+    <section style="background-color:;" id="" class="services hidden">
+        <!-- Flash message -->
+
+        <div class="flash-messages ">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for  category, message in messages %}
+                        <div class="flash-messages alert-{{category}}"> {{message}}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div><br>
+
+    </section>
+</div>
+ 
+<br>
+
+<section id="sect-mobile" style="flex-wrap: wrap;" class="container gen-flex">
+
+    <div class="doc-container">
+        <h3>Terms & Conditions for Eswatini Image Hosting Platform</h3>
+        <p class="temrs-p">
+            
+Welcome to the Eswatini Image Hosting Platform! By using our website, you agree to abide by the following Terms and Conditions. Please read them carefully before uploading images or using our services.
+</p>
+<b>1. Acceptance of Terms</b>
+
+<p>By accessing and using this platform, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions.
+</p>
+
+<b>2. Eligibility</b>
+<p>You must be a resident of Eswatini to upload images to the platform. Users outside Eswatini are welcome to download images but cannot contribute uploads.
+</p>
+
+<b>3. Image Upload Restrictions</b>
+<p>
+- Quality of Images: All images uploaded to our platform must be of high quality, clear, and visually appealing. Low-resolution or poorly composed images may be rejected.<br>
+- Original Content: You may only upload images that you have taken yourself using your own camera or mobile device. Uploading images that you do not own, or that are not your own original work, is strictly prohibited.<br>
+- Prohibited Content: <br>
+   - You may not upload images that depict government authority figures, individuals in sensitive contexts, or images of the King and government officials.<br>
+   - Images taken in designated areas with signage stating "Images are not allowed in this vicinity" are prohibited.<br>
+   - Images that could be considered political, inflammatory, or controversial in nature will not be accepted.<br>
+   - Any content that is discriminatory, obscene, incites violence, or violates privacy rights is strictly forbidden.<br>
+</p>
+
+<b>4. Licensing and Permissions</b>
+<p>
+By uploading images, you grant the Eswatini Image Hosting Platform a non-exclusive, worldwide, royalty-free license to display and distribute your content on the platform. You retain full ownership of your images and can revoke this license at any time by removing your images from the site.
+</p>
+
+<b>5. User Contributions and Donations</b>
+<p>
+While downloading images is free, we encourage users to contribute a minimum of 20 SZL or more to support image owners. The platform facilitates these contributions, but we do not guarantee the amount of income you may receive.
+</p>
+<b>6. User Responsibilities</b>
+<p>
+All users must adhere to the following:<br>
+- Ensure that your account information is accurate and up-to-date.<br>
+- Maintain the confidentiality of your account credentials and notify us immediately of any unauthorized use of your account.<br>
+- Respect other users and refrain from any harmful or abusive behavior.<br>
+</p>
+<b>7. Moderation and Reporting</b>
+<p>
+We reserve the right to review, monitor, or remove any images or content that we believe violate these Terms and Conditions. Users may report inappropriate or prohibited content using the 'Report' feature on the image page.
+</p>
+<b>8. Disclaimer of Warranties</b>
+<p>
+Our platform is provided on an "as-is" and "as-available" basis. We do not guarantee that the site will be uninterrupted or error-free, nor do we make guarantees regarding the quality of the images available for download.
+</p>
+<b>9. Limitation of Liability</b>
+<p>
+To the fullest extent permitted by law, the Eswatini Image Hosting Platform, its owners, and affiliates are not liable for any direct, indirect, incidental, consequential, or punitive damages arising from your use of the site or the images downloaded.
+</p>
+<b>10. Changes to Terms</b>
+<p>
+We may update these Terms and Conditions from time to time. Any changes will be posted on this page with an updated effective date. Your continued use of the site after any modifications indicates your acceptance of the revised terms.
+</p>
+<b>11. Governing Law</b>
+<p>
+These Terms and Conditions shall be governed by and construed in accordance with the laws of Eswatini. Any disputes arising from or relating to these terms shall be subject to the exclusive jurisdiction of the courts of Eswatini.
+</p>
+<b>12. Contact Information</b>
+<p>
+For any questions or concerns regarding these Terms and Conditions, please contact us through our website’s contact form.
+</p>
+
+<p>
+By using our platform, you accept these terms and conditions, contributing to a safe and respectful community focused on promoting the beauty and culture of Eswatini.
+</p>
+
+
+    </div>
+    <br>
+    <br>
+
+
+</section><br><br>
+
+
+<script>
+    // quoteBtns.forEach(function(btn){
+        function displayImage(image,imgname,by_who) {
+            console.log(image);
+            let mainImg = document.querySelector("#show-img");
+            let nameImg = document.querySelector(".img-name");
+            let describeImg = document.querySelector(".describe-img");
+            let displyCont = document.querySelector(".display-img");
+            let by = document.querySelector(".by");
+
+            let imageUrl = "static/uploads/usr_images/thumbnails/" + image + "?t=" + new Date().getTime();
+            
+            displyCont.classList.add("showIt");
+
+            mainImg.src = imageUrl;
+
+            nameImg.innerHTML = imgname;
+            by.innerHTML = "by " + by_who;
+            // describeImg.innerHTML = describeImg;
+
+            console.log("Name: ", nameImg.innerHTML);
+            console.log("Image: ", mainImg.src);
+
+            mainImg.onerror = function() {
+                console.error("Image failed to load:", imageUrl);
+                // Optionally, set a fallback image
+                mainImg.src = "path/to/fallback-image.jpg";
+            };
+        }
+
+    function revealIcons(id){
+        
+        let btn = document.querySelector("#reveal-icons-btns-"+id);
+        let icons = document.querySelector("#other-pltfms-"+id);
+        icons.classList.toggle("reveal-icons");
+
+        if (btn.innerHTML.trim() === "+more") {
+            btn.innerHTML = "less";
+            // btn.classList.toggle("btns-inverted")
+        } else {
+            btn.innerHTML = "+more";
+            
+        }
+    }
+
+    
+    const listIcon = document.querySelector("#list");
+    const blocksIcon = document.querySelector("#blocks");
+
+    listIcon.addEventListener("click", function(){
+
+        window.location.href = "/?icon=listview";
+        // listIcon.classList.add('active') ;
+
+    });
+
+    blocksIcon.addEventListener("click", function(){
+
+        window.location.href = "/?icon=blockview";
+        // console.log("Blocks Icon CLicked");
+
+    });
+
+
+
+document.getElementById('scroll-left').addEventListener('click', function() {
+    const container = document.querySelector('#view-cont');
+    const imgContainer = document.querySelector('.scroll-container');
+    const firstImg = document.querySelector('img');
+    // if (!firstImg) return;
+    const imageWidth = firstImg.clientWidth;
+    
+    if (window.innerWidth >= 600){
+        container.scrollBy({
+            left: -600, // Adjust this value to match the height of visible area
+            behavior: 'smooth'
+        });
+    }else{
+        container.scrollBy({
+            left: -220, // Adjust this value to match the height of visible area
+            behavior: 'smooth'
+        });
+    }
+});
+
+document.getElementById('scroll-right').addEventListener('click', function() {
+    console.log("Testing");
+    const container = document.querySelector('#view-cont');
+    const imgContainer = document.querySelector('.scroll-container');
+    const firstImg = document.querySelector('img');
+    // if (!firstImg) return;
+    const imageWidth = firstImg.clientWidth;
+    
+    if (window.innerWidth >= 600){
+        container.scrollBy({
+            left: 600, // Adjust this value to match the height of visible area
+            behavior: 'smooth'
+        });
+    }else{
+        container.scrollBy({
+            left: 220, // Adjust this value to match the height of visible area
+            behavior: 'smooth'
+        });
+    }
+});
+
+function trackClick(link,name) {
+        // Send a fetch request to the Flask endpoint to log the click
+        fetch('/track_click', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ clicked_link: link,appnm:name })
+        });
+    }
+
+</script>
+{% endblock %}

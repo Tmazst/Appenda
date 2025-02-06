@@ -8,6 +8,7 @@
 
     <title>{{title}}</title>
 
+    {%if home%}
     <div class="header gen-flex">
       <a href="/">
         <div style="flex-direction: column;" class="logo gen-flex-col">
@@ -16,10 +17,11 @@
         </div>
       </a>
       <div class="filler"></div>
-      <div class="flag">
-        <img style="height: inherit;" src="{{ url_for('static', filename='images/eswatini_flag.png') }}" />
+      <div style="margin-top:45px" class="flag">
+        <img style="height: 70px;" src="{{ url_for('static', filename='images/eswatini_flag.png') }}" />
       </div>
     </div>
+    {%endif%}
 
     <div id="search-cat" style="height: auto;padding:3px" class="header gen-flex">
       <!-- <div style="padding-left:20px" class="cap-1">Eswatini Image Hub</div> -->
@@ -45,7 +47,7 @@
             <div><a class="" href="/account"><span id="navlink" style="font-size:13px" class="nav-link">{{current_user.name}}</span></a></div>
             <div><a href="/logout"><img class="logout-icon" style="height:40px" src="static/icons/logout-icon.webp"></a></div>
           {% else %}
-            <li><a class="btns-outlined links-user" href="/login">Login</a></li>
+            <li><a id="login" class="btns-outlined links-user" href="/login">Login</a></li>
             <!-- <li><a class="btns-user links-user" href="/client_signup">Register</a></li> -->
           {% endif %}
           </div>
@@ -106,7 +108,7 @@
 
 </head>
 <body>
-    <div style="width:100%" class="">
+    <div style="width:90vw;" class="margin:0 auto">
         {% block content %}
         {%endblock%}
     </div>

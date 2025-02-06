@@ -37,7 +37,7 @@
 
 <section class="container flat-flex">
 
-    
+    <!-- For Wide Screens  -->
     <div style="align-items: flex-start !important;" class="category-nav gen-flex-col">
         <div style="padding-top:25px"  class="gen-flex-col cat-item-cont">
             <img style="height:50px" src="static/icons/category-icon.png" />
@@ -56,8 +56,7 @@
     </div>
 
     <div class="parent-img-cont">
-        
-
+        <!-- Main Container -->
         <div style="flex-wrap: wrap;" class="images-container flat-flex">
             {%for img in images%}
                 {% if ("static/uploads/usr_images/thumbnails/" ~ img.image_thumbnail) | file_exists %}
@@ -65,20 +64,13 @@
                 {%set likes = likes.query.filter_by(img_id=img.id).first().num_likes%}
                 <div class="img-card">
                     {%set descr = img.description | tojson %}
-                    <div id="imag-cont-{{img.id}}" onclick="displayImage('{{img.image_thumbnail}}','{{img.img_name | e}}','{{by_who}}','{{img.id}}', '{{descr | remove_special_chars}}', '{{likes}}')"  class="imag"><img id="image-{{img.id}}" class="img-thmb"  src="static/uploads/usr_images/thumbnails/{{img.image_thumbnail}}" /></div>
-                    <!-- <div style="gap:5px" class="icons gen-flex"> -->
-                        <!-- <div class="svg-hrefs" >
-                            <object class="svg-icons" type="image/svg+xml" data="static/icons/view-icon.svg"></object>
-                        </div>
 
-                        <a class="svg-hrefs" style="" href="%">
-                            <object class="svg-icons" type="image/svg+xml" data="static/icons/download-icon.svg"></object>
-                        </a>
+                    <!-- Image  -->
+                    <div id="imag-cont-{{img.id}}" onclick="displayImage('{{img.image_thumbnail}}','{{img.img_name | e}}','{{by_who}}','{{img.id}}', '{{descr | remove_special_chars}}', '{{likes}}')"  class="imag">
+                        <img id="image-{{img.id}}" class="img-thmb"  src="static/uploads/usr_images/thumbnails/{{img.image_thumbnail}}" />
+                    </div>
 
-                        <a class="svg-hrefs" style="" href="$">
-                            <object class="svg-icons" type="image/svg+xml" data="static/icons/share-icon.svg"></object>
-                        </a> -->
-                    <!-- </div> -->
+                    <!-- Likes  -->
                     <a href="/like?im={{img.id}}" >
                         <div class="likes-normal">
                             <div id="likes" style="position:relative">
@@ -87,25 +79,32 @@
                             </div>
                         </div>
                     </a>
-                    <div id="cap-{{img.id}}" style="display: none;" class="cap-2 gen-flex-col show-caption">
-                        <!-- <a href="" class="svg-hrefs" id="img-href-id" style="width:40px"> -->
+
+                    <!-- Delete Icon / Button for mobile phones (Absolute) -->
+                     {%if current_user.id == img.uid %}
+                    <div id="del-mobile-{{img.id}}" class="del-mobile">
+                        <a id="mobile-del-id" href="/delete-file?im={{img.id}}"><img class="svg-icons" src="static/icons/delete-icon.png"></a> 
+                    </div>
+                    {%endif%}
+
+                    <!-- Caption Displayed Inside image container  (Absolute)-->
+                    <div id="cap-{{img.id}}" style="display: none;" class="cap-2 gen-flex-col show-caption cap-img">
                             <div id="downld-btn-mobl-{{img.id}}" onclick="openDownload('{{img.id}}')" class="btns-inverted downld-btn-mobl">
                                 Download
                             </div>
-                        <!-- </a> -->
-                        
-
-                        <small class="captions">{{img.img_name}}</small>
+                        <small class="captions nam-on-img-captions">{{img.img_name}}</small>
                         <div class="gen-flex"><img style="height:20px" src="static/icons/user.png" /><small class="captions"> {{by_who}}</small></div>
                     </div>
                     
                 </div>
 
+                <!-- Caption Displayed Outside & Below image container (Dynamic) | Mobile Phones  -->
                 <div id="img-caption-{{img.id}}" style="align-items:flex-start;" class="img-caption gen-flex-col">
                     <div  class="t-info-t">{{img.img_name}} ({{img.image_category}})</div>
                     <div  class="t-info">{{img.description}}<span></span></div>
-                    <div class="t-info">Image by <span><b>{{by_who}}</b></span></div>
-                    <a id="mobile-del-id" href="/delete_file?im={{img.id}}"><img class="svg-icons" style="" src="static/icons/delete-icon.png"></a> 
+                    <div class="gen-flex"><img style="height:20px" src="static/images/default.png" /><small style="font-size:12px" class="t-info"><b>{{by_who}}</b> </small></div>
+                    <!-- <div class="t-info">Image by <span><b></b></span></div> -->
+                    <!-- Absoulte right  -->
                     <a href="/download_img?img_id={{img.id}}"  ><img class="svg-icons phone-dnwl-icon" src="static/icons/download-icon.svg" /></a>
                 </div><br><br>
                 {%endif%}
@@ -115,23 +114,37 @@
 
         <br>
 
+        <!-- Upload and Sign up Buttons  -->
         <div style="justify-content: flex-start;gap:5px" class="nd-child gen-flex">
             <a href="/image_form" ><div  class="btns">Upload</div></a>
             {%if not current_user %}
             <a href="/signup" ><div class="btns">Sign Up</div></a>
             {%endif%}
         </div><br>
-        <div style="align-items:flex-start;" class="nd-child gen-flex-col">
+
+
+        <!-- Tag Line  -->
+        <div style="align-items:flex-start;" class="nd-child gen-flex-col ">
             <h3>Showcasing the Beauty of Eswatini!</h2>
                 <div class="gen-flex">
                     <img style="height: 40px;" src="static/icons/camera-icon.png "/>
                     <div style="color:rgb(54, 54, 54)" class="labels">Landscapes, Waterfalls, Mountains, Infrastucture, Hot Springs, Vegetation, Rivers, Indigeneous Fruits, Culture, Villages, Sports, Wildlife, and more.</div><br>
-                </div><br>
-            <div  class="t-info">Powered by <span>EmaSwati</span></div>
-            <div class="t-info">Developed by <span>Tech Xolutions (TechX)</span></div>
+                </div><br><br>
+            <div class="footer">
+                <div  class="t-info">Powered by <span>EmaSwati</span></div>
+                <div class="t-info">Developed by <span>Tech Xolutions (TechX)</span></div>
+            </div>
+        </div><br><br>
+
+        <h4 style="color:rgb(143, 142, 142)">Affiliates</h4>
+        <div class="affilliates gen-flex">
+            <img src="static/images/techx-logo.png" />
+            <img src="static/images/byt-logo.png" />
         </div>
+        
     </div>
 
+    <!-- Side Image viewer for big screens | Dynamic -->
     <div class="display-img">
         <div style="position: fixed;" class="side-display-fixed">
             <div class="allow-scroll">
@@ -171,23 +184,29 @@
 
 
 <script>
+
+
+
     // quoteBtns.forEach(function(btn){
         function displayImage(image,imgname,by_who,img_id,describe,likes) {
 
             // Image Display Configs for small screen 
             if(window.innerWidth < 575){
-
+                // Classes are access for resets 
                 var allImgsCont = document.querySelectorAll(".imag");
                 var allImgs = document.querySelectorAll(".img-thmb");
                 var allBtns = document.querySelectorAll(".downld-btn-mobl");
                 var allImgCap = document.querySelectorAll(".img-caption");
                 var allinlineCaps = document.querySelectorAll(".cap-2");
+                var allDeleteIcons = document.querySelectorAll(".del-mobile");
+
                 console.log("We are on Small Screens: ", window.innerWidth);
                 var imgCont = document.querySelector("#imag-cont-" +img_id);
                 var img = document.querySelector("#image-" +img_id);
                 var downldBtnMobl = document.querySelector("#downld-btn-mobl-" +img_id);
                 var imgCap = document.querySelector("#img-caption-" +img_id);
-                var imgInlineCap = document.querySelector("#cap-" +img_id);
+                var imgInlineCap = document.querySelector("#cap-" +img_id); //Caption
+                var deleteIcon = document.querySelector("#del-mobile-" +img_id);
                 
                 // Validate all images container height to the standard 
                 allImgsCont.forEach(imgcont => {
@@ -207,6 +226,11 @@
                     btn.style.display = "none";
                     });
 
+                //Turn OFF all Delete Icons/buttons
+                allDeleteIcons.forEach(delIcon => {
+                    delIcon.classList.remove("show-caption");
+                });
+
                 allImgCap.forEach(caption => {
                     caption.classList.remove("show-caption");
                 });
@@ -221,6 +245,7 @@
                 downldBtnMobl.style.display = 'block';
                 imgCap.classList.add("show-caption");
                 imgInlineCap.classList.remove('show-caption');
+                deleteIcon.classList.add("show-caption");
 
             }else if(window.innerWidth > 575 && window.innerWidth < 800){
                 var allImg = document.querySelectorAll(".imag");
