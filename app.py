@@ -22,7 +22,6 @@ from PIL import Image
 import threading
 # from celery import Celery
 import re
-from flask_session import Session
 # import logging
 
 # logging.basicConfig(level=logging.INFO)
