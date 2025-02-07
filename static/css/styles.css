@@ -2864,6 +2864,16 @@ to{
     display: none;
 }
 
+.bg-class-lgn {
+    width: 100%;
+    height: max-content;
+    background-color: var(--main-color);
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 20px;
+    margin-left: -14px;
+}
+
 @media all and (max-width: 575px){
 
     .web-cont{
