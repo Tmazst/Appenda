@@ -47,6 +47,56 @@
 //}
 //window.onscroll = function() {handleScroll()};
 
+// Utility functions for cookies
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+}
+
+function setCookie(name, value, days) {
+    let expires = "";
+    if (days) {
+        const date = new Date();
+        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+        expires = `; expires=${date.toUTCString()}`;
+    }
+    document.cookie = `${name}=${value || ""}${expires}; path=/`;
+}
+
+
+// Check login state when the app loads
+// window.onload = () => {
+//     const sessionToken = getCookie("session_token"); // Check if session cookie exists
+
+//     if (sessionToken) {
+//         console.log("User is logged in. Fetching user info...");
+
+//         // Fetch user info from the backend
+//         fetch("/get_user_info")
+//             .then((response) => {
+//                 if (!response.ok) {
+//                     throw new Error("User not logged in!");
+//                 }
+//                 return response.json();
+//             })
+//             .then((user) => {
+//                 console.log("User Info:", user);
+//                 document.querySelector("#user-name").textContent = user.name; // Example: Update UI
+//             })
+//             .catch((error) => {
+//                 console.error("Error fetching user info:", error);
+//                 // Redirect user to login if needed
+//                 window.location.href = "/google_login";
+//             });
+//     } else {
+//         console.log("User is not logged in. Redirecting to login...");
+//         window.location.href = "/google_login"; // Redirect to login
+//     }
+// };
+
+
+
 window.addEventListener("scroll", function() {
     console.log("Scroll detected: ", window.scrollY);
 });
@@ -67,6 +117,31 @@ document.addEventListener("DOMContentLoaded", function() {
         console.error("The .menu-icon element was not found in the DOM!");
     }
 });
+
+
+
+// Step 1: Capture and Store the `state` parameter in localStorage if present in the URL
+const queryParams = new URLSearchParams(window.location.search);
+const state = queryParams.get("state");
+
+if (state) {
+    // Store the `state` in localStorage for later retrieval
+    localStorage.setItem("oauth_state", state);
+    console.log("OAuth state stored successfully:", state);
+}
+
+// Step 2: Retrieve the stored `state` and reattach it to the URL if not already present
+const storedState = localStorage.getItem("oauth_state");
+
+if (!queryParams.has("state") && storedState) {
+    // If the `state` parameter is missing in the URL, reattach the stored state
+    console.log("State missing in URL. Restoring from localStorage:", storedState);
+    
+    queryParams.set("state", storedState);
+    
+    // Reload the page with the updated query parameters
+    window.location.search = queryParams.toString();
+}
 
 
 var faqCont = document.querySelectorAll(".faq-ea-cont");

@@ -684,13 +684,21 @@ def remove_special_chars(s):
     return re.sub(r'[^a-zA-Z0-9\s]', '', s)
 
 
+# app.config["REMEMBER_COOKIE_DURATION"] = timedelta(days=7)  # Duration for "remember me" cookies
+# app.config["SESSION_PERMANENT"] = False  # Temporary sessions unless 'remember=True'
+
+# Flask-Login callback to load user
+# @login_manager.user_loader
+# def load_user(user_id):
+#     return User.query.get(int(user_id))
+
 @app.route("/signup", methods=["POST","GET"])
 def sign_up():
 
     register = Register()
     user = None
     home=True
-
+ 
     if current_user.is_authenticated:
         return redirect(url_for('home'))
 
@@ -702,7 +710,7 @@ def sign_up():
 
             user = gen_user(
                     name=register.name.data, email=register.email.data, password=hashd_pwd,
-                    confirm_password=hashd_pwd,image="default.png"
+                    confirm_password=hashd_pwd,image="default.png",timestamp=datetime.now().strftime("%d-%m-%y %H:%M:%S")
                     )
 
             if not Register().validate_email(register.email.data):
@@ -710,6 +718,8 @@ def sign_up():
                 db.session.commit()
                 print('Sign up successful!')
                 flash(f"Account Successfully Created for {register.name.data}", "success")
+                # Automatically log the user in after signup
+                login_user(user, remember=True)  # Set 'remember=True' to keep logged in
             else:
                 flash(f"Something went wrong, check for errors", "error")
                 print('Sign up unsuccessful')
@@ -760,7 +770,17 @@ def login():
     login = Login()
     home=True
 
-    if login.validate_on_submit():
+    usr = session.get('username')
+    timestamp = session.get('password')
+
+    if usr and timestamp:
+        user_login = User.query.filter_by(email=usr).first()
+
+        if user_login.timestamp ==  timestamp:
+            login_user(user_login)
+            flash(f"Welcome! {user_login.name.title()}", "success")
+
+    elif login.validate_on_submit():
 
         if request.method == 'POST':
 
@@ -847,45 +867,28 @@ def google_signup():
 @app.route("/google_login", methods=["POST","GET"])
 def google_login():
 
-    # print("DEBUG CREDITENTAILS: ",appConfig.get("OAUTH2_CLIENT_ID"),' ',appConfig.get("OAUTH2_CLIENT_SECRET"))
-
     # Step 1: Generate a nonce and store it in the session for validation
     nonce = os.urandom(16).hex()  # Generate a random string
     session['nonce'] = nonce  # Save nonce to session
-    print("DEBUG NONCE STEP 1: ",session['nonce'])
 
-    return oauth.appenda_oauth.authorize_redirect(redirect_uri=url_for("google_signin",_external=True),state=nonce)
+
+    return oauth.appenda_oauth.authorize_redirect(redirect_uri=url_for("google_signin",_external=True),nonce=nonce)
 
 
 #login redirect
 @app.route("/google_signin", methods=["POST","GET"])
 def google_signin():
 
-    print("DEBUG STATE: ", request.args.get('state'), session.get('_google_authlib_state_'))
     # Step 1: Handle the OAuth2 callback and exchange the authorization code for an access token
     token = oauth.appenda_oauth.authorize_access_token()
 
-    # Retrieve nonce from state (in URL query parameter)
-    state_nonce = request.args.get('state')  # `state` contains the nonce
-
-    
-
-    # Step 2: Retrieve and decode the ID token
-    id_token = token.get("id_token")
-    print("Raw ID Token:", id_token)
-
-    # Decode the ID token (without validation, for inspection purposes)
-    parts = id_token.split(".")
-    id_token_payload = json.loads(base64.urlsafe_b64decode(parts[1] + "==").decode("utf-8"))
-    print("Decoded ID Token:", id_token_payload)
-
     nonce = session.pop('nonce', None)
-    print("DEBUG NONCE STEP 2: ",nonce )
+
     if not nonce:
         return jsonify({'Error':"Something Went Missing With Your Sign in, Please Retry"})
     
     # Step 2: Parse the ID token from the response to get user information
-    user_info = oauth.appenda_oauth.parse_id_token(token,nonce=state_nonce)
+    user_info = oauth.appenda_oauth.parse_id_token(token,nonce=nonce)
     
     # Step 3: Store user info in the Flask session for persistence
     session['user'] = user_info
@@ -949,6 +952,17 @@ def google_signin():
         req_page = request.args.get('next')
         return redirect(req_page) if req_page else redirect(url_for('home'))
     
+
+# User info API for frontend
+@app.route("/get_user_info", methods=["GET"])
+def get_user_info():
+    # Check if user is logged in
+    user = session.get("user")
+    if not user:
+        return jsonify({"error": "User not logged in"}), 401  # Unauthorized
+
+    # Return user information to the frontend
+    return jsonify(user)
 
     # return redirect(url_for("home"))
 
