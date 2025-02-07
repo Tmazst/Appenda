@@ -33,6 +33,7 @@ class User(db.Model,UserMixin):
         'polymorphic_on':role
     }
 
+
 class gen_user(User):
 
     id = db.Column(db.Integer, ForeignKey('user.id'), primary_key=True)

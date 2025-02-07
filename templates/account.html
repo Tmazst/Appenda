@@ -9,6 +9,7 @@
     }
     section{ background-image:url(static/images/bg_service.png) }
 </style>
+<br><br>
 <div class="flash-messages" id="">
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -18,7 +19,7 @@
         {% endif %}
     {% endwith %}
 </div>
-<br><br>
+
 <div style class="user-info ">
     <div style="" class="img-cont">
         <div width="90%"><img class="prf-image" src="static/images/{{usr_account.image}}" alt=""/></div>

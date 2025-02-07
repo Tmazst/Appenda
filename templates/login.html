@@ -32,10 +32,12 @@
                 <h2 class="form-welcome" style="">Please Login<br><span style="font-size:medium;color:rgb(102, 102, 102);"></span></h2>
             </div><br>
         </div>
-        <div>
-            <a href="{{url_for('google_login')}}"><div style="gap:2px;justify-content: flex-start;" class="general-flex" ><h4 class="form-welcome" style="margin:0">Continue with </h4>
+        
+        <!-- <div>
+            <a href="url_for('google_login')"><div style="gap:2px;justify-content: flex-start;" class="general-flex" ><h4 class="form-welcome" style="margin:0">Continue with </h4>
             <img class="ggl-img" style="height: 35px;border-radius: 15px;" src="static/icons/google-icon.png" /> </div></a>
-        </div>
+        </div> -->
+
         {{login.hidden_tag()}}
         <div class="group">
             {{ login.email(class="form-control",placeholder="Email") }}<br>
