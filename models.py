@@ -1,6 +1,6 @@
 
 # from alchemy_db import db.Model
-from sqlalchemy import  MetaData, ForeignKey
+from sqlalchemy import  MetaData, ForeignKey, Table
 from flask_login import login_user, UserMixin
 from sqlalchemy.orm import backref, relationship
 from datetime import datetime
@@ -10,6 +10,13 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 metadata = MetaData()
+
+# Association table (no model required)
+likes_table = db.Table(
+    "likes",
+    db.Column("user_id", db.Integer, db.ForeignKey("user.id"), primary_key=True),
+    db.Column("image_id", db.Integer, db.ForeignKey("images.id"), primary_key=True)
+)
 
 #Users class, The class table name 'h1t_users_cvs'
 class User(db.Model,UserMixin):
@@ -26,6 +33,8 @@ class User(db.Model,UserMixin):
     role = db.Column(db.String(120))
     images = relationship("Images",backref="User",lazy=True)
     timestamp = db.Column(db.DateTime)
+     # Relationship to define which images the user has liked
+    liked_images = db.relationship("Images", secondary=likes_table, back_populates="likers")
     # project_briefs = relationship("Project_Brief", backref="Project_Brief", lazy=True)
 
     __mapper_args__={
@@ -78,14 +87,19 @@ class Images(db.Model):
     edited=db.Column(db.DateTime)
     edited_by=db.Column(db.String(100))
     access=relationship("Image_Access_Credits",backref="App_Info",lazy=True)
-    likes_id=relationship("Likes",backref="App_Info",lazy=True)
+    # likes_id=relationship("Likes",backref="App_Info",lazy=True)
+    # Relationship to define users who liked this image
+    likers = db.relationship("User", secondary=likes_table, back_populates="liked_images")
 
-class Likes(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    img_id = db.Column(db.Integer, ForeignKey('images.id'))
-    liker_id = db.Column(db.Integer,ForeignKey("user.id"))
-    num_likes = db.Column(db.Integer,default=0,nullable=False)
-    timestamp = db.Column(db.DateTime)
+
+
+
+# class Likes(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     img_id = db.Column(db.Integer, ForeignKey('images.id'))
+#     liker_id = db.Column(db.Integer,ForeignKey("user.id"))
+#     num_likes = db.Column(db.Integer,default=0,nullable=False)
+#     timestamp = db.Column(db.DateTime)
 
 class Image_Access_Credits(db.Model):
 

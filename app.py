@@ -224,11 +224,9 @@ def file_exists_filter(filepath):
 
 #Populating variables across all routes
 @app.context_processor
-def inject_ser():
+def inject_ser():  
 
-    
-
-    return dict(ser=ser,os=os,likes=Likes,home=False) #universal
+    return dict(ser=ser,os=os,home=False) #universal
 
 
 
@@ -243,6 +241,8 @@ def home():
     chck_len=True
     home=True
 
+    liked_images = [image.id for image in current_user.liked_images]  # List of image IDs the user has liked
+
     if cat:
         images = Images.query.filter_by(image_category=cat).all()
     elif al:
@@ -255,7 +255,8 @@ def home():
     if request.args.get('icon'):
         layout = request.args.get('icon')
 
-    return render_template("index.html", images=images, layout=layout, categories=categories,usr_obj=User,chck_len=chck_len,home=home)
+    return render_template("index.html", images=images, layout=layout, categories=categories,usr_obj=User,chck_len=chck_len,home=home,
+                           liked_images=liked_images)
 
 @app.route('/terms_conditions')
 def terms():
@@ -627,34 +628,57 @@ def image_form():
     return render_template("image_form.html",app_form=app_form)
 
 
-@app.route("/like", methods=['GET'])
+# Route to handle likes
+@app.route("/like", methods=["GET", "POST"])
 @login_required
-def likes():
+def like_image():
+    # Get the image ID from the query parameter
+    img_id = request.args.get("im", type=int)
+    
+    # Query the image from the database
+    image = Images.query.get_or_404(img_id)
 
-    id = request.args.get("im")
-    image = Images.query.get(id)
-    likes_obj = Likes.query.filter_by(img_id=image.id).first()
-    if current_user:
-        print("Debug Likes: ", image)
-        if likes_obj:
-            if not Likes.query.filter_by(liker_id=current_user.id,img_id=image.id):
-                likes_obj.img_id = image.id
-                likes_obj.liker_id=current_user.id
-                likes_obj.num_likes = likes_obj.num_likes=+1
-                likes_obj.timestamp = datetime.now()
+    # Check if the user has already liked the image
+    if current_user in image.likers:
+        # User has already liked the image; unlike it (remove from relationship)
+        image.likers.remove(current_user)
+        db.session.commit()
+        return jsonify({"status": "unliked", "likes_count": len(image.likers)})
+    else:
+        # User has not liked the image; add the like
+        image.likers.append(current_user)
+        db.session.commit()
+        return jsonify({"status": "liked", "likes_count": len(image.likers)})
+
+
+# @app.route("/like", methods=['GET'])
+# @login_required
+# def likes():
+
+#     id = request.args.get("im")
+#     image = Images.query.get(id)
+#     likes_obj = Likes.query.filter_by(img_id=image.id).first()
+#     if current_user:
+#         print("Debug Likes: ", image)
+#         if likes_obj:
+#             if not Likes.query.filter_by(liker_id=current_user.id,img_id=image.id):
+#                 likes_obj.img_id = image.id
+#                 likes_obj.liker_id=current_user.id
+#                 likes_obj.num_likes = likes_obj.num_likes=+1
+#                 likes_obj.timestamp = datetime.now()
 
                 
-                db.session.commit()
-            else:
-                print("Already Have Liked")
-        else:
-            print("Debug No Likes: ", image)
-            zero_likes = Likes(img_id=image.id,liker_id=current_user.id,timestamp=datetime.now(),num_likes=1)
-            db.session.add(zero_likes)
-            db.session.commit()
-        return redirect(url_for("home"))
+#                 db.session.commit()
+#             else:
+#                 print("Already Have Liked")
+#         else:
+#             print("Debug No Likes: ", image)
+#             zero_likes = Likes(img_id=image.id,liker_id=current_user.id,timestamp=datetime.now(),num_likes=1)
+#             db.session.add(zero_likes)
+#             db.session.commit()
+#         return redirect(url_for("home"))
     
-    return f""
+#     return f""
 
 @app.route("/edit_app", methods=['POST','GET'])
 def edit_app():

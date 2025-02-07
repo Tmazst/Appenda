@@ -65,6 +65,59 @@ function setCookie(name, value, days) {
 }
 
 
+document.addEventListener("DOMContentLoaded", function () {
+    // Attach event listeners to all like buttons
+    document.querySelectorAll('a[href^="/like"]').forEach(likeButton => {
+        likeButton.addEventListener("click", function (e) {
+            e.preventDefault(); // Prevent the default anchor link behavior
+
+            // Extract the image ID from the URL
+            const imageId = this.href.split("im=")[1];
+
+            // Find the likes container for this image
+            const likeContainer = this.querySelector("#likes");
+
+            console.log("imageId: ", imageId);
+
+            // Send the AJAX request
+            fetch(`/like?im=${imageId}`, { method: "POST" })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Received data from server:", data);
+
+                    // Find or create the like count element (.num)
+                    let likesCountEl = likeContainer.querySelector(".num");
+                    if (!likesCountEl && data.likes_count > 0) {
+                        // Create a new .num element if it doesn't exist and there are likes
+                        likesCountEl = document.createElement("small");
+                        likesCountEl.className = "num gen-flex likes-1";
+                        likeContainer.appendChild(likesCountEl); // Append to the likes container
+                    }
+
+                    // Update the like count dynamically
+                    if (likesCountEl) {
+                        likesCountEl.textContent = data.likes_count;
+                        // If likes are 0, hide/remove the `.num` element
+                        if (data.likes_count === 0) {
+                            likesCountEl.remove();
+                        }
+                    }
+
+                    // Update the heart icon
+                    const heartImg = likeContainer.querySelector("img");
+                    if (heartImg) {
+                        if (data.status === "liked") {
+                            heartImg.src = "static/icons/heart-icon-filled.png"; // Change to filled heart
+                        } else {
+                            heartImg.src = "static/icons/heart-icon-outlined.png"; // Change to outlined heart
+                        }
+                    }
+                })
+                .catch(error => console.error("Error liking image:", error));
+        });
+    });
+});
+
 // Check login state when the app loads
 // window.onload = () => {
 //     const sessionToken = getCookie("session_token"); // Check if session cookie exists
