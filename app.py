@@ -240,8 +240,10 @@ def home():
     cat = request.args.get("cat") #categry
     chck_len=True
     home=True
+    liked_images=None
 
-    liked_images = [image.id for image in current_user.liked_images]  # List of image IDs the user has liked
+    if current_user.is_authenticated:
+        liked_images = [image.id for image in current_user.liked_images]  # List of image IDs the user has liked
 
     if cat:
         images = Images.query.filter_by(image_category=cat).all()

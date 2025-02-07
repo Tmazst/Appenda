@@ -86,7 +86,7 @@
                     <a href="/like?im={{img.id}}" class="like-btn">
                         <div id="like-cont-{{img.id}}" class="likes-normal-bleft">
                             <div id="likes" style="position:relative">
-                                {%if img.id in liked_images%}
+                                {%if liked_images and img.id in liked_images%}
                                     <img id="heart-icon-{{img.id}}" style="height:35px" src="static/icons/heart-icon-filled.png" />
                                 {%else%}
                                     <img id="heart-icon-{{img.id}}" style="height:35px" src="static/icons/heart-icon-outlined.png" />
