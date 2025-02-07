@@ -607,7 +607,7 @@ def image_form():
 
         image_info = Images(
             img_name=app_form.name.data.strip(),description=app_form.description.data.strip(),
-            image_category=app_form.image_category.data,timestamp=datetime.now(),uid=current_user.id
+            image_category=app_form.image_category.data,timestamp=datetime.now(),uid=current_user.id,alias=app_form.alias.data.strip()
             )
 
         if app_form.image.data:

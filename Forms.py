@@ -42,6 +42,7 @@ class AccountForm(FlaskForm):
 class ImagesForm(FlaskForm):
 
     name = StringField('Image Name*', validators=[DataRequired()])
+    alias = StringField('siSwati Name(s) or Other', validators=[DataRequired()])
     image = FileField('Upload Image*', validators=[DataRequired()], render_kw={"accept": "image/png,image/jpeg,image/gif,image/bmp"})
     description = TextAreaField('Describe Image', validators=[Optional()])
     image_category = SelectField('Category*',choices=[

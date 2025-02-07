@@ -47,9 +47,21 @@
             <div style="background-color: f8f95a;" class="job-ad-group marginise-bottom">
                 {{ app_form.hidden_tag() }}
                 {{ app_form.name.label(class="labels")}}<br>
-                {{ app_form.name(class="form-control adj-width-60",placeholder="name")}}
+                {{ app_form.name(class="form-control adj-width-60",placeholder="e.g. Lusutfu Waterfall")}}
                 {% if app_form.name.errors %}
                     {% for error in app_form.name.errors %}
+                        <span class="span-error" >*{{error}}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <!-------Alias--------->
+            <div style="background-color: f8f95a;" class="job-ad-group marginise-bottom">
+                {{ app_form.hidden_tag() }}
+                {{ app_form.alias.label(class="labels")}}<br>
+                {{ app_form.alias(class="form-control adj-width-60",placeholder="a.k.a")}}
+                {% if app_form.alias.errors %}
+                    {% for error in app_form.alias.errors %}
                         <span class="span-error" >*{{error}}</span>
                     {% endfor %}
                 {% endif %}
@@ -58,7 +70,7 @@
             <!-------Image Category--------->
             <div class="job-ad-group marginise-bottom">
                 {{ app_form.image_category.label(class="labels")}}<br>
-                {{ app_form.image_category(class="form-control adj-width-60",placeholder="Company Name")}}
+                {{ app_form.image_category(class="form-control adj-width-60",placeholder="")}}
                 {% if app_form.image_category.errors %}
                     {% for error in app_form.image_category.errors %}
                         <span class="span-error" >*{{error}}</span>
@@ -69,7 +81,7 @@
             <!-------Description--------->
             <div style="background-color: f8f95a;" class="job-ad-group marginise-bottom">
                 {{ app_form.description.label(class="labels")}}<br>
-                {{ app_form.description(style="min-height:100px", class="form-control adj-width-60", placeholder="Description")}}
+                {{ app_form.description(style="min-height:100px", class="form-control adj-width-60", placeholder="e.g. A stunning cascade surrounded by lush greenery in Nkonjwa, Lubombo Region. Sparkling water, cliffs, vibrant flora, Eswatini's natural beauty and tranquility.")}}
                 {% if app_form.description.errors %}
                     {% for error in app_form.description.errors %}
                         <span class="span-error" >*{{error}}</span>

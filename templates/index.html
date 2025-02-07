@@ -67,7 +67,7 @@
                     {%set descr = img.description | tojson %}
 
                     <!-- Image  -->
-                    <div id="imag-cont-{{img.id}}" onclick="displayImage('{{img.image_thumbnail}}','{{img.img_name | e}}','{{by_who}}','{{img.id}}', '{{descr | remove_special_chars}}', '{{likes}}')"  class="imag">
+                    <div id="imag-cont-{{img.id}}" onclick="displayImage('{{img.image_thumbnail}}','{{img.img_name | e}}','{{by_who}}','{{img.id}}', '{{descr | remove_special_chars}}', '{{likes}}','{{img.alias}}')"  class="imag">
                         <img id="image-{{img.id}}" class="img-thmb"  src="static/uploads/usr_images/thumbnails/{{img.image_thumbnail}}" />
                     </div>
 
@@ -102,6 +102,7 @@
                 <!-- Caption Displayed Outside & Below image container (Dynamic) | Mobile Phones  -->
                 <div id="img-caption-{{img.id}}" style="align-items:flex-start;" class="img-caption gen-flex-col">
                     <div  class="t-info-t">{{img.img_name}} ({{img.image_category}})</div>
+                    <div style="justify-content: flex-start;padding-left: 0px;" class="gen-flex"><small style="color:rgb(104, 100, 45);font-style: italic;font-size: 10px;" class="alias">{%if img.alias%}Alias: {{img.alias}}{%endif%} </small></div><br>
                     <div  class="t-info">{{img.description}}<span></span></div>
                     <div class="gen-flex"><img style="height:20px" src="static/images/default.png" /><small style="font-size:12px" class="t-info"><b>{{by_who}}</b> </small></div>
                     <!-- <div class="t-info">Image by <span><b></b></span></div> -->
@@ -156,6 +157,7 @@
                 
                 <div style="" class="cap-parent gen-flex">
                     <h4 class="img-name">Name of the Image Here</h4>
+                    
                     <div class="filler"></div>
                     <a id="img-del-id" href=""><img style="height:50px" src="static/icons/delete-icon.png"></a> 
                     <a href="" id="add-like">
@@ -170,11 +172,12 @@
                         </a>
                     </div>
                 </div> 
+                <div style="justify-content: flex-start;padding-left: 18px;" class="gen-flex"><small style="color:rgb(104, 100, 45);font-style: italic;font-size: 12px;" class="alias"></small></div>
+               
 
                 <!-- <small class="by"></small><br> -->
-                <div style="justify-content: flex-start;padding-left: 10px;" class="gen-flex"><img style="height:30px" src="static/images/default.png" /><small class="by">{{by_who}}</small></div>
-
-                <div class="describe-img"></div>
+                <div style="justify-content: flex-start;padding-left: 10px;" class="gen-flex"><img style="height:30px" src="static/images/default.png" /><small class="by"></small></div>
+                 <div class="describe-img"></div>
                 <br><br>
 
             </div>
@@ -220,7 +223,7 @@
         });
 
     // quoteBtns.forEach(function(btn){
-        function displayImage(image,imgname,by_who,img_id,describe,likes) {
+        function displayImage(image,imgname,by_who,img_id,describe,likes,alias) {
 
             var allImgs = document.querySelectorAll(".imag");
 
@@ -238,7 +241,7 @@
 
 
             // Image Display Configs for small screen 
-            if(window.innerWidth < 575){
+            if(window.innerWidth < 700){
                 // Classes are access for resets 
                 var allImgsCont = document.querySelectorAll(".imag");
                 var allImgs = document.querySelectorAll(".img-thmb");
@@ -247,7 +250,7 @@
                 var allinlineCaps = document.querySelectorAll(".cap-2");
                 var allDeleteIcons = document.querySelectorAll(".del-mobile");
 
-                console.log("We are on Small Screens: ", window.innerWidth);
+                // console.log("We are on Small Screens: ", window.innerWidth);
                 var imgCont = document.querySelector("#imag-cont-" +img_id);
                 var img = document.querySelector("#image-" +img_id);
                 var downldBtnMobl = document.querySelector("#downld-btn-mobl-" +img_id);
@@ -318,7 +321,7 @@
                 
             }else{
 
-                console.log(image);
+                // console.log(image);
                 let mainImg = document.querySelector("#show-img");
                 let nameImg = document.querySelector(".img-name");
                 let describeImg = document.querySelector(".describe-img");
@@ -326,6 +329,7 @@
                 let locate = document.querySelector("#img-href-id");
                 let delImg = document.querySelector("#img-del-id");
                 let by = document.querySelector(".by");
+                let aliasObj = document.querySelector(".alias");
                 let num = document.querySelector("#num");
                 let addLike = document.querySelector("#add-like");
 
@@ -336,7 +340,13 @@
                 mainImg.src = imageUrl;
 
                 nameImg.innerHTML = imgname;
-                by.innerHTML = "by " + by_who;
+                by.innerHTML = by_who;
+                if (alias === "None"){
+                    aliasObj.innerHTML ="";
+                }else{
+                    aliasObj.innerHTML ="Alias: "+ alias;
+                }
+                
                 num.innerHTML = likes;
                 console.log("CHECK LIKES: ",num.innerHTML,"+",likes );
                 addLike.href = "/like?im=" + img_id;
