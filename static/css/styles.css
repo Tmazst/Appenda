@@ -292,8 +292,9 @@ div{
     height: 170px;
     width:max-content;
     border-radius: 20px;
+    min-width:auto;
     overflow: hidden;
-    /* background-color:rgb(12, 8, 4) !important; */
+    background-color:rgb(194, 194, 194) !important;
 }
 
 .imag-dwnl{
