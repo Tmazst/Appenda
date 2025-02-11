@@ -67,19 +67,19 @@
                     {%set descr = img.description | tojson %}
 
                     <!-- Image  -->
-                     {%if not img.category == "AI Generated" %}
+                     {%if not img.image_category == "AI Generated" %}
                     <div id="imag-cont-{{img.id}}" onclick="displayImage('{{img.image_thumbnail}}','{{img.img_name | e}}','{{by_who}}','{{img.id}}', '{{descr | remove_special_chars}}', 
                         '{{likes}}','{{img.alias}}')"  class="imag">
                         <img id="image-{{img.id}}" class="img-thmb"  src="static/uploads/usr_images/thumbnails/{{img.image_thumbnail}}" />
                     </div>
-                    {%elif img.category == "AI Generated" %}
+                    {%elif img.image_category == "AI Generated" %}
                     <h2>AI Generated Images</h2>
                     <div id="imag-cont-{{img.id}}" onclick="displayImage('{{img.image_thumbnail}}','{{img.img_name | e}}','{{by_who}}','{{img.id}}', '{{descr | remove_special_chars}}', 
                         '{{likes}}','{{img.alias}}')"  class="imag">
                         <img id="image-{{img.id}}" class="img-thmb"  src="static/uploads/usr_images/thumbnails/{{img.image_thumbnail}}" />
                     </div>
                     <h2>Artistic</h2>
-                    {%elif img.category == "Art Work" %}
+                    {%elif img.image_category == "Art Work" %}
                     <div id="imag-cont-{{img.id}}" onclick="displayImage('{{img.image_thumbnail}}','{{img.img_name | e}}','{{by_who}}','{{img.id}}', '{{descr | remove_special_chars}}', 
                         '{{likes}}','{{img.alias}}')"  class="imag">
                         <img id="image-{{img.id}}" class="img-thmb"  src="static/uploads/usr_images/thumbnails/{{img.image_thumbnail}}" />
