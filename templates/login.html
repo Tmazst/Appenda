@@ -25,14 +25,14 @@
 <br><br>
 <div style="width:85% !important;margin-left: 20px;" class="container">
 <div class="bg-class-lgn">
-  <div class="login-cont flex-general">
+  <div style="position:relative" class="login-cont flex-general">
     <form style="background-color:;flex-direction:column;z-index:1000;" class="" _lpchecked="1" action="" method="post">
         <div class="flex-general" style="flex-direction: column;align-items: flex-start;">
             <div class="flex-general" style="flex-direction: column;align-items: flex-start;">
                 <h2 class="form-welcome" style="">Please Login<br><span style="font-size:medium;color:rgb(102, 102, 102);"></span></h2>
             </div><br>
         </div>
-        
+
         <!-- <div>
             <a href="url_for('google_login')"><div style="gap:2px;justify-content: flex-start;" class="general-flex" ><h4 class="form-welcome" style="margin:0">Continue with </h4>
             <img class="ggl-img" style="height: 35px;border-radius: 15px;" src="static/icons/google-icon.png" /> </div></a>
@@ -63,9 +63,36 @@
             <div><a style="color:white" class="slinks-li" href="/forgot_password">Forgot Password?</a></div>
         </div>
 
+        <button
+            type="button"
+            id="toggle-button"
+            style="position: absolute; right: 15px; bottom: 85px; border: none; background: none; cursor: pointer;"
+            >
+           👁️
+        </button>
+
     </form>
   </div>
 </div>
 </div><br>
+
+<script>
+
+    var toggleBtn = document.querySelector('#toggle-button');
+    var passwordField = document.querySelector('#password');
+
+    toggleBtn.addEventListener("click", function () {
+
+        // Toggle the type attribute
+        const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
+        // const typeConfirm = passwordField.getAttribute("type") === "password" ? "text" : "password";
+        passwordField.setAttribute("type", type);
+  
+        // Toggle the eye icon (optional)
+        this.textContent = type === "password" ? "👁️" : "🙈";
+        
+  });
+
+</script>
 
 {%endblock%}

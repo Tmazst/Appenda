@@ -38,10 +38,17 @@ body{
 
 }
 
+.likes-modal{
+    right:-6px;
+    background-color: rgb(236, 236, 236) !important;
+    color:var(--main-color) !important;
+    font-weight: bold !important;
+}
+
 .likes-normal-bleft{
     position: absolute;
     left:5px;
-    bottom:5px;
+    bottom:35px;
 }
 
 .likes-normal-tright{
@@ -50,11 +57,28 @@ body{
     top:9px !important;
 }
 
+.side-view-comments{
+    margin-top:20px;
+}
+
+.comment-fetch{
+    font-size:13px;
+    font-weight: 600;
+    padding:7px;
+    margin:10px 0;
+}
+
 .likes-1{
     right:-6px !important;
     background: rgb(236, 236, 236) !important;
     color:var(--main-color) !important;
     font-weight: bold !important;
+}
+
+.btn-comm-abso{
+    position: absolute;
+    bottom:3px;
+
 }
 
 
@@ -138,6 +162,15 @@ div{
     cursor: pointer;
 }
 
+.describe-img-modal{
+    padding:20px;
+    font-size: 14px;
+    color:#555454;
+    background-color: #ebebeb;
+    border-radius: 15px;
+    width:480px !important;
+}
+
 .describe-img{
     padding:20px;
     font-size: 14px;
@@ -155,7 +188,25 @@ div{
     align-self: flex-start !important;
     /* background-color: #44132a; */
 }
+
+.img-name-modal{
+    color:#707070;
+    width:max-content;
+    /* margin:5px auto; */
+    margin-bottom:0;
+    align-self: flex-start !important;
+    /* background-color: #44132a; */
+}
+
 .by{
+    margin-top:0;
+    padding:20px;
+    color:#222;
+    font-weight: 500;
+    /* background-color: #00a550; */
+}
+
+.by-modal{
     margin-top:0;
     padding:20px;
     color:#222;
@@ -173,6 +224,11 @@ div{
 }
 
 .download_icon{
+    max-width: 70px;
+    width:max-content;
+}
+
+.download_icon_modal{
     max-width: 70px;
     width:max-content;
 }
@@ -249,6 +305,19 @@ div{
     border-radius: 50%;
 }
 
+.num-modal{
+    position: absolute;
+    width:20px;
+    height: 20px;
+    background-color: red;
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    top:-5px;
+    right:-20px;
+    border-radius: 50%;
+}
+
 .user-info{
     width:80%;
     margin:0 auto;
@@ -280,6 +349,71 @@ div{
     object-fit:cover;
 }
 
+/* Main modal container - hidden by default */
+.modal {
+    display: none; /* Hidden initially */
+    position: fixed;
+    z-index: 1000; /* Ensure it appears on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    backdrop-filter: blur(3px);
+    background-color: rgba(199, 199, 199, 0.6); /* Black background with transparency */
+    
+  }
+  
+/* Modal content */
+.modal-content {
+position: relative;
+margin: auto;
+padding: 20px;
+width: 80%; /* Default size */
+max-width: 700px; /* Limit size */
+animation: zoom 0.3s; /* Add zoom effect */
+background-color: #ffffff;
+border-radius: 10px;
+max-height:70vh;
+overflow-y: scroll;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background-color: rgba(212, 212, 212,0.5);
+    border-radius: 10px;
+    height: 1px !important;
+ }
+
+ 
+ .modal-content::-webkit-scrollbar {
+    margin-top:20px;
+    width: 8px;
+    background: none;
+ }
+  
+  /* Zoom animation */
+  @keyframes zoom {
+    from { transform: scale(0) }
+    to { transform: scale(1) }
+  }
+  
+  /* Close button "X" */
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+  }
+  
+  /* Large Image */
+  .modalImage {
+    /*width: 100%;  Adjust the image to fill modal content */
+    cursor: zoom-in; /* Change cursor for zooming */
+    max-height:600px
+  }
+
 
 .cat-item-cont{
     gap:15px;
@@ -292,7 +426,7 @@ div{
     height: 170px;
     width:max-content;
     border-radius: 20px;
-    min-width:auto;
+    min-width:90px;
     overflow: hidden;
     background-color:rgb(194, 194, 194) !important;
 }
@@ -460,7 +594,7 @@ div{
 .cap-2{
     position: absolute;
     width:120px;
-    bottom:15px;
+    bottom:40px;
     right:10px
 }
 
@@ -973,8 +1107,9 @@ input[type="checkbox"]{
 }
 
 .side-display-fixed{
-    height:600px;
+    height:65l 0px;
     overflow: scroll;
+    top:230px;
     /* background-color: #00a550; */
 }
 
@@ -1415,7 +1550,7 @@ input:focus{
 .form-control{
   background-color: #f8f9fa;
   padding: 7px;
-  padding: 7px 10px;
+  /* padding: 7px 10px; */
   margin-bottom: 0.8rem;
   border:1px solid #bebebe;
   border-radius:10px;
@@ -2410,7 +2545,7 @@ to{
 }
 
 .show-nav{
-    display: block;
+    display: block !important;
 }
 
 .selling-content-img{
@@ -2682,6 +2817,62 @@ to{
     transition:0.4s ease-in;
 }
 
+.img-preview{
+    height:inherit;
+}
+
+.comments-title{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap:5px;
+}
+
+.comments-container{
+    max-height:75vh;overflow: auto;
+}
+
+.comments-container{
+    max-height:49vh;overflow: auto;
+}
+
+.comments-cont{
+    border-radius:15px;
+    background-color: rgba(202, 202, 202, 0.6);
+    width:90%;
+    box-shadow: inset;
+    display: flex;
+    justify-content: flex-start;
+    align-items:center;
+    padding:7px;
+    gap:4px;
+    position: relative;
+}
+
+
+.comment-content{
+    font-size:13px;
+    font-weight: 600;
+    color:#292828
+}
+
+.delete-icon-cont{
+    position:absolute;
+    bottom: 2px;
+    right:2px;
+    height: 20px;
+    width: 40px;
+    background-color: ;
+}
+
+.btn-absolute{
+    position: absolute;
+    bottom:25px;
+    left:480px;
+    /* background:rgba(23,124,12,0.6); */
+}
+
+
 .show-popup{
     display:flex;
 }
@@ -2849,7 +3040,7 @@ to{
 
 #search-cat{
     position: sticky;
-    top:60px;
+    top:0px;
     z-index:500;
 }
 
@@ -2877,14 +3068,60 @@ to{
 
 }
 
+.name-comment{
+    display: flex;
+    flex-direction:column;
+    /* position: relative; */
+}
+
+.hide-field{
+    visibility: hidden;
+}
+
+.yes-btn{
+    text-decoration: none;
+    text-align: center;
+    font-weight: 500;
+    color:white;
+    background-color: var(--main-color);
+    border-radius: 20px;
+    border:none;
+    width:100px;
+    padding:10px;
+}
+
+
 @media all and (max-width: 575px){
+
+    .img-preview{
+        width:100%;
+    }
+    .btn-absolute{
+        position: absolute;
+        bottom:40px;
+        left:55px;
+        /* background:rgba(23,124,12,0.6); */
+    }
+
+    .comments-cont{
+        border-radius:15px;
+        background-color: rgba(202, 202, 202, 0.6);
+        width:90%;
+        box-shadow: inset;
+        display: flex;
+        justify-content: flex-start;
+        align-items:center;
+        padding:7px;
+        gap:4px;
+       
+    }
 
     .web-cont{
         margin-left:-20px ;
     }
 
-    #search-cat {
-        /* min-width: 400px; */
+    #search-cat{
+        top:60px;
     }
     
     .imag{

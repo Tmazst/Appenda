@@ -100,14 +100,63 @@
                 {% endif %}
             </div>
 
-            <div>
-                <!-- <label class="labels">Please wait while upoading file....</label> -->
+            <!---------Comments Bool--------->
+            <div class="job-ad-group marginise-bottom">
+                {{ app_form.comments_bool.label(class="labels")}}<br>
+                {{ app_form.comments_bool(onChange="commentsBool(event)",style="list-style-type:none",class="form-control adj-width-60",id='comments-bool',placeholder="Comment?")}}
+                {% if app_form.comments_bool.errors %}
+                    {% for error in app_form.comments_bool.errors %}
+                        <span class="span-error" >*{{error}}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <!---------Comments Hint--------->
+            <div style="display:none" id="comments-box" class="job-ad-group marginise-bottom">
+            {{ app_form.hint.label(class="labels")}}<br>
+            {{ app_form.hint(style="min-height:100px", class="form-control adj-width-60",placeholder="What Insights are you looking for concerning your image? ")}}
+            {% if app_form.hint.errors %}
+                {% for error in app_form.hint.errors %}
+                    <span class="span-error" >*{{error}}</span>
+                {% endfor %}
+            {% endif %}
+            </div>
+
+            <div class="job-ad-group marginise-bottom gen-flex">
+                <!-- <label class="labels">Please wait while uploading file....</label> -->
                 {{ app_form.submit(class="btns") }}
+                <div class="filler"></div>
+                <button onclick="previewImage(event)" >Preview</button>
             </div>
 
         </form>
+        <div class="pop-cont">
+            <div style="height:85vh;top:30px;overflow: scroll;" class="pop-up">
+                <img class="img-preview" src="" />
+            </div>
+        </div>
     </div>
 </div>
 </section>
+
+<script>
+
+    function commentsBool(event){
+        var boolCont = document.querySelector('#comments-bool');
+        var commentsBox = document.querySelector('#comments-box');
+        // console.log("Bool: ",event.target.value)
+        if (event.target.value === "True"){
+            commentsBox.classList.add('show-nav');
+        }else{
+            commentsBox.classList.remove('show-nav');
+        }
+    }
+
+    function previewImage(event){
+        var image_obj = document.querySelector('.img-preview');
+        console.dir("Bool: ",image_obj)
+        // imageCont.src = ''
+    }
+</script>
 
 {% endblock %}

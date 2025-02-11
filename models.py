@@ -23,14 +23,14 @@ class User(db.Model,UserMixin):
 
     #Create db.Columns
     id = db.Column(db.Integer,primary_key=True)
-    name = db.Column(db.String(20))
+    name = db.Column(db.String(50))
     image = db.Column(db.String(30), nullable=True)
     email = db.Column(db.String(120),unique=True)
     password = db.Column(db.String(120), unique=True)
     confirm_password = db.Column(db.String(120), unique=True)
     verified = db.Column(db.Boolean, default=False)
     contacts = db.Column(db.String(70))
-    role = db.Column(db.String(120))
+    role = db.Column(db.String(30))
     images = relationship("Images",backref="User",lazy=True)
     timestamp = db.Column(db.DateTime)
      # Relationship to define which images the user has liked
@@ -77,7 +77,9 @@ class Images(db.Model):
     description = db.Column(db.String(255))
     image_category = db.Column(db.String(255))
     alias = db.Column(db.String(100))
-    image_thumbnail = db.Column(db.String(100))
+    image_thumbnail = db.Column(db.String(100)) 
+    comments_bool = db.Column(db.Boolean)
+    hint = db.Column(db.String(100))
     publish=db.Column(db.Boolean,default=True)
     approved=db.Column(db.Boolean)
     timestamp=db.Column(db.DateTime)
@@ -87,11 +89,23 @@ class Images(db.Model):
     edited=db.Column(db.DateTime)
     edited_by=db.Column(db.String(100))
     access=relationship("Image_Access_Credits",backref="App_Info",lazy=True)
+    img_comments=relationship("Image_comments",backref="Images",lazy=True)
     # likes_id=relationship("Likes",backref="App_Info",lazy=True)
     # Relationship to define users who liked this image
     likers = db.relationship("User", secondary=likes_table, back_populates="liked_images")
 
 
+class Image_comments(db.Model,UserMixin):
+
+    __tablename__= "images_comments"
+
+    id = db.Column(db.Integer, primary_key=True)
+    usr_id = db.Column(db.Integer,ForeignKey('user.id'))
+    img_id = db.Column(db.Integer,ForeignKey('images.id'))
+    comment = db.Column(db.String(255))
+    comment_by = db.Column(db.Integer)
+    timestamp = db.Column(db.DateTime())
+    user = db.relationship("User", backref="comments")
 
 
 # class Likes(db.Model):

@@ -22,7 +22,7 @@
 
 <div class="container">
   <div class="bg-class-lgn">
-  <div class="login-cont flex-general">
+  <div style="position:relative" class="login-cont flex-general">
     
       <form style="flex-direction:column;z-index:1000;" class="" _lpchecked="1" action="" method="post">
         <div class="flex-general" style="flex-direction: column;align-items: flex-start;">
@@ -49,6 +49,7 @@
                     {% for error in register.email.errors %}<span class="span-error" >*{{error}}</span>{% endfor %}
                  {% endif %}
             </div>
+
             <div class="group">
                  {{ register.password(id="password",class="form-control",placeholder="Password")}}<br>
                  {% if register.password.errors %}
@@ -58,12 +59,22 @@
             </div>
 
             <div class="group">
-                {{ register.confirm(class="form-control",placeholder="confirm")}}<br>
+                {{ register.confirm(id="confirm", class="form-control",placeholder="confirm")}}<br>
                 {% if register.confirm.errors %}
                    {% for error in register.confirm.errors %}<span class="span-error" >*{{error}}</span>
                    {% endfor %}
                 {% endif %}
            </div>
+
+           <button
+            type="button"
+            id="toggle-button"
+            style="position: absolute; right: 15px; bottom: 85px; border: none; background: none; cursor: pointer;"
+            >
+           👁️
+            </button>
+
+
            <!-- <label style="color:rgb(36, 36, 36);font-weight: 500;">Password Strength Checker</label>
            <div class="power-container">
                 <div id="power-point" class="power-point"></div>
@@ -82,6 +93,23 @@
 </div>
 
 <script>
+
+    var toggleBtn = document.querySelector('#toggle-button');
+    var passwordField = document.querySelector('#password');
+    var confirmField = document.querySelector('#confirm');
+
+    toggleBtn.addEventListener("click", function () {
+
+        // Toggle the type attribute
+        const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
+        // const typeConfirm = passwordField.getAttribute("type") === "password" ? "text" : "password";
+        passwordField.setAttribute("type", type);
+        confirmField.setAttribute("type", type);
+  
+        // Toggle the eye icon (optional)
+        this.textContent = type === "password" ? "👁️" : "🙈";
+  });
+
     //Password Checker
     let password = document.getElementById("password");
     let power = document.getElementById("power-point");

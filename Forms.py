@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField,PasswordField,SubmitField, TextAreaField,BooleanField, SelectField,DateField, URLField,RadioField,IntegerField,TelField
+from wtforms import StringField,PasswordField,SubmitField, TextAreaField,BooleanField, SelectField,DateField, URLField,RadioField,IntegerField,TelField,HiddenField
 from wtforms.validators import DataRequired,Length,Email, EqualTo, ValidationError,Optional
 from flask_login import current_user
 from flask_wtf.file import FileField , FileAllowed
@@ -39,13 +39,23 @@ class AccountForm(FlaskForm):
     submit = SubmitField('Update')
 
 
+class CommentsForm(FlaskForm):
+
+    comment = TextAreaField('Comment', validators=[Length(max=255)])
+    img_id = StringField()
+    
+    submit = SubmitField('Submit')
+
 class ImagesForm(FlaskForm):
 
     name = StringField('Image Name*', validators=[DataRequired()])
     alias = StringField('siSwati Name(s) or Other', validators=[DataRequired()])
     image = FileField('Upload Image*', validators=[DataRequired()], render_kw={"accept": "image/png,image/jpeg,image/gif,image/bmp"})
     description = TextAreaField('Describe Image', validators=[Optional()])
+    comments_bool = RadioField("Do you want people's insights about your image?",choices=[(True,"Yes"),(False,"No")],default=False, validators=[Optional()])
+    hint = TextAreaField('Comments Hint', validators=[Optional()])
     image_category = SelectField('Category*',choices=[
+        ("AI Generated", "AI Generated"),
         ("Nature", "Nature"),
         ("Mountains", "Mountains"),
         ("Vegetation", "Vegetation"),

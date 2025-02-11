@@ -23,6 +23,7 @@ import threading
 # from celery import Celery
 import re
 import base64
+import pandas
 # import logging
 
 # logging.basicConfig(level=logging.INFO)
@@ -226,7 +227,7 @@ def file_exists_filter(filepath):
 @app.context_processor
 def inject_ser():  
 
-    return dict(ser=ser,os=os,home=False) #universal
+    return dict(ser=ser,os=os,home=False,comments_obj=Image_comments) #universal
 
 
 
@@ -238,9 +239,26 @@ def home():
     db.create_all()
     al = request.args.get("al") #All Images
     cat = request.args.get("cat") #categry
+    comment_req = request.args.get("img_id") 
     chck_len=True
     home=True
     liked_images=None
+    comments_form = CommentsForm()
+    img_comments = None
+    keys = ["id","usr_id","img_id","comment","comment_by","timestamp"]
+    dictn = {}
+
+    if comment_req:
+        img_comments = db.session.query(Image_comments).filter_by(img_id=comment_req).first()#db.session.get(Image_comments,comment_req)
+        # print("COMMENTS OBJ: ",dir(Image_comments.__table__))
+        # print("COMMENTS OBJ: ",Image_comments.__table__.columns)
+        for key in keys:
+            value = img_comments.__dict__.get(key)
+            dictn[key] = value 
+        print("Dictionary: ",dictn)
+
+        return img_comments
+    
 
     if current_user.is_authenticated:
         liked_images = [image.id for image in current_user.liked_images]  # List of image IDs the user has liked
@@ -258,7 +276,51 @@ def home():
         layout = request.args.get('icon')
 
     return render_template("index.html", images=images, layout=layout, categories=categories,usr_obj=User,chck_len=chck_len,home=home,
-                           liked_images=liked_images)
+                           liked_images=liked_images,comments_form=comments_form,img_comments=img_comments)
+
+
+
+@app.route('/comments', methods=['GET'])
+def fetch_comments():
+    # Get the img_id from query parameters
+    img_id = int(request.args.get("img_id")) # Ensure it's parsed as an integer
+    
+
+    if not img_id:
+        return jsonify({"error": "Invalid or missing img_id"}), 400  # Return error for invalid input
+
+    try:
+        # Fetch all comments for the given img_id
+        comments = db.session.query(Image_comments).filter_by(img_id=img_id).all()
+
+        # If no comments found
+        if not comments:
+            return jsonify({"comments": []})  # Return empty list if no comments exist for the image
+
+        # Convert comments to a JSON-serializable format
+        comments_list = [
+            {
+                "id": comment.id,
+                "comment": comment.comment,
+                "timestamp": comment.timestamp,
+                "comment_by": comment.comment_by,
+                "user_name": comment.user.name if comment.user else "Unknown",
+                "user_image": comment.user.image if comment.user else "static/images/default.png",
+                "deletable": current_user.is_authenticated and current_user.id == comment.comment_by
+            }
+            for comment in comments
+        ]
+
+        print("DEBUG ID SERVER_CODE: ", img_id)
+
+        # Return the comments as JSON
+        return jsonify({"comments": comments_list})
+
+    except Exception as e:
+        # Log the error and return a generic error response
+        print(f"Error fetching comments: {e}")
+        return jsonify({"error": "An error occurred while fetching comments"}), 500
+
 
 @app.route('/terms_conditions')
 def terms():
@@ -599,6 +661,36 @@ def email():
     return render_template("send_email.html",email_form=email_form)
 
 
+@app.route("/comments", methods=['POST','GET'])
+@login_required
+def comments():
+
+    comments_form = CommentsForm()
+
+    if request.method == "POST":
+
+        id = int(ser.loads(comments_form.img_id.data)['data'])
+        image = db.session.get(Images, id)
+
+        comment = Image_comments(
+            #image owner
+            usr_id = image.uid,
+            img_id = id,
+            comment = comments_form.comment.data,
+            comment_by = current_user.id, #Current_user who is commenting
+            timestamp = datetime.now(),
+        )
+
+        db.session.add(comment)
+        db.session.commit()
+
+        flash("Comment Sent Successfully", "success")
+
+        return redirect(url_for('comments'))
+
+    return f'' # render_template("comments.html",comments_form=comments_form)
+
+
 @app.route("/image_form", methods=['POST','GET'])
 @login_required
 def image_form():
@@ -610,7 +702,8 @@ def image_form():
 
         image_info = Images(
             img_name=app_form.name.data.strip(),description=app_form.description.data.strip(),
-            image_category=app_form.image_category.data,timestamp=datetime.now(),uid=current_user.id,alias=app_form.alias.data.strip()
+            image_category=app_form.image_category.data,timestamp=datetime.now(),uid=current_user.id,alias=app_form.alias.data.strip(),
+            hint=app_form.hint.data,comments_bool=app_form.comments_bool.data
             )
 
         if app_form.image.data:
@@ -625,7 +718,7 @@ def image_form():
         # db.session.commit()
 
         flash("Upload was Successful👍","success")
-        return redirect(url_for('home'))
+        return jsonify({"Success":"Thank You!, You can check your image 5 minutes from now"})
 
     return render_template("image_form.html",app_form=app_form)
 
@@ -653,34 +746,6 @@ def like_image():
         return jsonify({"status": "liked", "likes_count": len(image.likers)})
 
 
-# @app.route("/like", methods=['GET'])
-# @login_required
-# def likes():
-
-#     id = request.args.get("im")
-#     image = Images.query.get(id)
-#     likes_obj = Likes.query.filter_by(img_id=image.id).first()
-#     if current_user:
-#         print("Debug Likes: ", image)
-#         if likes_obj:
-#             if not Likes.query.filter_by(liker_id=current_user.id,img_id=image.id):
-#                 likes_obj.img_id = image.id
-#                 likes_obj.liker_id=current_user.id
-#                 likes_obj.num_likes = likes_obj.num_likes=+1
-#                 likes_obj.timestamp = datetime.now()
-
-                
-#                 db.session.commit()
-#             else:
-#                 print("Already Have Liked")
-#         else:
-#             print("Debug No Likes: ", image)
-#             zero_likes = Likes(img_id=image.id,liker_id=current_user.id,timestamp=datetime.now(),num_likes=1)
-#             db.session.add(zero_likes)
-#             db.session.commit()
-#         return redirect(url_for("home"))
-    
-#     return f""
 
 @app.route("/edit_app", methods=['POST','GET'])
 def edit_app():

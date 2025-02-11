@@ -47,6 +47,36 @@
 //}
 //window.onscroll = function() {handleScroll()};
 
+
+// quoteBtns.forEach(function(btn){
+function popChatUp(id){
+        // var popScrnLogo = document.getElementById("updates");
+        // popScrnLogo.classList.toggle("show-popup");
+        console.log("Pop-up on Chats");
+        let popCont = document.querySelector('#pop_chatscont_'+id);
+        let popup = document.querySelector("#popup_chats_"+id);
+        document.querySelector("#commentField").value = "";
+        popCont.classList.toggle("show-popup");
+        popup.classList.toggle("show-popup");
+    
+        // Assuming you want to remove the query parameter from the URL
+        // // Get the current URL without the query parameter
+        // var newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname;
+    
+        // // Use replaceState to update the URL without the query parameter
+        // window.history.replaceState({path: newUrl}, '', newUrl);
+        
+    };
+    
+    
+function closeChatsPopup(id){
+        let popup = document.querySelector("#popup_chats_"+id);
+        let popCont = document.querySelector('#pop_chatscont_'+id);
+        document.querySelector("#commentField").value = "";
+        popup.classList.remove("show-popup");
+        popCont.classList.remove("show-popup");
+    };
+
 // Utility functions for cookies
 function getCookie(name) {
     const value = `; ${document.cookie}`;
@@ -63,6 +93,89 @@ function setCookie(name, value, days) {
     }
     document.cookie = `${name}=${value || ""}${expires}; path=/`;
 }
+
+
+document.addEventListener("click", function (event) {
+    if (event.target.classList.contains("comment-fetch")) {
+        event.preventDefault(); // Prevent default link navigation
+
+        // Get the img_id from the clicked element
+        const imgId = event.target.id.split("comment-")[1];
+        console.log("DEBUG ID: ",imgId)
+        // Fetch and display comments
+        fetchComments(imgId);
+    }
+});
+
+
+function fetchComments(imgId) {
+    // Construct the query URL
+    const url = `/comments?img_id=${imgId}`;
+
+    // Add a loading indicator while fetching comments
+    const commentsContainer = document.querySelector(".side-view-comments");
+    commentsContainer.innerHTML = "<p>Loading comments...</p>";
+
+    // Send the AJAX GET request
+    fetch(url, { method: "GET" })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json(); // Parse the JSON response
+        })
+        .then((data) => {
+            // Clear the loading indicator
+            commentsContainer.innerHTML = "";
+
+            var comments = null;
+            comments = data.comments;
+
+            if (comments.length === 0) {
+                commentsContainer.innerHTML = "<p>No comments found for this image.</p>";
+                return;
+            }
+
+            // Populate the comments dynamically
+            comments.forEach((comment) => {
+                const commentHTML = `
+                <div id="${comment.id}" class="comment" style="margin-bottom: 10px;">
+                    <div class="comments-cont">
+                        <div class="img-cont" style="height:40px;width:40px;min-width:40px">
+                            <img src="static/images/${comment.user_image}" class="prf-image" style="height:inherit;width:inherit" alt="User profile">
+                        </div>
+                        <div class="name-comment">
+                            <div>
+                                <span style="font-size:12px;font-weight:700;color:#330F55;">${comment.user_name}</span>
+                            </div>
+                            <div style="font-size:13px;" class="comment-content">${comment.comment}</div>
+                            <div>
+                                <small style="color:#747272;font-weight:600;font-size:11px;">${comment.timestamp}</small>
+                            </div>
+                        </div>
+                        ${
+                            comment.deletable
+                                ? `<div class="delete-icon-cont">
+                                        <a class="svg-hrefs" href="/delete_comment?del=${comment.id}">
+                                            <object type="image/svg+xml" data="static/icons/delete-icon.svg" id="delete-icon"></object>
+                                        </a>
+                                   </div>`
+                                : ""
+                        }
+                    </div>
+                    
+                </div>
+                `;
+                commentsContainer.innerHTML += commentHTML;
+            });
+        })
+        .catch((error) => {
+            console.error("Error fetching comments:", error);
+            commentsContainer.innerHTML = "<p>Failed to load comments. Please try again later.</p>";
+        });
+}
+
+
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -90,7 +203,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (!likesCountEl && data.likes_count > 0) {
                         // Create a new .num element if it doesn't exist and there are likes
                         likesCountEl = document.createElement("small");
-                        likesCountEl.className = "num gen-flex likes-1";
+                        likesCountEl.className = "num-modal gen-flex likes-1";
                         likeContainer.appendChild(likesCountEl); // Append to the likes container
                     }
 
