@@ -3093,6 +3093,10 @@ to{
 
 @media all and (max-width: 575px){
 
+    .images-container{
+        gap:5px
+    }
+
     .img-preview{
         width:100%;
     }
@@ -3136,6 +3140,7 @@ to{
     .img-card{
         max-width:100vw;
         overflow: hidden;
+        height:min-content !important;
     }
     
     .img-caption{
