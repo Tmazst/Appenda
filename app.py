@@ -23,7 +23,7 @@ import threading
 # from celery import Celery
 import re
 import base64
-import pandas
+
 # import logging
 
 # logging.basicConfig(level=logging.INFO)
