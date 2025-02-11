@@ -703,7 +703,7 @@ def image_form():
         image_info = Images(
             img_name=app_form.name.data.strip(),description=app_form.description.data.strip(),
             image_category=app_form.image_category.data,timestamp=datetime.now(),uid=current_user.id,alias=app_form.alias.data.strip(),
-            hint=app_form.hint.data,comments_bool=app_form.comments_bool.data
+            hint=app_form.hint.data,comments_bool=bool(app_form.comments_bool.data)
             )
 
         if app_form.image.data:
