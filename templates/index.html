@@ -74,6 +74,7 @@
                         <img id="image-{{img.id}}" class="img-thmb"  src="static/uploads/usr_images/thumbnails/{{img.image_thumbnail}}" />
                     </div>
                     
+
                     <!-- Chats Pop-up  -->
                     <div id="pop_chatscont_{{img.id}}" class="pop-cont">
                         <div style="height:90vh;top:30px;" id="popup_chats_{{img.id}}" class="pop-up">
@@ -122,7 +123,7 @@
                                         {{comments_form.hidden_tag()}}
                                         {{comments_form.comment(class="form-control",placeholder="Comment",id="commentField")}}
                                         {{comments_form.submit(style='font-size:18px;padding:5px',class="btns",placeholder="Comment",value="Post")}}
-                                       
+                                        
                                         {{comments_form.img_id(class="form-control hide-field",placeholder="Comment",value=ser.dumps({'data':img.id}))}}
                                     </form>
                                     
@@ -133,7 +134,7 @@
                             </div>
                         </div>
                     </div>
-                    <br><br>
+                    
 
                     <!-- The Modal -->
                     <div id="imageModal-{{img.id}}" class="modal">
@@ -255,6 +256,7 @@
                     </div>
                     
                 </div>
+
 
                 <!-- Caption Displayed Outside & Below image container (Dynamic) | Mobile Phones  -->
                 <div id="img-caption-{{img.id}}" style="align-items:flex-start;" class="img-caption gen-flex-col">
