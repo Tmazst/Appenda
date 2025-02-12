@@ -260,12 +260,15 @@
 
                 <!-- Caption Displayed Outside & Below image container (Dynamic) | Mobile Phones  -->
                 <div id="img-caption-{{img.id}}" style="align-items:flex-start;" class="img-caption gen-flex-col">
+
                     <div  class="t-info-t">{{img.img_name}} ({{img.image_category}})</div>
                     <div style="justify-content: flex-start;padding-left: 0px;" class="gen-flex"><small style="color:rgb(104, 100, 45);font-style: italic;font-size: 10px;" class="alias">{%if img.alias%}Alias: {{img.alias}}{%endif%} </small></div><br>
                     <div  class="t-info">{{img.description}}<span></span></div>
                     <div style="gap:10px;margin-top: 3px;" class="gen-flex">
                         <div  class="gen-flex"><img style="height:20px" src="static/images/default.png" /><small style="font-size:12px" class="t-info"><b>{{by_who}}</b> </small></div>
-                        <button style="background:none; border:none;color:rgb(27, 36, 44);font-weight: 600;" class="" onclick="popChatUp('{{img.id}}')">comments</button> 
+                        {%if img.comments_bool %}
+                            <button style="background:none; border:none;color:rgb(27, 36, 44);font-weight: 600;" class="" onclick="popChatUp('{{img.id}}')">comments</button> 
+                        {% endif %}
                     </div>
                     <!-- <div class="t-info">Image by <span><b></b></span></div> btn-comm-abso-->
                     <!-- Absoulte right  -->
@@ -273,7 +276,6 @@
                     
                 </div>
                 
-                <!-- <br><br><br><br> -->
                 {%endif%}
             {%endfor%}
 
