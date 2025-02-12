@@ -48,7 +48,7 @@ body{
 .likes-normal-bleft{
     position: absolute;
     left:5px;
-    bottom:35px;
+    bottom:5px;
 }
 
 .likes-normal-tright{
@@ -594,7 +594,7 @@ overflow-y: scroll;
 .cap-2{
     position: absolute;
     width:120px;
-    bottom:40px;
+    bottom:15px;
     right:10px
 }
 
