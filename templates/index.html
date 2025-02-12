@@ -121,7 +121,7 @@
                                     <!-- Comment Form  -->
                                     <form  class="form-comment" style="background-color: f8db5a;width:100%;"  _lpchecked="1" action="{{url_for('comments')}}" method="post" enctype="multipart/form-data">
                                         {{comments_form.hidden_tag()}}
-                                        {{comments_form.comment(class="form-control",placeholder="Comment",id="commentField")}}
+                                        {{comments_form.comment(style="width:90%;min-height:150px;",class="form-control",placeholder="Comment",id="commentField")}}
                                         {{comments_form.submit(style='font-size:18px;padding:5px',class="btns",placeholder="Comment",value="Post")}}
                                         
                                         {{comments_form.img_id(class="form-control hide-field",placeholder="Comment",value=ser.dumps({'data':img.id}))}}
@@ -364,7 +364,8 @@
                 
 
             </div>
-        </div>     
+    </div>   
+
     </div>
 
 </section><br><br>
@@ -479,7 +480,7 @@
                 imgInlineCap.classList.remove('show-caption');
                 deleteIcon.classList.add("show-caption");
 
-            }else if(window.innerWidth > 700 && window.innerWidth < 1400){
+            }else if(window.innerWidth > 700 && window.innerWidth < 2000){
 
                 var modal = document.querySelector("#imageModal-"+img_id);
                 modal.style.display = "flex";

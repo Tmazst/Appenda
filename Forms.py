@@ -49,7 +49,7 @@ class CommentsForm(FlaskForm):
 class ImagesForm(FlaskForm):
 
     name = StringField('Image Name*', validators=[DataRequired()])
-    alias = StringField('siSwati Name(s) or Other', validators=[DataRequired()])
+    alias = StringField('Aliases (Other Names)', validators=[Optional()])
     image = FileField('Upload Image*', validators=[DataRequired()], render_kw={"accept": "image/png,image/jpeg,image/gif,image/bmp"})
     description = TextAreaField('Describe Image', validators=[Optional()])
     comments_bool = RadioField("Do you want people's insights about your image?",choices=[(True,"Yes"),(False,"No")],default=False, validators=[Optional()])
@@ -61,11 +61,13 @@ class ImagesForm(FlaskForm):
         ("Vegetation", "Vegetation"),
         ("Sunsets", "Sunsets"),
         ("Flowers", "Flowers"),
+        ("Animals", "Animals"),
         ("Seascapes", "Seascapes"),
         ("Cities", "Cities"),
         ("Abstract", "Abstract"),
         ("Rivers", "Rivers"),
         ("Wildlife", "Wildlife"),
+        ("Insects", "Insects"),
         ("Beaches", "Beaches"),
         ("Forests", "Forests"),
         ("Spring Water", "Spring Water"),
