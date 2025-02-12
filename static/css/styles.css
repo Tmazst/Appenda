@@ -3130,7 +3130,12 @@ to{
     
     .imag{
         width:100%;
+        height:auto;
 /*        background-color: aqua;*/
+    }
+
+    .img-thmb{
+        width:inherit;
     }
 
     /* .cap-img{
