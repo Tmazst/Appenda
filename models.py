@@ -78,7 +78,7 @@ class Images(db.Model):
     image_category = db.Column(db.String(255))
     alias = db.Column(db.String(100))
     image_thumbnail = db.Column(db.String(100)) 
-    comments_bool = db.Column(db.Boolean)
+    comments_bool = db.Column(db.Boolean, default=False)
     hint = db.Column(db.String(100))
     publish=db.Column(db.Boolean,default=True)
     approved=db.Column(db.Boolean)
@@ -93,6 +93,7 @@ class Images(db.Model):
     # likes_id=relationship("Likes",backref="App_Info",lazy=True)
     # Relationship to define users who liked this image
     likers = db.relationship("User", secondary=likes_table, back_populates="liked_images")
+    user = db.relationship("User", backref="Images")
 
 
 class Image_comments(db.Model,UserMixin):

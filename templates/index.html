@@ -164,15 +164,16 @@
 
                                 <!-- <small class="by"></small><br> -->
                                 <div style="justify-content: flex-start;padding-left: 10px;" class="gen-flex"><img style="height:30px" src="static/images/default.png" /><small class="by-modal">{{by_who}}</small></div>
-                                <div class="describe-img-modal">{{img.description}}</div>
+                                <div class="describe-img-modal">{{img.description}}</div><br>
+                                <button onclick="openComments('{{img.id}}')" style="border-radius: 15px;font-size: 12px;border:none">Comments</button><br><br>
 
                                 <!-- Chats Pop-up  -->
     
-                                <div class="allow-scroll" style="width:100%">
+                                <div id="comments-wd-{{img.id}}" class="allow-scroll comments-wd" style="width:100%;display:none">
 
                                     <div class="comments-title">
                                         <h2 style="margin:0 0">Reactions</h2>
-                                        <small style="color:#222222;;font-weight: 600;font-size:14px">on {{usr_obj.query.get(img.uid).name}}'s post</small>
+                                        <small style="color:#222222;;font-weight: 600;font-size:14px">on {{img.user.name}}'s image</small>
                                         <small style="color:#494949;font-weight: 600;font-size:14px">{{img.timestamp.strftime("%d %b %y - %H:%M")}}</small><br>
                                     </div>
                                     
@@ -184,7 +185,7 @@
                                             <div style="background-color:;margin-bottom: 10px;" class="">
                                                 <div>
                                                     <div class="comments-cont">
-                                                        <div style="height:40px;width:40px;min-width:40px" class="img-cont"><img style="height:inherit;width:inherit" class="prf-image" src="static/images/{{usr_obj.query.get(comment.comment_by).image}}" alt=""/></div>
+                                                        <div style="height:40px;width:40px;min-width:40px;border-width: 1px;" class="img-cont"><img style="height:inherit;width:inherit" class="prf-image" src="static/images/{{usr_obj.query.get(comment.comment_by).image}}" alt=""/></div>
                                                         <div class='name-comment'>
                                                             <div style="background:none;"><span style="font-size:12px;text-wrap: nowrap;font-weight: 700;color:rgb(51, 15, 85)" 
                                                             class="nav-link">{{usr_obj.query.get(comment.comment_by).name}}</span></div>
@@ -266,7 +267,7 @@
                     <div  class="t-info">{{img.description}}<span></span></div>
                     <div style="gap:10px;margin-top: 3px;" class="gen-flex">
                         <div  class="gen-flex"><img style="height:20px" src="static/images/default.png" /><small style="font-size:12px" class="t-info"><b>{{by_who}}</b> </small></div>
-                        {%if img.comments_bool %}
+                        {%if img.comments_bool  %}
                             <button style="background:none; border:none;color:rgb(27, 36, 44);font-weight: 600;" class="" onclick="popChatUp('{{img.id}}')">comments</button> 
                         {% endif %}
                     </div>

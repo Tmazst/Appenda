@@ -47,6 +47,17 @@
 //}
 //window.onscroll = function() {handleScroll()};
 
+function openComments(id){
+    var allComments = document.querySelectorAll(".comments-wd");
+    var targetedComments = document.querySelector("#comments-wd-" + id);
+    allComments.forEach(commCont => {
+        commCont.style.display = "none";
+    });
+
+    targetedComments.style.display = "block";
+
+}
+
 
 // quoteBtns.forEach(function(btn){
 function popChatUp(id){
