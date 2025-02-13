@@ -55,6 +55,15 @@ class gen_user(User):
             "polymorphic_identity":'gen_user'
         }
 
+
+class user_devices(db.Model):
+    
+    id = db.Column(db.Integer, primary_key=True)
+    uid = db.Column(db.Integer,ForeignKey("user.id"))
+    device_token = db.Column(db.String(255))
+    user = db.relationship("User", backref="user_devices")
+
+
 class admin_user(User):
 
     id = db.Column(db.Integer, ForeignKey('user.id'), primary_key=True)

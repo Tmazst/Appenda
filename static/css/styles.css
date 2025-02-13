@@ -583,10 +583,10 @@ overflow-y: scroll;
 }
 
 
-
 .contr-class-2{
     background-color: #054ce4;
 }
+
 
 .cap-2{
     position: absolute;
@@ -594,6 +594,7 @@ overflow-y: scroll;
     bottom:15px;
     right:10px
 }
+
 
 del{
     position: absolute;

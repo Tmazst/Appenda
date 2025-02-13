@@ -147,7 +147,7 @@
                                     <h4 class="img-name-modal">{{img.img_name}}</h4>
                                     
                                     <div class="filler"></div>
-                                    <a id="img-del-id-{{img.id}}" href="/delete-file?im={{img.id}}"><img style="height:50px" src="static/icons/delete-icon.png"></a> 
+                                    <a id="img-del-id-{{img.id}}" href="/delete-file?im={{ser.dumps({'data':img.id})}}&tkn={{session['token']}}"><img style="height:50px" src="static/icons/delete-icon.png"></a> 
                                     <a href="/like?im={{img.id}}" id="add-like-{{img.id}}">
                                         <div id="likes-{{img.id}}" style="position:relative">
                                             <img style="height:40px" src="static/icons/heart-icon-filled.png" />

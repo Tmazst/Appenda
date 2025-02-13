@@ -1,5 +1,5 @@
 
-from flask import Flask,render_template,url_for,redirect,request,flash,jsonify,make_response,session
+from flask import Flask,render_template,url_for,redirect,request,flash,jsonify,make_response,session,abort,response
 from flask_login import login_user, LoginManager,current_user,logout_user, login_required
 from sqlalchemy.exc import IntegrityError
 from Forms import *
@@ -87,8 +87,6 @@ if os.path.exists('client.json'):
 def load_user(user_id):
     return User.query.get(user_id)
 
-# Generate a token and store it in a session
-session["token"] = secrets.token_hex(16)
 
 
 def compress_image(image_path, target_size_kb):
@@ -228,6 +226,7 @@ def file_exists_filter(filepath):
 #Populating variables across all routes
 @app.context_processor
 def inject_ser():  
+    
 
     return dict(ser=ser,os=os,home=False,comments_obj=Image_comments) #universal
 
@@ -247,6 +246,10 @@ def home():
     liked_images=None
     comments_form = CommentsForm()
     img_comments = None
+
+    # Generate a token and store it in a session
+    session["token"] = secrets.token_hex(16)
+
     keys = ["id","usr_id","img_id","comment","comment_by","timestamp"]
     dictn = {}
 
@@ -382,12 +385,21 @@ def delete_files_maindir(file):
 @app.route('/delete-file', methods=['GET'])
 @login_required
 def delete_file():
-    im_id =  request.args.get('im')
-    req_img = None
 
+    # Primary Origin Layer 
     csrf_token = request.args.get('tkn')
     if csrf_token != session.get('token'):
+        print("Token Mismatch: ",csrf_token, session.get('token'))
         return "Invalid Token", 403
+    
+    # Add an additional check for Referer/Origin
+    origin = request.headers.get('Origin') or request.headers.get('Referer')
+    if origin and "https://appenda.techxolutions.com/" not in origin:
+        print("Origin: ",csrf_token,origin)
+        abort(403, description="Invalid request origin")
+
+    im_id =  request.args.get('im')
+    req_img = None
 
     if im_id:
         req_img = ser.loads(im_id)['data']
@@ -795,6 +807,7 @@ def remove_special_chars(s):
 # def load_user(user_id):
 #     return User.query.get(int(user_id))
 
+
 @app.route("/signup", methods=["POST","GET"])
 def sign_up():
 
@@ -836,6 +849,7 @@ def sign_up():
     # from myproject.models import user
     return render_template("signup_form.html",register=register,home=home)
 
+
 # User Account
 @app.route("/account", methods=["POST", "GET"])
 def user_account():
@@ -866,29 +880,48 @@ def user_account():
 
     return render_template('account.html',account_form =account_form, usr_account=usr_account)
 
-#Verification Pending
-@app.route("/login", methods=["POST","GET"])
+
+@app.route("/login_auto", methods=["POST","GET"])
 def login():
 
     login = Login()
-    home=True
 
-    usr = session.get('username')
-    timestamp = session.get('password')
+    # Get the stored device token from the incoming cookies
+    device_token = request.cookies.get('device_token')
+    usrs_dev_tokens = db.session.query(user_devices).filter_by(device_token=device_token).first()
 
-    if usr and timestamp:
-        user_login = User.query.filter_by(email=usr).first()
+    if usrs_dev_tokens:
+        for tokens in usrs_dev_tokens:
+            if device_token  
 
-        if user_login.timestamp ==  timestamp:
-            login_user(user_login)
-            flash(f"Welcome! {user_login.name.title()}", "success")
+    return render_template("login.html",login=login,home=True)
 
-    elif login.validate_on_submit():
+
+@app.route("/login", methods=["POST","GET"])
+def login():
+
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+
+    login = Login()
+
+    if login.validate_on_submit():
 
         if request.method == 'POST':
 
             user_login = User.query.filter_by(email=login.email.data).first()
             if user_login and encrypt_password.check_password_hash(user_login.password, login.password.data):
+                login_user(user_login)
+                # Generate a random token for the device
+                device_token = secrets.token_hex(32)
+
+                # Store it in a secure HTTP-only cookie
+                response.set_cookie('device_token', device_token, httponly=True, secure=True)
+                response.set_cookie(login.email.data, device_token, httponly=True, secure=True)
+
+                save_dv_token = user_devices(uid=current_user.id,device_token=device_token)
+                db.session.add(save_dv_token)
+                db.session.commit()
 
                 # if not user_login.verified:
                 #     login_user(user_login)
@@ -900,7 +933,7 @@ def login():
 
                 # Check If are they allocated to a church 
 
-                login_user(user_login)
+                
                 flash(f"Welcome! {user_login.name.title()}", "success")
 
                 req_page = request.args.get('next')
