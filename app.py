@@ -881,23 +881,23 @@ def user_account():
     return render_template('account.html',account_form =account_form, usr_account=usr_account)
 
 
-@app.route("/login_auto", methods=["POST","GET"])
-def login():
+# @app.route("/login_auto", methods=["POST","GET"])
+# def login():
 
-    login = Login()
+#     login = Login()
 
-    # Get the stored device token from the incoming cookies
-    device_token = request.cookies.get('device_token')
-    username = request.cookies.get('username')
-    usrs_dev_token = db.session.query(user_devices).filter_by(device_token=device_token).first()
+#     # Get the stored device token from the incoming cookies
+#     device_token = request.cookies.get('device_token')
+#     username = request.cookies.get('username')
+#     usrs_dev_token = db.session.query(user_devices).filter_by(device_token=device_token).first()
 
-    if usrs_dev_token:
-        if username == usrs_dev_token.user.email:
-            login_user(db.session.get(User, usrs_dev_token.uid))
-        else:
-            return redirect(url_for('login'))
+#     if usrs_dev_token:
+#         if username == usrs_dev_token.user.email:
+#             login_user(db.session.get(User, usrs_dev_token.uid))
+#         else:
+#             return redirect(url_for('login'))
 
-    return render_template("login.html",login=login,home=True)
+#     return render_template("login.html",login=login,home=True)
 
 
 @app.route("/login", methods=["POST","GET"])
