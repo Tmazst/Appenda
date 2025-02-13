@@ -243,7 +243,7 @@
                     <!-- Delete Icon / Button for mobile phones (Absolute) -->
                      {%if current_user.id == img.uid %}
                     <div id="del-mobile-{{img.id}}" class="del-mobile">
-                        <a id="mobile-del-id" href="/delete-file?im={{img.id}}"><img class="svg-icons" src="static/icons/delete-icon.png"></a> 
+                        <a id="mobile-del-id" href="/delete-file?im={{ser.dumps({'data':img.id})}}"><img class="svg-icons" src="static/icons/delete-icon.png"></a> 
                     </div>
                     {%endif%}
 

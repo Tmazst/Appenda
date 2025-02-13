@@ -378,10 +378,16 @@ def delete_files_maindir(file):
 
 
 @app.route('/delete-file', methods=['GET'])
+@login_required
 def delete_file():
-    req_img = request.args.get('im')
+    im_id =  request.args.get('im')
+    req_img = None
+
+    if im_id:
+        req_img = ser.loads(im_id)['data']
+
     if not req_img:
-        return jsonify({"Error": "Missing 'im' parameter"}), 400
+        return jsonify({"Error": "Missing a parameter"}), 400
 
     img = Images.query.get(req_img)
     if not img:
