@@ -888,11 +888,14 @@ def login():
 
     # Get the stored device token from the incoming cookies
     device_token = request.cookies.get('device_token')
-    usrs_dev_tokens = db.session.query(user_devices).filter_by(device_token=device_token).first()
+    username = request.cookies.get('username')
+    usrs_dev_token = db.session.query(user_devices).filter_by(device_token=device_token).first()
 
-    if usrs_dev_tokens:
-        for tokens in usrs_dev_tokens:
-            if device_token  
+    if usrs_dev_token:
+        if username == usrs_dev_token.user.email:
+            login_user(db.session.get(User, usrs_dev_token.uid))
+        else:
+            return redirect(url_for('login'))
 
     return render_template("login.html",login=login,home=True)
 
@@ -914,10 +917,11 @@ def login():
                 login_user(user_login)
                 # Generate a random token for the device
                 device_token = secrets.token_hex(32)
+                username = login.email.data
 
                 # Store it in a secure HTTP-only cookie
                 response.set_cookie('device_token', device_token, httponly=True, secure=True)
-                response.set_cookie(login.email.data, device_token, httponly=True, secure=True)
+                response.set_cookie("username", username, httponly=True, secure=True)
 
                 save_dv_token = user_devices(uid=current_user.id,device_token=device_token)
                 db.session.add(save_dv_token)
@@ -930,8 +934,6 @@ def login():
                 # After login required prompt, take me to the page I requested earlier
                 # login_user(user_login)
                 # print("No Verification Needed: ", user_login.verified)
-
-                # Check If are they allocated to a church 
 
                 
                 flash(f"Welcome! {user_login.name.title()}", "success")
