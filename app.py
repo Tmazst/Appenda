@@ -1,5 +1,5 @@
 
-from flask import Flask,render_template,url_for,redirect,request,flash,jsonify,make_response,session,abort,response
+from flask import Flask,render_template,url_for,redirect,request,flash,jsonify,make_response,session,abort
 from flask_login import login_user, LoginManager,current_user,logout_user, login_required
 from sqlalchemy.exc import IntegrityError
 from Forms import *
@@ -918,7 +918,7 @@ def login():
                 # Generate a random token for the device
                 device_token = secrets.token_hex(32)
                 username = login.email.data
-
+                response = make_response("Success!")
                 # Store it in a secure HTTP-only cookie
                 response.set_cookie('device_token', device_token, httponly=True, secure=True)
                 response.set_cookie("username", username, httponly=True, secure=True)
