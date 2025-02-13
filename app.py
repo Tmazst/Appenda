@@ -87,6 +87,8 @@ if os.path.exists('client.json'):
 def load_user(user_id):
     return User.query.get(user_id)
 
+# Generate a token and store it in a session
+session["token"] = secrets.token_hex(16)
 
 
 def compress_image(image_path, target_size_kb):
@@ -382,6 +384,10 @@ def delete_files_maindir(file):
 def delete_file():
     im_id =  request.args.get('im')
     req_img = None
+
+    csrf_token = request.args.get('tkn')
+    if csrf_token != session.get('token'):
+        return "Invalid Token", 403
 
     if im_id:
         req_img = ser.loads(im_id)['data']
