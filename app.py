@@ -387,7 +387,7 @@ def delete_file():
         req_img = ser.loads(im_id)['data']
 
     if not req_img:
-        return jsonify({"Error": "Missing a parameter"}), 400
+        return jsonify({"Error": "A parameter is missing"}), 400
 
     img = Images.query.get(req_img)
     if not img:
