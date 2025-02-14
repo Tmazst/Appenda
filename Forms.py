@@ -80,6 +80,7 @@ class ImagesForm(FlaskForm):
         ("People", "People"),
         ("Community", "Community"),
         ("Festival", "Festival"),
+        ("3D Icons", "3D Icons"),
         ("Road", "Road"),
         ("Infrastructure", "Infrastructure"),
         ("Communications & Media", "Communications & Media"),
