@@ -904,6 +904,7 @@ def user_account():
 def login():
 
     if current_user.is_authenticated:
+        flash(f"Welcome {current_user.name}","success")
         return redirect(url_for('home'))
 
     login = Login()

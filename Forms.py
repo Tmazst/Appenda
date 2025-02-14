@@ -66,6 +66,7 @@ class ImagesForm(FlaskForm):
         ("Cities", "Cities"),
         ("Abstract", "Abstract"),
         ("Rivers", "Rivers"),
+        ("Corporate", "Corporate"),
         ("Wildlife", "Wildlife"),
         ("Insects", "Insects"),
         ("Beaches", "Beaches"),
