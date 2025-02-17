@@ -41,7 +41,7 @@
 
         <div class="line"></div><br>
 
-        <form id="file-upload-form" style="background-color: ;width:100%;"  _lpchecked="1" action="" method="post" enctype="multipart/form-data">
+        <form id="file-upload-form" style="width:100%;"  _lpchecked="1" action="" method="post" enctype="multipart/form-data">
             <br>
             <!-------Name--------->
             <div style="background-color: f8f95a;" class="job-ad-group marginise-bottom">
@@ -88,11 +88,16 @@
                     {% endfor %}
                 {% endif %}
             </div>
+            <!-- Preview Section -->
+            <div id="image-preview" style="display: none; margin-top: 20px;">
+                <p>Image Preview:</p>
+                <img id="preview-img" src="" alt="Preview" style="max-width: 100%; max-height: 300px; border: 1px solid #ccc;" />
+            </div>
 
             <!---------Image--------->
             <div class="job-ad-group marginise-bottom">
                 {{ app_form.image.label(class="labels")}}<br>
-                {{ app_form.image(class="form-control adj-width-60",placeholder="App Icon")}}
+                {{ app_form.image(class="form-control adj-width-60", id="file", placeholder="App Icon", accept="image/*", onchange="previewImage(event)")}} 
                 {% if app_form.image.errors %}
                     {% for error in app_form.image.errors %}
                         <span class="span-error" >*{{error}}</span>
@@ -138,6 +143,11 @@
         <div style="min-height: 50px;" id="upload-msg-pop"  class="pop-up">
             <div style="color:rgb(247, 247, 247);font-size: 14px;font-weight: 600;">Thank You!, You can check your image 5 minutes from now</div>
         </div>
+        <!-- Preview Section -->
+        <div id="image-preview" style="display: none; margin-top: 20px;">
+            <p>Image Preview:</p>
+            <img id="preview-img" src="" alt="Preview" style="max-width: 100%; max-height: 300px; border: 1px solid #ccc;" />
+        </div>
     </div>
 </div>
 </section>
@@ -165,23 +175,46 @@
         }
     }
 
-    function previewImage(event){
-        var image_obj = document.querySelector('.img-preview');
-        console.dir("Bool: ",image_obj)
-        // imageCont.src = ''
-    }
+    // function previewImage(event){
+    //     var image_obj = document.querySelector('.img-preview');
+    //     console.dir("Bool: ",image_obj)
+    //     // imageCont.src = ''
+    // }
 
 
     function popMsg() {
-        console.log("Modal Called!");
+        // console.log("Modal Called!");
         const msgPopup = document.querySelector("#upload-msg-pop");
         msgPopup.style.display = 'flex'; // Show the pop-up
     }
 
     function hideMsg() {
-        console.log("Modal Hidden!");
+        // console.log("Modal Hidden!");
         const msgPopup = document.querySelector("#upload-msg-pop");
         msgPopup.style.display = 'none'; // Hide the pop-up
+    }
+
+    
+    // Handle image file preview
+    function previewImage(event) {
+        // console.log("Image Previewer Called");
+        const file = event.target.files[0]; // Get the selected file
+        const previewContainer = document.getElementById("image-preview");
+        const previewImg = document.getElementById("preview-img");
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                // console.log("Reading Source File: ",e.target.result );
+                previewImg.src = e.target.result; // Set the image source to the file data
+                previewContainer.style.display = "block"; // Show the preview container
+            };
+
+            reader.readAsDataURL(file); // Read the file as a Data URL (base64 encoded)
+        } else {
+            previewContainer.style.display = "none"; // Hide the preview if no file selected
+        }
     }
 
     async function handleFormSubmit(event) {

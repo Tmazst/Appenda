@@ -2824,6 +2824,8 @@ to{
     background-color: var(--main-color);
 }
 
+
+
 .img-preview{
     height:inherit;
 }
@@ -3099,6 +3101,10 @@ to{
 
 
 @media all and (max-width: 575px){
+
+    #preview-img{
+        max-height: auto;
+    }
 
     .images-container{
         gap:5px
