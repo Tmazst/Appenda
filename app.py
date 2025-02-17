@@ -149,6 +149,7 @@ def process_file(file,usr):
             threading.Thread(target=compress_image, args=(new_path,),kwargs={"target_size_kb":90}).start()
 
             flash(f"File Upload Successful!!", "success")
+            jsonify({"Success":"Upload Successful"})
 
             return new_file_name
 
@@ -741,7 +742,7 @@ def image_form():
         # db.session.add(zero_likes)
         # db.session.commit()
 
-        flash("Upload was Successful👍","success")
+        # flash("Upload was Successful👍","success")
         return jsonify({"Success":"Thank You!, You can check your image 5 minutes from now"})
 
     return render_template("image_form.html",app_form=app_form)
@@ -768,7 +769,6 @@ def like_image():
         image.likers.append(current_user)
         db.session.commit()
         return jsonify({"status": "liked", "likes_count": len(image.likers)})
-
 
 
 @app.route("/edit_app", methods=['POST','GET'])

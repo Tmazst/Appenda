@@ -284,9 +284,10 @@
             {%endfor%}
 
         </div>
-         <!-- Corporate Images -->
-          <h2>AI Generated</h2>
-         <div style="flex-wrap: wrap;" class="images-container flat-flex">
+
+        <!-- Corporate Images -->
+        <h2>AI Generated</h2>
+        <div style="flex-wrap: wrap;" class="images-container flat-flex">
             {%for img in images%}
                 {% if ("static/uploads/usr_images/thumbnails/" ~ img.image_thumbnail) | file_exists %}
                 {% set by_who = usr_obj.query.get(img.uid).name %}
@@ -513,86 +514,6 @@
 
         </div>
 
-        <h2>3D Icons</h2>
-        <!-- 3D Icons -->
-        <div style="flex-wrap: wrap;" class="images-container flat-flex">
-           {%for img in images%}
-               {% if ("static/uploads/usr_images/thumbnails/" ~ img.image_thumbnail) | file_exists %}
-               {% set by_who = usr_obj.query.get(img.uid).name %}
-               {%set likes = img.likers | length %}
-               {%if img.image_category == "3D Icons"%}
-               
-
-               <div class="img-card">
-                   {%set descr = img.description | tojson %}
-
-                   <!-- Image  -->
-                    
-                   <div id="imag-cont-{{img.id}}" onclick="displayImage('{{img.image_thumbnail}}','{{img.img_name | e}}','{{by_who}}','{{img.id}}', '{{descr | remove_special_chars}}', 
-                       '{{likes}}','{{img.alias}}')"  class="imag">
-                       <img id="image-{{img.id}}" class="img-thmb"  src="static/uploads/usr_images/thumbnails/{{img.image_thumbnail}}" />
-                   </div>
-                   
-                  
-                   <!-- Likes  -->
-                   <a href="/like?im={{img.id}}" class="like-btn">
-                       <div id="like-cont-{{img.id}}" class="likes-normal-bleft">
-                           <div id="likes" style="position:relative">
-                               {%if liked_images and img.id in liked_images%}
-                                   <img id="heart-icon-{{img.id}}" style="height:35px" src="static/icons/heart-icon-filled.png" />
-                               {%else%}
-                                   <img id="heart-icon-{{img.id}}" style="height:35px" src="static/icons/heart-icon-outlined.png" />
-                               {%endif%}
-                               {% if likes %}
-                                   <small class="num gen-flex likes-1">{{likes}}</small>
-                               {% endif %}
-                           </div>
-                       </div>
-                   </a>
-
-                   <!-- Delete Icon / Button for mobile phones (Absolute) -->
-                    {%if current_user.id == img.uid %}
-                   <div id="del-mobile-{{img.id}}" class="del-mobile">
-                       <a id="mobile-del-id" href="/delete-file?im={{ser.dumps({'data':img.id})}}&tkn={{session['token']}}"><img class="svg-icons" src="static/icons/delete-icon.png"></a> 
-                   </div>
-                   {%endif%}
-
-                   <!-- Caption Displayed Inside image container  (Absolute)-->
-                   <div id="cap-{{img.id}}" style="display: none;" class="cap-2 gen-flex-col show-caption cap-img">
-                           <div id="downld-btn-mobl-{{img.id}}" onclick="openDownload('{{img.id}}')" class="btns-inverted downld-btn-mobl">
-                               Download
-                           </div>
-                       <small class="captions nam-on-img-captions">{{img.img_name}}</small>
-                       <div class="gen-flex"><img style="height:20px" src="static/icons/user.png" /><small class="captions"> {{by_who}}</small></div>
-                   </div>
-                   
-               </div>
-               {%endif%}
-
-
-               <!-- Caption Displayed Outside & Below image container (Dynamic) | Mobile Phones  -->
-               <div id="img-caption-{{img.id}}" style="align-items:flex-start;" class="img-caption gen-flex-col">
-
-                   <div  class="t-info-t">{{img.img_name}} ({{img.image_category}})</div>
-                   <div style="justify-content: flex-start;padding-left: 0px;" class="gen-flex"><small style="color:rgb(104, 100, 45);font-style: italic;font-size: 10px;" class="alias">{%if img.alias%}Alias: {{img.alias}}{%endif%} </small></div><br>
-                   <div  class="t-info">{{img.description}}<span></span></div>
-                   <div style="gap:10px;margin-top: 3px;" class="gen-flex">
-                       <div  class="gen-flex"><img style="height:20px" src="static/images/default.png" /><small style="font-size:12px" class="t-info"><b>{{by_who}}</b> </small></div>
-                       {%if img.comments_bool  %}
-                           <button style="background:none; border:none;color:rgb(27, 36, 44);font-weight: 600;" class="" onclick="popChatUp('{{img.id}}')">comments</button> 
-                       {% endif %}
-                   </div>
-                   <!-- <div class="t-info">Image by <span><b></b></span></div> btn-comm-abso-->
-                   <!-- Absoulte right  -->
-                   <a href="/download_img?img_id={{img.id}}"  ><img class="svg-icons phone-dnwl-icon" src="static/icons/download-icon.svg" /></a>
-                   
-               </div>
-               
-               {%endif%}
-           {%endfor%}
-
-       </div>
-
         <br>
 
         <!-- Upload and Sign up Buttons  -->
@@ -603,7 +524,6 @@
             {%endif%}
             <a href="/about" ><div style="font-size:13px;padding:3px"  class="btns-outlined">About</div></a>
         </div><br>
-
 
         <!-- Tag Line  -->
         <div style="align-items:flex-start;" class="nd-child gen-flex-col ">
@@ -624,7 +544,6 @@
             <img src="static/images/byt-logo.png" />
         </div>
         
-    </div>
 
     <!-- Side Image viewer for big screens | Dynamic -->
     <div class="display-img">

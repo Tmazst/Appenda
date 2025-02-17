@@ -41,7 +41,7 @@
 
         <div class="line"></div><br>
 
-        <form style="background-color: ;width:100%;"  _lpchecked="1" action="" method="post" enctype="multipart/form-data">
+        <form id="file-upload-form" style="background-color: ;width:100%;"  _lpchecked="1" action="" method="post" enctype="multipart/form-data">
             <br>
             <!-------Name--------->
             <div style="background-color: f8f95a;" class="job-ad-group marginise-bottom">
@@ -126,7 +126,7 @@
                 <!-- <label class="labels">Please wait while uploading file....</label> -->
                 {{ app_form.submit(class="btns") }}
                 <div class="filler"></div>
-                <button onclick="previewImage(event)" >Preview</button>
+                <!-- <button onclick="previewImage(event)" >Preview</button> -->
             </div>
 
         </form>
@@ -135,11 +135,24 @@
                 <img class="img-preview" src="" />
             </div>
         </div>
+        <div style="min-height: 50px;" id="upload-msg-pop"  class="pop-up">
+            <div style="color:rgb(247, 247, 247);font-size: 14px;font-weight: 600;">Thank You!, You can check your image 5 minutes from now</div>
+        </div>
     </div>
 </div>
 </section>
 
+<div id="upload-msg" class="pop-cont">
+
+</div>
+
 <script>
+
+    // function popMsg(){
+    //     console.log("Modal Called!");
+    //     var msgPopup = document.querySelector("#upload-msg-pop");
+    //     msgPopup.style.display = 'flex';
+    // }
 
     function commentsBool(event){
         var boolCont = document.querySelector('#comments-bool');
@@ -157,6 +170,49 @@
         console.dir("Bool: ",image_obj)
         // imageCont.src = ''
     }
+
+
+    function popMsg() {
+        console.log("Modal Called!");
+        const msgPopup = document.querySelector("#upload-msg-pop");
+        msgPopup.style.display = 'flex'; // Show the pop-up
+    }
+
+    function hideMsg() {
+        console.log("Modal Hidden!");
+        const msgPopup = document.querySelector("#upload-msg-pop");
+        msgPopup.style.display = 'none'; // Hide the pop-up
+    }
+
+    async function handleFormSubmit(event) {
+        event.preventDefault(); // Prevent the form from submitting the default way
+        popMsg(); // Show the loading popup
+        const formData = new FormData(event.target); // Collect the form data
+
+        try {
+            const response = await fetch(event.target.action, {
+                method: "POST",
+                body: formData,
+            });
+
+            if (response.ok) {
+                const result = await response.json(); // Assuming your server returns JSON
+                console.log("Upload Successful: ", result);
+                alert("File uploaded successfully!"); // Optional
+            } else {
+                console.error("Upload failed!");
+                alert("Something went wrong during upload!");
+            }
+        } catch (error) {
+            console.error("Error during upload: ", error);
+            alert("Error occurred while uploading. Please try again.");
+        }
+
+        hideMsg(); // Hide the loading popup after completion
+    }
+
+    document.getElementById("file-upload-form").addEventListener("submit", handleFormSubmit);
+
 </script>
 
 {% endblock %}
